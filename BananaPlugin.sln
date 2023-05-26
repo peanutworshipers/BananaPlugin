@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33209.295
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BananaPlugin", "BananaPlugin.csproj", "{429A89A7-53FF-496C-808F-2AB9C1362842}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5FCA876F-8AB4-4292-82BE-F4FE9DA528C1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Local|Any CPU = Local|Any CPU
+		Local|x64 = Local|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Debug|x64.ActiveCfg = Debug|x64
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Debug|x64.Build.0 = Debug|x64
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Local|Any CPU.Build.0 = Local|Any CPU
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Local|x64.ActiveCfg = Local|x64
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Local|x64.Build.0 = Local|x64
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Release|x64.ActiveCfg = Release|x64
+		{429A89A7-53FF-496C-808F-2AB9C1362842}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E8D04F2F-5F3D-4834-95BB-F1BB6A5014C8}
+	EndGlobalSection
+EndGlobal

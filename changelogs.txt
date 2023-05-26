@@ -1,0 +1,9 @@
+﻿0.0.0
+Added basic feature loader.
+
+Added DeveloperCommandSender and override command.
+- Allows developers to enter developer mode to access remote admin if necessary.
+
+Added commands: enable, disable, showfeatures, and information command.
+
+Added basic permissions system.

@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <AssemblyTitle>BananaPlugin</AssemblyTitle>
+    <Product>BananaPlugin</Product>
+    <Copyright>Copyright © 2023</Copyright>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;LOCAL</DefineConstants>
+    <DebugType>full</DebugType>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <Platforms>x64;AnyCPU</Platforms>
+    <Configurations>Debug;Release;Local</Configurations>
+    <!--
+    Make sure any documentation comments which are included in code get checked for syntax during the build, but do
+    not report warnings for missing comments.
+
+    CS1573: Parameter 'parameter' has no matching param tag in the XML comment for 'parameter' (but other parameters do)
+    CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member'
+    -->
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+    <NoWarn>$(NoWarn),1573,1591,1712</NoWarn>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+    <ItemGroup>
+      <Reference Include="System" />
+      <Reference Include="Microsoft.CSharp" />
+      <Reference Include="Assembly-CSharp-firstpass" SpecificVersion="false" HintPath="$(SL_REFERENCES)\Assembly-CSharp-firstpass.dll" Private="False" />
+      <Reference Include="Mirror" SpecificVersion="false" HintPath="$(SL_REFERENCES)\Mirror.dll" Private="False" />
+      <Reference Include="UnityEngine.CoreModule" SpecificVersion="false" HintPath="$(SL_REFERENCES)\UnityEngine.CoreModule.dll" Private="False" />
+      <Reference Include="UnityEngine.PhysicsModule" SpecificVersion="false" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="False" />
+      <Reference Include="Pooling" SpecificVersion="false" HintPath="$(SL_REFERENCES)\Pooling.dll" Private="False" />
+    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="EXILED" Version="7.0.0-rc.2-1" />
+    <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="changelogs.txt" />
+  </ItemGroup>
+</Project>
