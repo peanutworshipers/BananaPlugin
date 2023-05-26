@@ -6,7 +6,6 @@ using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 #if !LOCAL
 using System.Reflection;
 #endif
@@ -24,7 +23,6 @@ public sealed class BPLogger
     private static readonly Assembly Assembly = typeof(BPLogger).Assembly;
 #endif
 
-#warning implement this please
     /// <summary>
     /// Initializes a new instance of the <see cref="BPLogger"/> class.
     /// </summary>

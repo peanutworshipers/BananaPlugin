@@ -8,7 +8,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;LOCAL</DefineConstants>
     <DebugType>full</DebugType>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
