@@ -3,10 +3,13 @@ namespace BananaPlugin;
 
 using BananaPlugin.API.Collections;
 using BananaPlugin.API.Main;
+using BananaPlugin.API.Testing;
 using BananaPlugin.API.Utils;
 using Exiled.API.Features;
+using HarmonyLib;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using static Exiled.Events.Events;
 
 /// <summary>
 /// The main plugin class for this assembly.
@@ -14,6 +17,13 @@ using System.Diagnostics.CodeAnalysis;
 public sealed class Plugin : Plugin<Config>
 {
     private bool enabled = false;
+
+    static Plugin()
+    {
+        Harmony = new Harmony("com.zereth.bananaplugin");
+
+        Harmony.PatchAll();
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Plugin"/> class.
@@ -27,14 +37,19 @@ public sealed class Plugin : Plugin<Config>
     }
 
     /// <summary>
-    /// Gets the plugin Instance.
+    /// Gets the plugin instance.
     /// </summary>
     public static Plugin? Instance { get; private set; }
 
     /// <summary>
-    /// Gets the plugin Instance.
+    /// Gets the feature collection.
     /// </summary>
     public static FeatureCollection? Features { get; private set; }
+
+    /// <summary>
+    /// Gets the harmony instance for this assembly.
+    /// </summary>
+    public static Harmony Harmony { get; }
 
     /// <inheritdoc/>
     public override string Author => "Zereth";
@@ -55,7 +70,7 @@ public sealed class Plugin : Plugin<Config>
     /// Checks that the static instances are not null.
     /// </summary>
     /// <returns>A value indicating whether the instances are not null.</returns>
-    [MemberNotNullWhen(true, "Instance", "Features")]
+    [MemberNotNullWhen(true, nameof(Instance), nameof(Features))]
     public static bool CheckInstances()
     {
         if (Instance == null)
@@ -71,7 +86,7 @@ public sealed class Plugin : Plugin<Config>
     /// Checks if the current plugin Instance is assigned and enabled.
     /// </summary>
     /// <returns>A value indicating whether the plugin is assigned and enabled.</returns>
-    [MemberNotNullWhen(true, "Instance", "Features")]
+    [MemberNotNullWhen(true, nameof(Instance), nameof(Features))]
     public static bool AssertEnabled()
     {
         return CheckInstances() && Instance.enabled;
@@ -82,7 +97,7 @@ public sealed class Plugin : Plugin<Config>
     /// </summary>
     /// <param name="response">The error response.</param>
     /// <returns>A value indicating whether the plugin is assigned and enabled.</returns>
-    [MemberNotNullWhen(true, "Instance", "Features")]
+    [MemberNotNullWhen(true, nameof(Instance), nameof(Features))]
     public static bool AssertEnabled([NotNullWhen(false)] out string? response)
     {
         if (!CheckInstances() || !Instance.enabled)
@@ -146,7 +161,7 @@ public sealed class Plugin : Plugin<Config>
             return;
         }
 
-        foreach (var feature in Features)
+        foreach (BananaFeature feature in Features)
         {
             feature.Enabled = false;
         }
@@ -156,7 +171,7 @@ public sealed class Plugin : Plugin<Config>
         base.OnDisabled();
     }
 
-    [MemberNotNull("Instance", "Features")]
+    [MemberNotNull(nameof(Instance), nameof(Features))]
     private void EnsureInstances()
     {
         Instance ??= this;

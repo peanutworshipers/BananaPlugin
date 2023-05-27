@@ -25,15 +25,20 @@ public sealed class RoundEndFF : BananaFeature
     /// <inheritdoc/>
     protected override void Enable()
     {
-        ServerHandlers.WaitingForPlayers += this.ResetFFConfig;
-        ServerHandlers.RoundEnded += this.EnableFF;
+        ExHandlers.Server.WaitingForPlayers += this.ResetFFConfig;
+        ExHandlers.Server.RoundEnded += this.EnableFF;
     }
 
     /// <inheritdoc/>
     protected override void Disable()
     {
-        ServerHandlers.WaitingForPlayers -= this.ResetFFConfig;
-        ServerHandlers.RoundEnded -= this.EnableFF;
+        ExHandlers.Server.WaitingForPlayers -= this.ResetFFConfig;
+        ExHandlers.Server.RoundEnded -= this.EnableFF;
+
+        if (Round.IsEnded)
+        {
+            this.ResetFFConfig();
+        }
     }
 
     private void ResetFFConfig()

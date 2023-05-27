@@ -22,7 +22,7 @@ public static class MECExtensions
     public static CoroutineHandle Run<T>(T coroutine, Segment segment, params object[] args)
         where T : Delegate
     {
-        var enumerator = MakeSafeCoroutine(coroutine, args);
+        IEnumerator<float> enumerator = MakeSafeCoroutine(coroutine, args);
 
         return Timing.RunCoroutine(enumerator, segment);
     }
@@ -38,7 +38,7 @@ public static class MECExtensions
     public static void RunAfterFrames<T>(int frameCount, Segment segment, T coroutine, params object[] args)
         where T : Delegate
     {
-        var safeCoroutine = MakeSafeCoroutine(RunAfterFramesCoroutine<T>, frameCount, coroutine, args);
+        IEnumerator<float> safeCoroutine = MakeSafeCoroutine(RunAfterFramesCoroutine<T>, frameCount, coroutine, args);
 
         Timing.RunCoroutine(safeCoroutine, segment);
     }

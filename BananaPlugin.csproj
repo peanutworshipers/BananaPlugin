@@ -31,7 +31,9 @@
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
     <ItemGroup>
-      <Reference Include="System" />
+      <Reference Include="System">
+        <Private>False</Private>
+      </Reference>
       <Reference Include="Microsoft.CSharp" />
       <Reference Include="Assembly-CSharp-firstpass" SpecificVersion="false" HintPath="$(SL_REFERENCES)\Assembly-CSharp-firstpass.dll" Private="False" />
       <Reference Include="Mirror" SpecificVersion="false" HintPath="$(SL_REFERENCES)\Mirror.dll" Private="False" />
@@ -40,20 +42,39 @@
       <Reference Include="Pooling" SpecificVersion="false" HintPath="$(SL_REFERENCES)\Pooling.dll" Private="False" />
     </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="7.0.0-rc.2-1" />
-    <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+    <PackageReference Include="EXILED" Version="7.0.0-rc.3-1">
+      <ExcludeAssets>RUNTIME</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Lib.Harmony" Version="2.2.2">
+      <ExcludeAssets>RUNTIME</ExcludeAssets>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
+      <ExcludeAssets>RUNTIME</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Buffers" Version="4.5.1" />
-    <PackageReference Include="System.Memory" Version="4.5.5" />
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
+    <PackageReference Include="System.Buffers" Version="4.5.1">
+      <ExcludeAssets>RUNTIME</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Memory" Version="4.5.5">
+      <ExcludeAssets>RUNTIME</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0">
+      <ExcludeAssets>RUNTIME</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.3">
+      <ExcludeAssets>RUNTIME</ExcludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

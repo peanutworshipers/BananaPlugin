@@ -6,9 +6,7 @@ using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-#if !LOCAL
 using System.Reflection;
-#endif
 
 /// <summary>
 /// A class used to sort logs by their feature and type.
@@ -16,6 +14,8 @@ using System.Reflection;
 public sealed class BPLogger
 {
     private static readonly List<BPLogger> Loggers = new ();
+
+    private static readonly HashSet<MethodBase> AlreadyIdentified = new();
 
     private static readonly Dictionary<string, (string, string)> Identifiers = new ();
 
@@ -48,11 +48,15 @@ public sealed class BPLogger
     /// </summary>
     /// <param name="typeName">The type name to identify as.</param>
     /// <param name="methodName">The method name to identify as.</param>
-    internal static void IdentifyMethodAs(string typeName, string methodName)
+    /// <param name="force">Specifies whether to force the operation.</param>
+    internal static void IdentifyMethodAs(string typeName, string methodName, bool force = false)
     {
         MethodBase method = GetCallingMethod();
 
-        Identifiers[GetFullMethodName(method)] = (typeName, methodName);
+        if (AlreadyIdentified.Add(method) || force)
+        {
+            Identifiers[GetFullMethodName(method)] = (typeName, methodName);
+        }
     }
 
     /// <summary>
@@ -138,7 +142,7 @@ public sealed class BPLogger
             _ => throw new ArgumentOutOfRangeException(nameof(logType)),
         };
 
-#if !LOCAL
+#if !DEBUG
         if (logType != LogLevel.Debug || Log.DebugEnabled.Contains(Assembly))
         {
             Log.SendRaw(message, color);
