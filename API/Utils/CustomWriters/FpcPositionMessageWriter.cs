@@ -2,7 +2,6 @@
 
 using BananaPlugin.Extensions;
 using Exiled.API.Features;
-using Exiled.API.Interfaces;
 using Mirror;
 using PlayerRoles.FirstPersonControl;
 using PlayerRoles.FirstPersonControl.NetworkMessages;
@@ -10,8 +9,9 @@ using RelativePositioning;
 using System;
 using UnityEngine;
 
-#pragma warning disable SA1500 // Braces for multi-line statements should not share line
-#warning add docs
+/// <summary>
+/// A class used to override the <see cref="FpcPositionMessage"/> writer to allow forced client values.
+/// </summary>
 public static class FpcPositionMessageWriter
 {
     private static AppliedValues valuesToApply;
@@ -76,6 +76,78 @@ public static class FpcPositionMessageWriter
         ApplyMovementState = 1 << 2,
     }
 
+    /// <summary>
+    /// Sets a specified player's client camera rotation.
+    /// </summary>
+    /// <param name="player">The player to set the rotation of.</param>
+    /// <param name="forward">The forward direction of the rotation.</param>
+    public static void SetRotation(this Player player, Vector3 forward)
+        => player.ReferenceHub.SetRotation(forward);
+
+    /// <summary>
+    /// Sets a specified player's client camera rotation.
+    /// </summary>
+    /// <param name="player">The player to set the rotation of.</param>
+    /// <param name="horizontal">The horizontal value of the rotation.</param>
+    /// <param name="vertical">The vertical value of the rotation.</param>
+    public static void SetRotation(this Player player, ushort horizontal, ushort vertical)
+        => player.ReferenceHub.SetRotation(horizontal, vertical);
+
+    /// <summary>
+    /// Sets a specified player's client camera rotation.
+    /// </summary>
+    /// <param name="hub">The player to set the rotation of.</param>
+    /// <param name="forward">The forward direction of the rotation.</param>
+    public static void SetRotation(this ReferenceHub hub, Vector3 forward)
+    {
+        (ushort horizontal, ushort vertical) = Quaternion.LookRotation(forward, Vector3.up).ToClientUShorts();
+
+        hub.SetRotation(horizontal, vertical);
+    }
+
+    /// <summary>
+    /// Sets a specified player's client camera rotation.
+    /// </summary>
+    /// <param name="hub">The player to set the rotation of.</param>
+    /// <param name="horizontal">The horizontal value of the rotation.</param>
+    /// <param name="vertical">The vertical value of the rotation.</param>
+    public static void SetRotation(this ReferenceHub hub, ushort horizontal, ushort vertical)
+    {
+        if (hub.roleManager.CurrentRole is not IFpcRole)
+        {
+            return;
+        }
+
+        appliedMouseLook = (horizontal, vertical);
+        valuesToApply |= AppliedValues.ApplyMouseLook;
+        hub.connectionToClient.Send(new FpcPositionMessage(hub));
+    }
+
+    /// <summary>
+    /// Sets a specified player's client movement state.
+    /// </summary>
+    /// <param name="player">The player to set the movement state of.</param>
+    /// <param name="movementState">The movement state to apply to the player.</param>
+    public static void SetMovementState(this Player player, PlayerMovementState movementState)
+        => player.ReferenceHub.SetMovementState(movementState);
+
+    /// <summary>
+    /// Sets a specified player's client movement state.
+    /// </summary>
+    /// <param name="hub">The player to set the movement state of.</param>
+    /// <param name="movementState">The movement state to apply to the player.</param>
+    public static void SetMovementState(this ReferenceHub hub, PlayerMovementState movementState)
+    {
+        if (hub.roleManager.CurrentRole is not IFpcRole)
+        {
+            return;
+        }
+
+        appliedMovementState = movementState;
+        valuesToApply |= AppliedValues.ApplyMovementState;
+        hub.connectionToClient.Send(new FpcPositionMessage(hub));
+    }
+
     private static void WriteFpcPositionMessage(NetworkWriter writer, FpcPositionMessage message)
     {
         if (valuesToApply > 0)
@@ -106,7 +178,7 @@ public static class FpcPositionMessageWriter
             : default;
 
         PlayerMovementState movementState = applyMovementState
-            ? appliedMovementState
+            ? (appliedMovementState & (PlayerMovementState)3)
             : fpcModule.CurrentMovementState;
 
         RelativePosition position = applyPosition
@@ -142,30 +214,5 @@ public static class FpcPositionMessageWriter
             writer.WriteUShort(horizontal);
             writer.WriteUShort(vertical);
         }
-    }
-
-    public static void SetRotation(this Player player, Vector3 forward)
-        => player.ReferenceHub.SetRotation(forward);
-
-    public static void SetRotation(this Player player, ushort horizontal, ushort vertical)
-        => player.ReferenceHub.SetRotation(horizontal, vertical);
-
-    public static void SetRotation(this ReferenceHub hub, Vector3 forward)
-    {
-        (ushort horizontal, ushort vertical) = Quaternion.LookRotation(forward, Vector3.up).ToClientUShorts();
-
-        hub.SetRotation(horizontal, vertical);
-    }
-
-    public static void SetRotation(this ReferenceHub hub, ushort horizontal, ushort vertical)
-    {
-        if (hub.roleManager.CurrentRole is not IFpcRole)
-        {
-            return;
-        }
-
-        appliedMouseLook = (horizontal, vertical);
-        valuesToApply |= AppliedValues.ApplyMouseLook;
-        hub.connectionToClient.Send(new FpcPositionMessage(hub));
     }
 }

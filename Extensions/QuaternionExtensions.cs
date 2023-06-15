@@ -1,11 +1,17 @@
 ﻿namespace BananaPlugin.Extensions;
 
-using PlayerRoles.FirstPersonControl.NetworkMessages;
 using UnityEngine;
 
-#warning add docs
+/// <summary>
+/// Consists of <see cref="Quaternion"/> extensions used for different use cases throughout the assembly.
+/// </summary>
 public static class QuaternionExtensions
 {
+    /// <summary>
+    /// Converts a specified rotation to a clients rotation values in ushort form.
+    /// </summary>
+    /// <param name="rotation">The rotation to convert.</param>
+    /// <returns>A <see cref="System.ValueTuple{T1,T2}"/> representing the horizontal and vertical ushort values converted, in order, respectively.</returns>
     public static (ushort horizontal, ushort vertical) ToClientUShorts(this Quaternion rotation)
     {
         if (rotation.eulerAngles.z != 0f)
