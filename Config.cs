@@ -20,4 +20,10 @@ public sealed class Config : IConfig
     /// </summary>
     [Description("Enables debug logging.")]
     public bool Debug { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a value indicating the number of tokens granted when a cuffed guard escapes.
+    /// </summary>
+    [Description("Indicates the number of tokens granted when a cuffed guard escapes.")]
+    public int GuardEscapeTokens { get; set; }
 }
