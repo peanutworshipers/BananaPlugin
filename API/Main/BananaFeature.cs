@@ -1,16 +1,7 @@
 ﻿namespace BananaPlugin.API.Main;
 
-using BananaPlugin.API.Attributes;
 using BananaPlugin.API.Utils;
-using Exiled.Events.EventArgs.Interfaces;
-using HarmonyLib;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using static Exiled.Events.Events;
 
 /// <summary>
 /// The main feature implementation.

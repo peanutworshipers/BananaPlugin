@@ -3,6 +3,7 @@
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using BananaPlugin.Extensions;
+using BananaPlugin.Features.Configs;
 using Exiled.API.Features;
 using InventorySystem.Disarming;
 using MEC;
@@ -13,15 +14,32 @@ using System.Collections.Generic;
 /// <summary>
 /// The main feature that allows guards to escape as chaos insurgency.
 /// </summary>
-public sealed class GuardEscape : BananaFeature
+public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
 {
     private CoroutineHandle mainHandle;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GuardEscape"/> class.
+    /// </summary>
+    public GuardEscape()
+    {
+        if (!Plugin.AssertEnabled())
+        {
+            throw new System.InvalidOperationException();
+        }
+
+        this.LocalConfig = Plugin.Instance.Config.GuardEscape;
+        Config.GuardEscapeUpdated = this.OnConfigUpdated;
+    }
 
     /// <inheritdoc/>
     public override string Name => "Guard Escape";
 
     /// <inheritdoc/>
     public override string Prefix => "guardesc";
+
+    /// <inheritdoc/>
+    public override CfgGuardEscape LocalConfig { get; protected set; }
 
     /// <inheritdoc/>
     protected override void Enable()
@@ -37,7 +55,12 @@ public sealed class GuardEscape : BananaFeature
         Timing.KillCoroutines(this.mainHandle);
     }
 
-    private static IEnumerator<float> MainCoroutine()
+    private void OnRoundStarted()
+    {
+        this.mainHandle.AssignNew(this.MainCoroutine, Segment.Update);
+    }
+
+    private IEnumerator<float> MainCoroutine()
     {
         BPLogger.IdentifyMethodAs("GuardEscape", "MainCoroutine");
 
@@ -65,25 +88,18 @@ public sealed class GuardEscape : BananaFeature
                     continue;
                 }
 
-                BPLogger.Debug("is guard!!!");
-
                 if (!hub.inventory.IsDisarmed())
                 {
                     continue;
                 }
 
                 hub.roleManager.ServerSetRole(RoleTypeId.ChaosConscript, RoleChangeReason.Escaped);
-                RespawnTokensManager.GrantTokens(SpawnableTeamType.ChaosInsurgency, Plugin.Instance!.Config.GuardEscapeTokens);
+                RespawnTokensManager.GrantTokens(SpawnableTeamType.ChaosInsurgency, this.LocalConfig.EscapeTokens);
 
                 BPLogger.Debug($"Cuffed guard escaped. ({hub.nicknameSync.MyNick})");
             }
 
             yield return Timing.WaitForOneFrame;
         }
-    }
-
-    private void OnRoundStarted()
-    {
-        this.mainHandle.AssignNew(MainCoroutine, Segment.Update);
     }
 }
