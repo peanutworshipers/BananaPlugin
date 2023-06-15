@@ -1,15 +1,13 @@
-﻿#nullable enable
-namespace BananaPlugin;
+﻿namespace BananaPlugin;
 
 using BananaPlugin.API.Collections;
 using BananaPlugin.API.Main;
-using BananaPlugin.API.Testing;
 using BananaPlugin.API.Utils;
 using Exiled.API.Features;
 using HarmonyLib;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using static Exiled.Events.Events;
+using System.Reflection;
 
 /// <summary>
 /// The main plugin class for this assembly.
@@ -22,7 +20,21 @@ public sealed class Plugin : Plugin<Config>
     {
         Harmony = new Harmony("com.zereth.bananaplugin");
 
-        Harmony.PatchAll();
+        Type[] types = AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly());
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            Type type = types[i];
+
+            try
+            {
+                Harmony.CreateClassProcessor(type).Patch();
+            }
+            catch (HarmonyException e)
+            {
+                BPLogger.Error($"Failed to apply harmony patch: [{type.FullName}]\n{e}");
+            }
+        }
     }
 
     /// <summary>
