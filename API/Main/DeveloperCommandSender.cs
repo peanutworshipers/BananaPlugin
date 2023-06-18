@@ -112,11 +112,11 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
             this.ServerRoles.RefreshPermissions(disp: false);
         }
 
-        var message = $"@[SYSTEM BROADCAST]\n<size=35>Player ({this.PlayerId}) {this.Nickname} has {(value ? "enabled" : "disabled")} Developer Mode.</size>";
+        string message = $"@[SYSTEM BROADCAST]\n<size=35>Player ({this.PlayerId}) {this.Nickname} has {(value ? "enabled" : "disabled")} Developer Mode.</size>";
 
         this.RaReply(message, true, false, string.Empty);
 
-        foreach (var ply in Player.List.Where(x => x.Sender.CheckPermission(BRank.SeniorModerator, out _)))
+        foreach (Player ply in Player.List.Where(x => x.Sender.CheckPermission(BRank.SeniorModerator, out _)))
         {
             if (ply.ReferenceHub == this.ReferenceHub)
             {
