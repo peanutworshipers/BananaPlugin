@@ -8,6 +8,10 @@ using BananaPlugin.API.Main;
 /// </summary>
 public sealed class TestFeature : BananaFeature
 {
+    private TestFeature()
+    {
+    }
+
     /// <inheritdoc/>
     public override string Name => "Test Feature";
 

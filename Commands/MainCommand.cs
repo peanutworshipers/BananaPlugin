@@ -1,5 +1,6 @@
 ﻿namespace BananaPlugin.Commands;
 
+using BananaPlugin.API.Utils;
 using BananaPlugin.Commands.Main;
 using BananaPlugin.Extensions;
 using CommandSystem;
@@ -17,7 +18,31 @@ public sealed class MainCommand : ParentCommand, IUsageProvider, IHelpProvider
     /// <summary>
     /// Initializes a new instance of the <see cref="MainCommand"/> class.
     /// </summary>
-    public MainCommand() => this.LoadGeneratedCommands();
+    public MainCommand()
+    {
+        this.LoadGeneratedCommands();
+
+        Instance = this;
+
+        try
+        {
+            OnAssigned?.Invoke(this);
+        }
+        catch (Exception ex)
+        {
+            BPLogger.Error("Failed to invoke OnAssigned delegate.\n" + ex.ToString());
+        }
+    }
+
+    /// <summary>
+    /// Called when a new command instance is assigned.
+    /// </summary>
+    internal static event Action<MainCommand>? OnAssigned;
+
+    /// <summary>
+    /// Gets the currently active instance of the main banana plugin command.
+    /// </summary>
+    public static MainCommand? Instance { get; private set; }
 
     /// <inheritdoc/>
     public override string Command => "bananaplugin";

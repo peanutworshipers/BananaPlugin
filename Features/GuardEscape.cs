@@ -21,7 +21,7 @@ public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
     /// <summary>
     /// Initializes a new instance of the <see cref="GuardEscape"/> class.
     /// </summary>
-    public GuardEscape()
+    private GuardEscape()
     {
         if (!Plugin.AssertEnabled())
         {
@@ -45,6 +45,11 @@ public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
     protected override void Enable()
     {
         ExHandlers.Server.RoundStarted += this.OnRoundStarted;
+
+        if (Round.IsStarted)
+        {
+            this.OnRoundStarted();
+        }
     }
 
     /// <inheritdoc/>

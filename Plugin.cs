@@ -148,7 +148,7 @@ public sealed class Plugin : Plugin<Config>
                 continue;
             }
 
-            BananaFeature feature = (BananaFeature)Activator.CreateInstance(type);
+            BananaFeature feature = (BananaFeature)Activator.CreateInstance(type, nonPublic: true);
 
             if (!Features.TryAddFeature(feature, out string? response))
             {

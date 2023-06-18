@@ -8,10 +8,15 @@ using System.ComponentModel;
 public sealed class CfgAutoNuke
 {
     /// <summary>
+    /// The default nuke seconds config value.
+    /// </summary>
+    public const double DefaultNukeSeconds = 1500d;
+
+    /// <summary>
     /// Gets or sets the time after round start before auto nuke is activated.
     /// </summary>
     [Description("The time after round start before auto nuke is activated.")]
-    public double NukeSeconds { get; set; } = 1500d;
+    public double NukeSeconds { get; set; } = DefaultNukeSeconds;
 
     /// <summary>
     /// Gets or sets the message broadcasted when the auto nuke starts.

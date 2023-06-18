@@ -11,6 +11,10 @@ using GameCore;
 /// </summary>
 public sealed class RoundEndFF : BananaFeature
 {
+    private RoundEndFF()
+    {
+    }
+
     /// <summary>
     /// Gets a value indicating whether the base game friendly fire config is enabled.
     /// </summary>

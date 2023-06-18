@@ -45,7 +45,7 @@ public sealed class ShowFeatures : ICommand, IUsageProvider, IHelpProvider
 
         StringBuilder strBuilder = StringBuilderPool.Shared.Rent();
 
-        strBuilder.AppendLine("\nFeatures list:\n");
+        strBuilder.AppendLine("\n<size=30><b><u>Features list:</u></b></size>\n");
 
         BananaFeature[] arr = Plugin.Features.OrderByDescending(x => x.Enabled).ToArray();
 
