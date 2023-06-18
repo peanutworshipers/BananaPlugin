@@ -140,8 +140,9 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
             while (!Warhead.IsDetonated && Warhead.IsInProgress && Round.InProgress)
             {
                 Cassie.Clear();
-                Cassie.Message("PITCH_0.2 .g3 PITCH_1.0", false, false, false);
-                yield return Timing.WaitForSeconds(7f);
+                yield return Timing.WaitForSeconds(0.5f);
+                Cassie.Message("PITCH_0.2 .g3 PITCH_1.8 . PITCH_0.2 .g3 PITCH_1.0", false, false, false);
+                yield return Timing.WaitForSeconds(6f);
             }
 
             yield break;
@@ -219,7 +220,14 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
             }
 
             this.parent.LocalConfig.NukeSeconds = result;
-            response = $"Nuke time set to: {TimeSpan.FromSeconds(result):g}";
+
+            if (Round.ElapsedTime.TotalSeconds < result)
+            {
+                this.parent.StopAutoNuking();
+                this.parent.mainHandle.KillAssignNew(this.parent.CheckRoundTime, Segment.Update);
+            }
+
+            response = $"Auto Nuke time set to: {TimeSpan.FromSeconds(result):g}";
             return true;
         }
     }
