@@ -45,12 +45,15 @@ public static class PermissionExtensions
 
             if (!DeveloperUtils.IsDeveloper(pSender.SenderId))
             {
-                BPLogger.Info(pSender.SenderId);
-
                 response = $"You dont have access to this command. Missing rank: Developer";
                 return false;
             }
 
+            response = null;
+            return true;
+        }
+        else if (sender is PlayerCommandSender pSender && DeveloperUtils.IsDeveloper(pSender.SenderId))
+        {
             response = null;
             return true;
         }

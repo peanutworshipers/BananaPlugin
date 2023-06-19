@@ -1,6 +1,7 @@
 ﻿namespace BananaPlugin.Features;
 
 using BananaPlugin.API;
+using BananaPlugin.API.Interfaces;
 using BananaPlugin.API.Main;
 using BananaPlugin.Extensions;
 using BananaPlugin.Features.Configs;
@@ -23,14 +24,6 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
 
     private AutoNuke()
     {
-        if (!Plugin.AssertEnabled())
-        {
-            throw new InvalidOperationException();
-        }
-
-        this.LocalConfig = Plugin.Instance.Config.AutoNuke;
-        Config.AutoNukeUpdated = this.OnConfigUpdated;
-
         ExHandlers.Server.WaitingForPlayers += this.ForceEnableOnWaitingForPlayers;
 
         this.Commands = new ICommand[]
@@ -52,9 +45,6 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
 
     /// <inheritdoc/>
     public override ICommand[] Commands { get; }
-
-    /// <inheritdoc/>
-    public override CfgAutoNuke LocalConfig { get; protected set; }
 
     /// <summary>
     /// Starts the warhead from the 90 second count.
@@ -90,6 +80,9 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
 
         this.StopAutoNuking();
     }
+
+    /// <inheritdoc/>
+    protected override CfgAutoNuke RetrieveLocalConfig(Config config) => config.AutoNuke;
 
     private void StopAutoNuking()
     {
@@ -158,46 +151,36 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
     /// <summary>
     /// The command responsible for setting the start time of auto nuke.
     /// </summary>
-    public sealed class SetStartTimeCmd : ICommand, IUsageProvider, IHelpProvider
+    private sealed class SetStartTimeCmd : IFeatureSubcommand<AutoNuke>
     {
-        private readonly AutoNuke parent;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SetStartTimeCmd"/> class.
-        /// </summary>
-        /// <param name="parent">The parent feature instance.</param>
         public SetStartTimeCmd(AutoNuke parent)
         {
-            this.parent = parent;
+            this.Parent = parent;
         }
 
-        /// <inheritdoc/>
+        public AutoNuke Parent { get; }
+
         public string Command => "setstarttime";
 
-        /// <inheritdoc/>
         public string[] Aliases { get; } = new string[]
         {
             "starttime",
             "stime",
         };
 
-        /// <inheritdoc/>
         public string Description => "Sets the start time of auto nuke.";
 
-        /// <inheritdoc/>
         public string[] Usage { get; } = new string[]
         {
             "time (seconds) / default",
         };
 
-        /// <inheritdoc/>
         public string GetHelp(ArraySegment<string> arguments)
         {
             return this.HelpProviderFormat($"Enter the time auto nuke should enable after round start. (in seconds)" +
                 $"\nUse 'default' to set the value to its default ({TimeSpan.FromSeconds(CfgAutoNuke.DefaultNukeSeconds):g}).");
         }
 
-        /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, [NotNullWhen(true)] out string? response)
         {
             if (!sender.CheckPermission(BRank.Developer, out _) && !sender.CheckPermission(PlayerPermissions.ServerConfigs, out response))
@@ -219,12 +202,12 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
                 return false;
             }
 
-            this.parent.LocalConfig.NukeSeconds = result;
+            this.Parent.LocalConfig.NukeSeconds = result;
 
             if (Round.ElapsedTime.TotalSeconds < result)
             {
-                this.parent.StopAutoNuking();
-                this.parent.mainHandle.KillAssignNew(this.parent.CheckRoundTime, Segment.Update);
+                this.Parent.StopAutoNuking();
+                this.Parent.mainHandle.KillAssignNew(this.Parent.CheckRoundTime, Segment.Update);
             }
 
             response = $"Auto Nuke time set to: {TimeSpan.FromSeconds(result):g}";

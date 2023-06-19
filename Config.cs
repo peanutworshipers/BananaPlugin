@@ -13,6 +13,7 @@ public sealed class Config : IConfig
 {
     private CfgGuardEscape guardEscape;
     private CfgAutoNuke autoNuke;
+    private CfgPinkCandyBowl pinkCandyBowl;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Config"/> class.
@@ -21,7 +22,13 @@ public sealed class Config : IConfig
     {
         this.GuardEscape = new();
         this.AutoNuke = new();
+        this.PinkCandyBowl = new();
     }
+
+    /// <summary>
+    /// Event that invokes whenever a feature based config is updated.
+    /// </summary>
+    internal static event Action<Config>? FeatureConfigUpdated;
 
     /// <summary>
     /// Gets or sets a value indicating whether the plugin is enabled.
@@ -45,7 +52,7 @@ public sealed class Config : IConfig
         set
         {
             this.guardEscape = value;
-            GuardEscapeUpdated?.Invoke(value);
+            FeatureConfigUpdated?.Invoke(this);
         }
     }
 
@@ -59,17 +66,21 @@ public sealed class Config : IConfig
         set
         {
             this.autoNuke = value;
-            AutoNukeUpdated?.Invoke(value);
+            FeatureConfigUpdated?.Invoke(this);
         }
     }
 
     /// <summary>
-    /// Gets or sets the action called when the guard escape config is changed.
+    /// Gets or sets the pink candy bowl config.
     /// </summary>
-    internal static Action<CfgGuardEscape>? GuardEscapeUpdated { get; set; }
-
-    /// <summary>
-    /// Gets or sets the action called when the auto nuke config is changed.
-    /// </summary>
-    internal static Action<CfgAutoNuke>? AutoNukeUpdated { get; set; }
+    public CfgPinkCandyBowl PinkCandyBowl
+    {
+        get => this.pinkCandyBowl;
+        [MemberNotNull(nameof(pinkCandyBowl))]
+        set
+        {
+            this.pinkCandyBowl = value;
+            FeatureConfigUpdated?.Invoke(this);
+        }
+    }
 }

@@ -5,15 +5,15 @@ using BananaPlugin.Commands;
 using BananaPlugin.Extensions;
 using CommandSystem;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using static BananaPlugin.Features.AutoNuke;
 
 /// <summary>
 /// The main feature implementation.
 /// </summary>
 public abstract class BananaFeature
 {
+    private static readonly Dictionary<string, BananaFeature> FeaturesByPrefix = new();
     private bool enabled = false;
 
     /// <summary>
@@ -21,10 +21,17 @@ public abstract class BananaFeature
     /// </summary>
     protected BananaFeature()
     {
+        FeaturesByPrefix.Add(this.Prefix, this);
+
         MainCommand.OnAssigned += this.RegisterCommands;
 
         this.Command = new(this);
     }
+
+    /// <summary>
+    /// Gets a dictionary of all features keyed by their prefix.
+    /// </summary>
+    public static IReadOnlyDictionary<string, BananaFeature> Features => FeaturesByPrefix;
 
     /// <summary>
     /// Gets the name of the feature.
@@ -86,6 +93,18 @@ public abstract class BananaFeature
     public FeatureCommand Command { get; }
 
     /// <summary>
+    /// Gets a feature keyed by its prefix, unsafely casts it, then returns it.
+    /// </summary>
+    /// <typeparam name="T">The type to cast to.</typeparam>
+    /// <param name="prefix">The prefix of the feature.</param>
+    /// <returns>A feature with the specified prefix casted to the specified type.</returns>
+    public static T GetFeature<T>(string prefix)
+        where T : BananaFeature
+    {
+        return (T)FeaturesByPrefix[prefix];
+    }
+
+    /// <summary>
     /// Enables the feature.
     /// </summary>
     protected abstract void Enable();
@@ -97,6 +116,11 @@ public abstract class BananaFeature
 
     private void RegisterCommands(MainCommand command)
     {
+        if (this.Commands.Length == 0)
+        {
+            return;
+        }
+
         command.UnregisterCommand(this.Command);
         command.RegisterCommand(this.Command);
 

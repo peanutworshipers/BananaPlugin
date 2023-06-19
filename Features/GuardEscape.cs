@@ -18,28 +18,11 @@ public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
 {
     private CoroutineHandle mainHandle;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="GuardEscape"/> class.
-    /// </summary>
-    private GuardEscape()
-    {
-        if (!Plugin.AssertEnabled())
-        {
-            throw new System.InvalidOperationException();
-        }
-
-        this.LocalConfig = Plugin.Instance.Config.GuardEscape;
-        Config.GuardEscapeUpdated = this.OnConfigUpdated;
-    }
-
     /// <inheritdoc/>
     public override string Name => "Guard Escape";
 
     /// <inheritdoc/>
     public override string Prefix => "guardesc";
-
-    /// <inheritdoc/>
-    public override CfgGuardEscape LocalConfig { get; protected set; }
 
     /// <inheritdoc/>
     protected override void Enable()
@@ -60,6 +43,9 @@ public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
         Timing.KillCoroutines(this.mainHandle);
     }
 
+    /// <inheritdoc/>
+    protected override CfgGuardEscape RetrieveLocalConfig(Config config) => config.GuardEscape;
+
     private void OnRoundStarted()
     {
         this.mainHandle.AssignNew(this.MainCoroutine, Segment.Update);
@@ -73,22 +59,12 @@ public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
         {
             foreach (ReferenceHub hub in ReferenceHub.AllHubs)
             {
-                if (hub.roleManager.CurrentRole is not HumanRole hRole)
+                if (hub.roleManager.CurrentRole.RoleTypeId != RoleTypeId.FacilityGuard)
                 {
                     continue;
                 }
 
-                if (hRole.RoleTypeId != RoleTypeId.FacilityGuard)
-                {
-                    continue;
-                }
-
-                if ((hRole.FpcModule.Position - Escape.WorldPos).sqrMagnitude > Escape.RadiusSqr)
-                {
-                    continue;
-                }
-
-                if (hRole.ActiveTime < 10f)
+                if ((hub.transform.position - Escape.WorldPos).sqrMagnitude > Escape.RadiusSqr)
                 {
                     continue;
                 }

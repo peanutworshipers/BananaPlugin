@@ -1,0 +1,17 @@
+﻿namespace BananaPlugin.API.Interfaces;
+
+using BananaPlugin.API.Main;
+using CommandSystem;
+
+/// <summary>
+/// Implements a feature subcommand.
+/// </summary>
+/// <typeparam name="T">The feature associated with this subcommand.</typeparam>
+public interface IFeatureSubcommand<T> : ICommand, IUsageProvider, IHelpProvider
+    where T : BananaFeature
+{
+    /// <summary>
+    /// Gets the parent feature of this subcommand.
+    /// </summary>
+    public T Parent { get; }
+}
