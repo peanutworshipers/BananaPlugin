@@ -57,11 +57,11 @@ public static class PrefabHelper
         prefabsLoaded = true;
 
 #if LOCAL
-        foreach (var prefab in NetworkClient.prefabs)
+        foreach (KeyValuePair<uint, UnityEngine.GameObject> prefab in NetworkClient.prefabs)
         {
             BPLogger.Info($"{prefab.Value.name}");
 
-            foreach (var comp in prefab.Value.GetComponents<NetworkBehaviour>())
+            foreach (NetworkBehaviour comp in prefab.Value.GetComponents<NetworkBehaviour>())
             {
                 BPLogger.Info($"- {comp.GetType().Name}");
             }

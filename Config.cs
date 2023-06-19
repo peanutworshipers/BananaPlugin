@@ -14,6 +14,7 @@ public sealed class Config : IConfig
     private CfgGuardEscape guardEscape;
     private CfgAutoNuke autoNuke;
     private CfgPinkCandyBowl pinkCandyBowl;
+    private CfgCleanup cleanup;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Config"/> class.
@@ -23,6 +24,7 @@ public sealed class Config : IConfig
         this.GuardEscape = new();
         this.AutoNuke = new();
         this.PinkCandyBowl = new();
+        this.Cleanup = new();
     }
 
     /// <summary>
@@ -80,6 +82,20 @@ public sealed class Config : IConfig
         set
         {
             this.pinkCandyBowl = value;
+            FeatureConfigUpdated?.Invoke(this);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the cleanup config.
+    /// </summary>
+    public CfgCleanup Cleanup
+    {
+        get => this.cleanup;
+        [MemberNotNull(nameof(cleanup))]
+        set
+        {
+            this.cleanup = value;
             FeatureConfigUpdated?.Invoke(this);
         }
     }
