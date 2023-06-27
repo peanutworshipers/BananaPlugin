@@ -4,6 +4,7 @@ using AdminToys;
 using BananaPlugin.API.Utils;
 using Interactables.Interobjects.DoorUtils;
 using Mirror;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
@@ -85,7 +86,7 @@ public static class PrefabLoader
         // Null checking responsiblity
         // should be left to the caller
         // and not us.
-        var prim = Object.Instantiate(primitiveToy) !;
+        PrimitiveObjectToy prim = Object.Instantiate(primitiveToy) !;
 
         prim.transform.position = pos;
         prim.transform.rotation = Quaternion.Euler(rot);
@@ -103,7 +104,7 @@ public static class PrefabLoader
     {
         BPLogger.Info("Initializing schematic fields...");
 
-        var prefabs = NetworkClient.prefabs;
+        Dictionary<uint, GameObject> prefabs = NetworkClient.prefabs;
 
         if (!prefabs.TryGetValue(PrimitiveToyKey, out GameObject gameObj) || !gameObj.TryGetComponent(out PrimitiveObjectToy primToy))
         {

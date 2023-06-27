@@ -31,6 +31,11 @@
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
     <ItemGroup>
+      <Reference Include="Pooling">
+        <HintPath>C:\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory Dedicated Server\SCPSL_Data\Managed\Pooling-Publicized.dll</HintPath>
+        <Private>False</Private>
+        <SpecificVersion>False</SpecificVersion>
+      </Reference>
       <Reference Include="System">
         <Private>False</Private>
       </Reference>
@@ -39,10 +44,9 @@
       <Reference Include="Mirror" SpecificVersion="false" HintPath="$(SL_REFERENCES)\Mirror.dll" Private="False" />
       <Reference Include="UnityEngine.CoreModule" SpecificVersion="false" HintPath="$(SL_REFERENCES)\UnityEngine.CoreModule.dll" Private="False" />
       <Reference Include="UnityEngine.PhysicsModule" SpecificVersion="false" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="False" />
-      <Reference Include="Pooling" SpecificVersion="false" HintPath="$(SL_REFERENCES)\Pooling.dll" Private="False" />
     </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="7.0.0-rc.3-1">
+    <PackageReference Include="EXILED" Version="7.0.2">
       <ExcludeAssets>RUNTIME</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Lib.Harmony" Version="2.2.2">
