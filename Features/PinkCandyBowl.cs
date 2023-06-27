@@ -45,7 +45,7 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
     /// <returns>The weight value retrieved from the check.</returns>
     public static float GetCandyWeight()
     {
-        PinkCandyBowl pinkCandyBowl = GetFeature<PinkCandyBowl>("pinkc");
+        PinkCandyBowl pinkCandyBowl = GetFeatureType<PinkCandyBowl>("pinkc");
 
         return pinkCandyBowl.Enabled ? pinkCandyBowl.LocalConfig.PinkCandyWeight : 0f;
     }

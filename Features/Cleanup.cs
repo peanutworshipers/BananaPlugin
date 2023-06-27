@@ -26,7 +26,7 @@ public sealed class Cleanup : BananaFeatureConfig<CfgCleanup>
     /// <summary>
     /// Gets the cleanup instance.
     /// </summary>
-    public static Cleanup Instance => GetFeature<Cleanup>("clean");
+    public static Cleanup Instance => GetFeatureType<Cleanup>("clean");
 
     /// <inheritdoc/>
     public override string Name => "Cleanup";

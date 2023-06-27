@@ -98,10 +98,20 @@ public abstract class BananaFeature
     /// <typeparam name="T">The type to cast to.</typeparam>
     /// <param name="prefix">The prefix of the feature.</param>
     /// <returns>A feature with the specified prefix casted to the specified type.</returns>
-    public static T GetFeature<T>(string prefix)
+    public static T GetFeatureType<T>(string prefix)
         where T : BananaFeature
     {
         return (T)FeaturesByPrefix[prefix];
+    }
+
+    /// <summary>
+    /// Gets a feature keyed by its prefix, then returns it.
+    /// </summary>
+    /// <param name="prefix">The prefix of the feature.</param>
+    /// <returns>A feature with the specified prefix.</returns>
+    public static BananaFeature GetFeature(string prefix)
+    {
+        return FeaturesByPrefix[prefix];
     }
 
     /// <summary>
