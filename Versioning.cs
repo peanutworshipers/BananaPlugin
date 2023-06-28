@@ -17,7 +17,7 @@ public static class Versioning
     /// <summary>
     /// The string representation of the current assembly version.
     /// </summary>
-    public const string VersionString = "1.0.0";
+    public const string VersionString = "1.0.1";
 
     /// <summary>
     /// The extension of the current assembly version.
@@ -73,9 +73,12 @@ public static class Versioning
         Regex regex = new (SemanticVersioningRegex);
 
         string? line;
-        while ((line = stream.ReadLine()) is not null && regex.IsMatch(line))
+        while ((line = stream.ReadLine()) is not null)
         {
-            versions.Add(line);
+            if (regex.IsMatch(line))
+            {
+                versions.Add(line);
+            }
         }
 
         AllVersions = versions;

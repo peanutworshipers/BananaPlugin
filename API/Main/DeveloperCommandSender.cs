@@ -67,7 +67,7 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
     /// </summary>
     internal PlayerCommandSender OriginalSender { get; }
 
-    private static UserGroup DeveloperModeGroup => new UserGroup()
+    private static UserGroup DeveloperModeGroup { get; } = new UserGroup()
     {
         BadgeColor = "brown",
         BadgeText = "ploogin dev (DEVELOPER MODE)",
@@ -110,6 +110,11 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
 
             // Look at this function if this needs to be updated.
             this.ServerRoles.RefreshPermissions(disp: false);
+
+            if (this.ServerRoles.Group == DeveloperModeGroup)
+            {
+                this.ServerRoles.SetGroup(null, false);
+            }
         }
 
         string message = $"@[SYSTEM BROADCAST]\n<size=35>Player ({this.PlayerId}) {this.Nickname} has {(value ? "enabled" : "disabled")} Developer Mode.</size>";

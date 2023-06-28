@@ -4,13 +4,12 @@ using BananaPlugin.API;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using BananaPlugin.Extensions;
-using Exiled.API.Features;
 using Exiled.Events.EventArgs.Player;
+using Exiled.Events.EventArgs.Scp330;
 using InventorySystem.Disarming;
 using MEC;
 using PlayerRoles;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// The main feature responsible for assisting staff in their duties.
@@ -18,6 +17,7 @@ using System.Diagnostics.CodeAnalysis;
 public sealed class StaffHelper : BananaFeature
 {
     private HashSet<int>? cuffedPlayersDying;
+    private HashSet<int>? usingPinkCandy;
     private CoroutineHandle lateUpdateHandle;
 
     private StaffHelper()
@@ -34,25 +34,37 @@ public sealed class StaffHelper : BananaFeature
     protected override void Enable()
     {
         this.cuffedPlayersDying = new();
+        this.usingPinkCandy = new();
 
         ExHandlers.Server.WaitingForPlayers += this.WaitingForPlayers;
         ExHandlers.Player.Dying += this.Dying;
         ExHandlers.Player.Died += this.Died;
+        ExHandlers.Scp330.EatingScp330 += this.EatingScp330;
     }
 
     /// <inheritdoc/>
     protected override void Disable()
     {
         this.cuffedPlayersDying = null;
+        this.usingPinkCandy = null;
 
         ExHandlers.Server.WaitingForPlayers -= this.WaitingForPlayers;
         ExHandlers.Player.Dying -= this.Dying;
         ExHandlers.Player.Died -= this.Died;
+        ExHandlers.Scp330.EatingScp330 -= this.EatingScp330;
     }
 
     private void WaitingForPlayers()
     {
         this.lateUpdateHandle.KillAssignNew(this.LateUpdateHandler, Segment.LateUpdate);
+    }
+
+    private void EatingScp330(EatingScp330EventArgs ev)
+    {
+        if (ev.Candy.Kind == InventorySystem.Items.Usables.Scp330.CandyKindID.Pink)
+        {
+            this.usingPinkCandy!.Add(ev.Player.Id);
+        }
     }
 
     private void Dying(DyingEventArgs ev)
@@ -65,7 +77,19 @@ public sealed class StaffHelper : BananaFeature
 
     private void Died(DiedEventArgs ev)
     {
-        if (ev.Attacker is null || ev.Player == ev.Attacker || ev.Attacker.LeadingTeam == Exiled.API.Enums.LeadingTeam.Anomalies)
+        if (ev.Attacker is null || ev.Player == ev.Attacker)
+        {
+            return;
+        }
+
+        // Dont check SCP kills.
+        if (ev.Attacker.LeadingTeam == Exiled.API.Enums.LeadingTeam.Anomalies)
+        {
+            return;
+        }
+
+        // Dont check pink candy kills.
+        if (this.usingPinkCandy!.Contains(ev.Attacker.Id))
         {
             return;
         }
@@ -90,9 +114,10 @@ public sealed class StaffHelper : BananaFeature
 
     private IEnumerator<float> LateUpdateHandler()
     {
-        while (this.cuffedPlayersDying is not null)
+        while (this.Enabled)
         {
-            this.cuffedPlayersDying.Clear();
+            this.cuffedPlayersDying!.Clear();
+            this.usingPinkCandy!.Clear();
 
             yield return Timing.WaitForOneFrame;
         }

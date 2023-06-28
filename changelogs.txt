@@ -1,4 +1,9 @@
-﻿1.0.0
+﻿1.0.1
+- Fix versioning not working.
+- Pink candy no longer causes KOS broadcasts.
+- Developer override now properly disables for users who don't have a group.
+
+1.0.0
 Added basic feature loader.
 
 Added DeveloperCommandSender and override command.
