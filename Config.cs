@@ -1,5 +1,6 @@
 ﻿namespace BananaPlugin;
 
+using BananaPlugin.Features;
 using BananaPlugin.Features.Configs;
 using Exiled.API.Interfaces;
 using System;
@@ -15,6 +16,7 @@ public sealed class Config : IConfig
     private CfgAutoNuke autoNuke;
     private CfgPinkCandyBowl pinkCandyBowl;
     private CfgCleanup cleanup;
+    private CfgLevelSystem levelSystem;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Config"/> class.
@@ -25,6 +27,7 @@ public sealed class Config : IConfig
         this.AutoNuke = new();
         this.PinkCandyBowl = new();
         this.Cleanup = new();
+        this.LevelSystem = new();
     }
 
     /// <summary>
@@ -96,6 +99,20 @@ public sealed class Config : IConfig
         set
         {
             this.cleanup = value;
+            FeatureConfigUpdated?.Invoke(this);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the level system config.
+    /// </summary>
+    public CfgLevelSystem LevelSystem
+    {
+        get => this.levelSystem;
+        [MemberNotNull(nameof(levelSystem))]
+        set
+        {
+            this.levelSystem = value;
             FeatureConfigUpdated?.Invoke(this);
         }
     }
