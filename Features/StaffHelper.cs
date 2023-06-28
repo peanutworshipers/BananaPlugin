@@ -65,7 +65,7 @@ public sealed class StaffHelper : BananaFeature
 
     private void Died(DiedEventArgs ev)
     {
-        if (ev.Attacker is null || ev.Player == ev.Attacker)
+        if (ev.Attacker is null || ev.Player == ev.Attacker || ev.Attacker.LeadingTeam == Exiled.API.Enums.LeadingTeam.Anomalies)
         {
             return;
         }

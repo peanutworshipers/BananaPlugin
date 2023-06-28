@@ -1,8 +1,8 @@
 ﻿namespace BananaPlugin.Features;
 
+#if DEBUG
 using BananaPlugin.API.Main;
 
-#if DEBUG
 /// <summary>
 /// The test feature used for debugging.
 /// </summary>
