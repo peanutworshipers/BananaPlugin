@@ -34,7 +34,7 @@ public static class CommandExtensions
     /// <returns><see langword="false"/>.</returns>
     public static bool InvalidSubcommandFormat(this ICommandHandler handler, out string response)
     {
-        IEnumerable<string> commands = handler.AllCommands.Select(SelectCommand);
+        IEnumerable<string> commands = handler.AllCommands.Where(x => x is not IHiddenCommand).Select(SelectCommand);
 
         response = $"\nInvalid subcommand. Valid subcommands:\n- {string.Join("\n- ", commands)}";
         return false;

@@ -19,6 +19,10 @@ using UnityEngine;
 /// </summary>
 public sealed class CustomRoomsPlaceholder : BananaFeature
 {
+    private CustomRoomsPlaceholder()
+    {
+    }
+
     /// <inheritdoc/>
     public override string Name => "Custom Rooms";
 

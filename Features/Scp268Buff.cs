@@ -17,6 +17,10 @@ using System.Reflection.Emit;
 /// </summary>
 public sealed class Scp268Buff : BananaFeature
 {
+    private Scp268Buff()
+    {
+    }
+
     /// <inheritdoc/>
     public override string Name => "SCP-268 Buff";
 

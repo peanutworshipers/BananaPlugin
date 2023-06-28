@@ -46,7 +46,7 @@
       <Reference Include="UnityEngine.PhysicsModule" SpecificVersion="false" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="False" />
     </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="7.0.2">
+    <PackageReference Include="EXILED" Version="7.1.0">
       <ExcludeAssets>RUNTIME</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Lib.Harmony" Version="2.2.2">

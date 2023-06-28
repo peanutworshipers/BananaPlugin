@@ -7,7 +7,7 @@ using CommandSystem;
 /// Implements a feature subcommand.
 /// </summary>
 /// <typeparam name="T">The feature associated with this subcommand.</typeparam>
-public interface IFeatureSubcommand<T> : ICommand, IUsageProvider, IHelpProvider
+public interface IFeatureSubcommand<T> : IFullCommand
     where T : BananaFeature
 {
     /// <summary>
