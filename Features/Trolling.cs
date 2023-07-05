@@ -10,6 +10,9 @@ using CommandSystem;
 using CustomPlayerEffects;
 using Exiled.Permissions.Extensions;
 using Hazards;
+using InventorySystem;
+using InventorySystem.Items.MicroHID;
+using InventorySystem.Items.Pickups;
 using MEC;
 using Mirror;
 using PlayerRoles;
@@ -35,6 +38,7 @@ public sealed class Trolling : BananaFeature
             new SpinCommand(this),
             new SeverCommand(this),
             new ForceTantrum(this),
+            new BottleInvasion(this),
         };
 
         MainCommand.OnAssigned += this.EnableCommands;
@@ -65,6 +69,7 @@ public sealed class Trolling : BananaFeature
     /// <inheritdoc/>
     protected override void Disable()
     {
+        BottleInvasionHandler.ClearBottles();
         this.SpinningPlayers.Clear();
         Timing.KillCoroutines(this.spinHandle);
     }
@@ -93,6 +98,114 @@ public sealed class Trolling : BananaFeature
             }
 
             yield return Timing.WaitForOneFrame;
+        }
+    }
+
+    /// <summary>
+    /// A struct containing info about spawned bottles.
+    /// </summary>
+    public struct SpawnedBottleInfo
+    {
+        /// <summary>
+        /// The netId of the object associated with this bottle.
+        /// </summary>
+        public uint NetId;
+
+        /// <summary>
+        /// The spawn time of the object associated with this bottle.
+        /// </summary>
+        public float SpawnTime;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SpawnedBottleInfo"/> struct.
+        /// </summary>
+        /// <param name="netId">The netId of the instance.</param>
+        /// <param name="spawnTime">The spawn time of the instance.</param>
+        public SpawnedBottleInfo(uint netId, float spawnTime)
+        {
+            this.NetId = netId;
+            this.SpawnTime = spawnTime;
+        }
+    }
+
+    /// <summary>
+    /// The main class responsible for handling bottle invasions.
+    /// </summary>
+    public static class BottleInvasionHandler
+    {
+        /// <summary>
+        /// The maximum number of bottles that can be spawned (global).
+        /// </summary>
+        public const int MaxBottles = 100;
+
+        /// <summary>
+        /// The amount of time the bottles are sustained for.
+        /// </summary>
+        #warning implement this lul
+        [Obsolete("Not implemented.")]
+        public const float SpawnedTime = 60f;
+
+        static BottleInvasionHandler()
+        {
+            ExHandlers.Server.WaitingForPlayers += WaitingForPlayers;
+        }
+
+        /// <summary>
+        /// Gets the queue of spawned bottles.
+        /// </summary>
+        public static Queue<SpawnedBottleInfo> SpawnedBottles { get; } = new(MaxBottles);
+
+        /// <summary>
+        /// Attempts to spawn a bottle with the given hit information.
+        /// </summary>
+        /// <param name="hitInfo">The hit information to use.</param>
+        /// <param name="response">The response.</param>
+        /// <returns>A value indicating whether the operation was a success.</returns>
+        public static bool TrySpawnBottle(RaycastHit hitInfo, out string response)
+        {
+            if (!hitInfo.collider)
+            {
+                response = "Can't spawn bottle! No valid surface!";
+                return false;
+            }
+
+            if (SpawnedBottles.Count >= MaxBottles)
+            {
+                SpawnedBottleInfo bottleInfo = SpawnedBottles.Dequeue();
+
+                NetworkServer.spawned.TryGetValue(bottleInfo.NetId, out NetworkIdentity? networkIdentity);
+
+                NetworkServer.Destroy(networkIdentity?.gameObject);
+            }
+
+            Quaternion rotation = Quaternion.LookRotation(hitInfo.normal);
+            Vector3 position = hitInfo.point + (hitInfo.normal * 0.125f);
+
+            ItemPickupBase bottle = UnityEngine.Object.Instantiate(InventoryItemLoader.AvailableItems[ItemType.SCP207].PickupDropModel, position, rotation);
+            bottle.Info.Locked = true;
+            NetworkServer.Spawn(bottle.gameObject);
+            SpawnedBottles.Enqueue(new SpawnedBottleInfo(bottle.netId, Time.fixedUnscaledTime));
+
+            response = "Bottle spawned!";
+            return true;
+        }
+
+        /// <summary>
+        /// Clears all spawned bottles.
+        /// </summary>
+        public static void ClearBottles()
+        {
+            while (SpawnedBottles.TryDequeue(out SpawnedBottleInfo bottleInfo))
+            {
+                NetworkServer.spawned.TryGetValue(bottleInfo.NetId, out NetworkIdentity? networkIdentity);
+
+                NetworkServer.Destroy(networkIdentity?.gameObject);
+            }
+        }
+
+        private static void WaitingForPlayers()
+        {
+            SpawnedBottles.Clear();
         }
     }
 
@@ -273,6 +386,81 @@ public sealed class Trolling : BananaFeature
         public string GetHelp(ArraySegment<string> arguments)
         {
             return this.HelpProviderFormat("Supply playerids to toggle severed hands for.");
+        }
+    }
+
+    /// <summary>
+    /// The main command responsible for forcing a tantrum on players.
+    /// </summary>
+    public sealed class BottleInvasion : IFeatureSubcommand<Trolling>, IRequiresRank
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BottleInvasion"/> class.
+        /// </summary>
+        /// <param name="parent">The parent feature associated with this command.</param>
+        public BottleInvasion(Trolling parent)
+        {
+            this.Parent = parent;
+        }
+
+        /// <inheritdoc/>
+        public Trolling Parent { get; }
+
+        /// <inheritdoc/>
+        public string Command => "bottleinvasion";
+
+        /// <inheritdoc/>
+        public string[] Aliases => new string[]
+        {
+            "bottle",
+            "binv",
+        };
+
+        /// <inheritdoc/>
+        public string Description => "Forces a tantrum on yourself.";
+
+        /// <inheritdoc/>
+        public string[] Usage => Array.Empty<string>();
+
+        /// <inheritdoc/>
+        public BRank RankRequirement => BRank.JuniorAdministrator;
+
+        /// <inheritdoc/>
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, [NotNullWhen(true)] out string? response)
+        {
+            if (!sender.CheckPermission(this.RankRequirement, out response))
+            {
+                return false;
+            }
+
+            if (!this.Parent.Enabled)
+            {
+                response = "This feature for this command is disabled.";
+                return false;
+            }
+
+            if (arguments.Count > 0 && arguments.At(0).ToLower() == "clear")
+            {
+                BottleInvasionHandler.ClearBottles();
+                response = "Cleared all bottles!";
+                return true;
+            }
+
+            if (!ExFeatures.Player.TryGet(sender, out ExFeatures.Player plySender))
+            {
+                response = "Must be a player to use this command!";
+                return false;
+            }
+
+            Physics.Raycast(plySender.CameraTransform.position, plySender.CameraTransform.forward, out RaycastHit hitInfo, 100f, MicroHIDItem.WallMask);
+
+            return BottleInvasionHandler.TrySpawnBottle(hitInfo, out response);
+        }
+
+        /// <inheritdoc/>
+        public string GetHelp(ArraySegment<string> arguments)
+        {
+            return this.HelpProviderFormat("Execute the command, or run with the argument 'clear' to clear all spawned bottles.");
         }
     }
 
