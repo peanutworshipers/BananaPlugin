@@ -9,6 +9,7 @@ using Exiled.Events.EventArgs.Scp330;
 using InventorySystem.Disarming;
 using MEC;
 using PlayerRoles;
+using PluginAPI.Core.Interfaces;
 using System.Collections.Generic;
 
 /// <summary>
@@ -40,6 +41,7 @@ public sealed class StaffHelper : BananaFeature
         ExHandlers.Player.Dying += this.Dying;
         ExHandlers.Player.Died += this.Died;
         ExHandlers.Scp330.EatingScp330 += this.EatingScp330;
+        ExHandlers.Player.Handcuffing += this.Handcuffing;
     }
 
     /// <inheritdoc/>
@@ -52,6 +54,7 @@ public sealed class StaffHelper : BananaFeature
         ExHandlers.Player.Dying -= this.Dying;
         ExHandlers.Player.Died -= this.Died;
         ExHandlers.Scp330.EatingScp330 -= this.EatingScp330;
+        ExHandlers.Player.Handcuffing -= this.Handcuffing;
     }
 
     private void WaitingForPlayers()
@@ -110,6 +113,16 @@ public sealed class StaffHelper : BananaFeature
                 BRank.JuniorModerator.AdminBroadcastRankedPlayers(message);
             }
         }
+    }
+
+    private void Handcuffing(HandcuffingEventArgs ev)
+    {
+        if (ev.Target.Role != RoleTypeId.Tutorial)
+        {
+            return;
+        }
+
+        ev.IsAllowed = false;
     }
 
     private IEnumerator<float> LateUpdateHandler()
