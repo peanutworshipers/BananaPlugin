@@ -38,7 +38,7 @@ public static class QuaternionExtensions
     {
         const float ToHorizontal = 65535f / 360f;
 
-        horizontal = Mathf.Clamp(0f, 360f, horizontal);
+        horizontal = Mathf.Clamp(horizontal, 0f, 360f);
 
         return (ushort)Mathf.RoundToInt(horizontal * ToHorizontal);
     }
@@ -47,7 +47,7 @@ public static class QuaternionExtensions
     {
         const float ToVertical = 65535f / 176f;
 
-        vertical = Mathf.Clamp(-88f, 88f, vertical) + 88f;
+        vertical = Mathf.Clamp(vertical, -88f, 88f) + 88f;
 
         return (ushort)Mathf.RoundToInt(vertical * ToVertical);
     }
