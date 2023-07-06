@@ -3,9 +3,12 @@
 using BananaPlugin.API.Collections;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
+using BananaPlugin.Extensions;
 using Exiled.API.Features;
 using HarmonyLib;
+using MEC;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -20,21 +23,7 @@ public sealed class Plugin : Plugin<Config>
     {
         Harmony = new Harmony("com.zereth.bananaplugin");
 
-        Type[] types = AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly());
-
-        for (int i = 0; i < types.Length; i++)
-        {
-            Type type = types[i];
-
-            try
-            {
-                Harmony.CreateClassProcessor(type).Patch();
-            }
-            catch (HarmonyException e)
-            {
-                BPLogger.Error($"Failed to apply harmony patch: [{type.FullName}]\n{e}");
-            }
-        }
+        MECExtensions.Run(ApplyPatches, Segment.EndOfFrame);
     }
 
     /// <summary>
@@ -181,6 +170,38 @@ public sealed class Plugin : Plugin<Config>
         this.enabled = false;
 
         base.OnDisabled();
+    }
+
+    private static IEnumerator<float> ApplyPatches()
+    {
+        BPLogger.IdentifyMethodAs(nameof(Plugin), nameof(ApplyPatches));
+
+        Type[] types = AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly());
+
+        int failCount = 0;
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            Type type = types[i];
+
+            try
+            {
+                Harmony.CreateClassProcessor(type).Patch();
+            }
+            catch (HarmonyException e)
+            {
+                failCount++;
+
+                BPLogger.Error($"Failed to apply harmony patch: [{type.FullName}]\n{e}");
+            }
+        }
+
+        if (failCount > 0)
+        {
+            BPLogger.Error($"Failed to apply {failCount} patches.");
+        }
+
+        yield break;
     }
 
     [MemberNotNull(nameof(Instance), nameof(Features))]
