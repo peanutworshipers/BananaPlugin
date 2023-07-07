@@ -94,7 +94,7 @@ public sealed class Trolling : BananaFeature
         {
             foreach (ReferenceHub ply in this.SpinningPlayers)
             {
-                ply.SetRotation((ushort)Mathf.RoundToInt((Time.fixedUnscaledTime % 2f) / 2f * ushort.MaxValue), ushort.MaxValue / 2);
+                ply.SetHubRotation((ushort)Mathf.RoundToInt((Time.fixedUnscaledTime % 2f) / 2f * ushort.MaxValue), ushort.MaxValue / 2);
             }
 
             yield return Timing.WaitForOneFrame;

@@ -81,8 +81,8 @@ public static class FpcPositionMessageWriter
     /// </summary>
     /// <param name="player">The player to set the rotation of.</param>
     /// <param name="forward">The forward direction of the rotation.</param>
-    public static void SetRotation(this Player player, Vector3 forward)
-        => player.ReferenceHub.SetRotation(forward);
+    public static void SetRotationForward(this Player player, Vector3 forward)
+        => player.ReferenceHub.SetHubRotationForward(forward);
 
     /// <summary>
     /// Sets a specified player's client camera rotation.
@@ -91,18 +91,18 @@ public static class FpcPositionMessageWriter
     /// <param name="horizontal">The horizontal value of the rotation.</param>
     /// <param name="vertical">The vertical value of the rotation.</param>
     public static void SetRotation(this Player player, ushort horizontal, ushort vertical)
-        => player.ReferenceHub.SetRotation(horizontal, vertical);
+        => player.ReferenceHub.SetHubRotation(horizontal, vertical);
 
     /// <summary>
     /// Sets a specified player's client camera rotation.
     /// </summary>
     /// <param name="hub">The player to set the rotation of.</param>
     /// <param name="forward">The forward direction of the rotation.</param>
-    public static void SetRotation(this ReferenceHub hub, Vector3 forward)
+    public static void SetHubRotationForward(this ReferenceHub hub, Vector3 forward)
     {
         (ushort horizontal, ushort vertical) = Quaternion.LookRotation(forward, Vector3.up).ToClientUShorts();
 
-        hub.SetRotation(horizontal, vertical);
+        hub.SetHubRotation(horizontal, vertical);
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public static class FpcPositionMessageWriter
     /// <param name="hub">The player to set the rotation of.</param>
     /// <param name="horizontal">The horizontal value of the rotation.</param>
     /// <param name="vertical">The vertical value of the rotation.</param>
-    public static void SetRotation(this ReferenceHub hub, ushort horizontal, ushort vertical)
+    public static void SetHubRotation(this ReferenceHub hub, ushort horizontal, ushort vertical)
     {
         if (hub.roleManager.CurrentRole is not IFpcRole)
         {
@@ -129,14 +129,14 @@ public static class FpcPositionMessageWriter
     /// <param name="player">The player to set the movement state of.</param>
     /// <param name="movementState">The movement state to apply to the player.</param>
     public static void SetMovementState(this Player player, PlayerMovementState movementState)
-        => player.ReferenceHub.SetMovementState(movementState);
+        => player.ReferenceHub.SetHubMovementState(movementState);
 
     /// <summary>
     /// Sets a specified player's client movement state.
     /// </summary>
     /// <param name="hub">The player to set the movement state of.</param>
     /// <param name="movementState">The movement state to apply to the player.</param>
-    public static void SetMovementState(this ReferenceHub hub, PlayerMovementState movementState)
+    public static void SetHubMovementState(this ReferenceHub hub, PlayerMovementState movementState)
     {
         if (hub.roleManager.CurrentRole is not IFpcRole)
         {
