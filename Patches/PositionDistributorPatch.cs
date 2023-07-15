@@ -18,19 +18,22 @@ using static HarmonyLib.AccessTools;
 [HarmonyPatch(typeof(FpcServerPositionDistributor), nameof(FpcServerPositionDistributor.WriteAll))]
 public static class PositionDistributorPatch
 {
+    private static readonly List<VisibilityCheck> Handlers = new(16);
+
     /// <summary>
     /// The delegate used for checking visibility of players.
     /// </summary>
-    /// <param name="invisible">Indicates whether the player should be considered invisible.</param>
-    /// <param name="priority">The current change priority.</param>
-    /// <param name="receiver">The player that is receiving the position information.</param>
-    /// <param name="player">The player whose position is being sent to the receiver.</param>
-    public delegate void VisibilityCheck(ref bool invisible, ref EventChangePriority priority, ReferenceHub receiver, ReferenceHub player);
+    /// <param name="data">The data of the visibility check.</param>
+    public delegate void VisibilityCheck(ref VisibilityData data);
 
     /// <summary>
     /// Event called when checking the visibility for players.
     /// </summary>
-    public static event VisibilityCheck? CheckingVisibility;
+    public static event VisibilityCheck CheckingVisibility
+    {
+        add => Handlers.Add(value);
+        remove => Handlers.Remove(value);
+    }
 
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
@@ -57,7 +60,7 @@ public static class PositionDistributorPatch
             new(OpCodes.Call, Method(typeof(PositionDistributorPatch), nameof(CallSafely))),
         });
 
-        for (int z = 0; z < newInstructions.Count;  z++)
+        for (int z = 0; z < newInstructions.Count; z++)
         {
             yield return newInstructions[z];
         }
@@ -69,25 +72,66 @@ public static class PositionDistributorPatch
     {
         try
         {
-            Delegate[] delegates = CheckingVisibility?.GetInvocationList() ?? Array.Empty<VisibilityCheck>();
+            VisibilityData data = new(invisible, receiver, player);
 
-            EventChangePriority currentPriority = EventChangePriority.None;
-
-            for (int i = 0; i < delegates.Length; i++)
+            for (int i = 0; i < Handlers.Count; i++)
             {
                 try
                 {
-                    ((VisibilityCheck)delegates[i]).Invoke(ref invisible, ref currentPriority, receiver, player);
+                    Handlers[i].Invoke(ref data);
                 }
                 catch (Exception e)
                 {
                     BPLogger.Error($"Failed to invoke event: {e}");
                 }
             }
+
+            invisible = data.Invisible;
         }
         catch (Exception e)
         {
             BPLogger.Error(e.ToString());
+        }
+    }
+
+    /// <summary>
+    /// Struct responsible for holding visiblity check data.
+    /// </summary>
+    public struct VisibilityData
+    {
+        /// <summary>
+        /// Value indicating whether the player should be invisible to the receiver.
+        /// </summary>
+        public bool Invisible;
+
+        /// <summary>
+        /// The current event change priority.
+        /// </summary>
+        public EventChangePriority Priority;
+
+        /// <summary>
+        /// The receiver of the visibility information.
+        /// </summary>
+        public ReferenceHub Receiver;
+
+        /// <summary>
+        /// The player being viewed by the receiver.
+        /// </summary>
+        public ReferenceHub Player;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VisibilityData"/> struct.
+        /// </summary>
+        /// <param name="invisible">Indicates whether the player should be invisible to the receiver.</param>
+        /// <param name="priority">The event change priority.</param>
+        /// <param name="receiver">The receiver of the visibility information.</param>
+        /// <param name="player">The player being viewed by the receiver.</param>
+        public VisibilityData(bool invisible, ReferenceHub receiver, ReferenceHub player)
+        {
+            this.Invisible = invisible;
+            this.Priority = EventChangePriority.None;
+            this.Receiver = receiver;
+            this.Player = player;
         }
     }
 }

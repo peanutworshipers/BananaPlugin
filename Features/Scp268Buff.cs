@@ -5,12 +5,9 @@ using BananaPlugin.API.Main;
 using BananaPlugin.Patches;
 using CustomPlayerEffects;
 using HarmonyLib;
-using PlayerRoles.FirstPersonControl.NetworkMessages;
 using PlayerRoles.FirstPersonControl.Thirdperson;
-using PlayerRoles.PlayableScps.Scp079;
 using PlayerRoles.PlayableScps.Scp939.Ripples;
-using System.Collections.Generic;
-using System.Reflection.Emit;
+using static BananaPlugin.Patches.PositionDistributorPatch;
 
 /// <summary>
 /// The main feature responsible for buffing the SCP-268 item.
@@ -39,25 +36,30 @@ public sealed class Scp268Buff : BananaFeature
         PositionDistributorPatch.CheckingVisibility -= this.CheckingVisibility;
     }
 
-    private void CheckingVisibility(ref bool invisible, ref EventChangePriority priority, ReferenceHub receiver, ReferenceHub player)
+    private void CheckingVisibility(ref VisibilityData data)
     {
-        if (priority >= EventChangePriority.Feature)
+        if (data.Invisible)
         {
             return;
         }
 
-        if (receiver.roleManager.CurrentRole.RoleTypeId != PlayerRoles.RoleTypeId.Scp079)
+        if (data.Priority >= EventChangePriority.Feature)
         {
             return;
         }
 
-        if (!player.playerEffectsController.GetEffect<Invisible>().IsEnabled)
+        if (data.Receiver.roleManager.CurrentRole.RoleTypeId != PlayerRoles.RoleTypeId.Scp079)
         {
             return;
         }
 
-        priority = EventChangePriority.Feature;
-        invisible = true;
+        if (!data.Player.playerEffectsController.GetEffect<Invisible>().IsEnabled)
+        {
+            return;
+        }
+
+        data.Priority = EventChangePriority.Feature;
+        data.Invisible = true;
     }
 
     [HarmonyPatch(typeof(FootstepRippleTrigger), nameof(FootstepRippleTrigger.OnFootstepPlayed))]
