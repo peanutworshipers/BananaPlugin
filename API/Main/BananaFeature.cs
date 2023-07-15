@@ -5,7 +5,6 @@ using BananaPlugin.Commands;
 using BananaPlugin.Extensions;
 using CommandSystem;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
@@ -13,7 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 /// </summary>
 public abstract class BananaFeature
 {
-    private static readonly Dictionary<string, BananaFeature> FeaturesByPrefix = new();
     private bool enabled = false;
 
     /// <summary>
@@ -21,17 +19,10 @@ public abstract class BananaFeature
     /// </summary>
     protected BananaFeature()
     {
-        FeaturesByPrefix.Add(this.Prefix, this);
-
         MainCommand.OnAssigned += this.RegisterCommands;
 
         this.Command = new(this);
     }
-
-    /// <summary>
-    /// Gets a dictionary of all features keyed by their prefix.
-    /// </summary>
-    public static IReadOnlyDictionary<string, BananaFeature> Features => FeaturesByPrefix;
 
     /// <summary>
     /// Gets the name of the feature.
@@ -92,26 +83,9 @@ public abstract class BananaFeature
     /// </summary>
     public FeatureCommand Command { get; }
 
-    /// <summary>
-    /// Gets a feature keyed by its prefix, unsafely casts it, then returns it.
-    /// </summary>
-    /// <typeparam name="T">The type to cast to.</typeparam>
-    /// <param name="prefix">The prefix of the feature.</param>
-    /// <returns>A feature with the specified prefix casted to the specified type.</returns>
-    public static T GetFeatureType<T>(string prefix)
-        where T : BananaFeature
+    public static implicit operator bool([NotNullWhen(true)] BananaFeature? feature)
     {
-        return (T)FeaturesByPrefix[prefix];
-    }
-
-    /// <summary>
-    /// Gets a feature keyed by its prefix, then returns it.
-    /// </summary>
-    /// <param name="prefix">The prefix of the feature.</param>
-    /// <returns>A feature with the specified prefix.</returns>
-    public static BananaFeature GetFeature(string prefix)
-    {
-        return FeaturesByPrefix[prefix];
+        return feature is not null;
     }
 
     /// <summary>

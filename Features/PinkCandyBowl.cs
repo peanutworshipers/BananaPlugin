@@ -22,6 +22,8 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
 {
     private PinkCandyBowl()
     {
+        Instance = this;
+
         this.Commands = new ICommand[]
         {
             new SetPinkCandyWeight(this),
@@ -29,6 +31,11 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
             new GetWeightFromChance(),
         };
     }
+
+    /// <summary>
+    /// Gets the PinkCandyBowl instance.
+    /// </summary>
+    public static PinkCandyBowl? Instance { get; private set; }
 
     /// <inheritdoc/>
     public override string Name => "Pink Candy Bowl";
@@ -45,9 +52,7 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
     /// <returns>The weight value retrieved from the check.</returns>
     public static float GetCandyWeight()
     {
-        PinkCandyBowl pinkCandyBowl = GetFeatureType<PinkCandyBowl>("pinkc");
-
-        return pinkCandyBowl.Enabled ? pinkCandyBowl.LocalConfig.PinkCandyWeight : 0f;
+        return (Instance && Instance.Enabled) ? Instance.LocalConfig.PinkCandyWeight : 0f;
     }
 
     /// <summary>

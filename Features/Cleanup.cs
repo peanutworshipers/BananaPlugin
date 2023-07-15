@@ -4,7 +4,6 @@ using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using BananaPlugin.Features.Configs;
 using Mirror;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,12 +20,13 @@ public sealed class Cleanup : BananaFeatureConfig<CfgCleanup>
 
     private Cleanup()
     {
+        Instance = this;
     }
 
     /// <summary>
-    /// Gets the cleanup instance.
+    /// Gets the Cleanup instance.
     /// </summary>
-    public static Cleanup Instance => GetFeatureType<Cleanup>("clean");
+    public static Cleanup? Instance { get; private set; }
 
     /// <inheritdoc/>
     public override string Name => "Cleanup";
@@ -84,26 +84,27 @@ public sealed class Cleanup : BananaFeatureConfig<CfgCleanup>
 
         private static void EnsureCapacity(RagdollCleanup ragdoll)
         {
-            if (ragdoll is null)
+            if (ragdoll is null || !Instance)
             {
                 return;
             }
 
-            if (RagdollQueue.Count == Instance.LocalConfig.RagdollCleanup)
-            {
-                if (RagdollQueue.TryDequeue(out RagdollCleanup queuedRagdoll))
-                {
-                    if (Instance.Enabled)
-                    {
-                        NetworkServer.Destroy(queuedRagdoll.gameObject);
-                    }
+            RagdollQueue.Enqueue(ragdoll);
 
-                    RagdollQueue.Enqueue(ragdoll);
-                    return;
-                }
+            if (!Instance.Enabled)
+            {
+                return;
             }
 
-            RagdollQueue.Enqueue(ragdoll);
+            while (RagdollQueue.Count > Instance.LocalConfig.RagdollCleanup)
+            {
+                if (!RagdollQueue.TryDequeue(out RagdollCleanup queuedRagdoll))
+                {
+                    break;
+                }
+
+                NetworkServer.Destroy(queuedRagdoll.gameObject);
+            }
         }
 
         private void Awake()
