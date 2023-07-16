@@ -37,7 +37,7 @@ public static class PositionDistributorPatch
 
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
-        List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
+        instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
 
         // FpcSyncData newSyncData = GetNewSyncData(receiver, allHub, fpcRole.FpcModule, flag2);
         //
@@ -60,12 +60,7 @@ public static class PositionDistributorPatch
             new(OpCodes.Call, Method(typeof(PositionDistributorPatch), nameof(CallSafely))),
         });
 
-        for (int z = 0; z < newInstructions.Count; z++)
-        {
-            yield return newInstructions[z];
-        }
-
-        ListPool<CodeInstruction>.Shared.Return(newInstructions);
+        return newInstructions.FinishTranspiler();
     }
 
     private static void CallSafely(ref bool invisible, ReferenceHub receiver, ReferenceHub player)

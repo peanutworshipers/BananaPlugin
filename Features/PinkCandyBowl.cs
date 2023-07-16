@@ -3,6 +3,7 @@
 using BananaPlugin.API;
 using BananaPlugin.API.Interfaces;
 using BananaPlugin.API.Main;
+using BananaPlugin.API.Utils;
 using BananaPlugin.Extensions;
 using BananaPlugin.Features.Configs;
 using CommandSystem;
@@ -132,9 +133,9 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
         [HarmonyPatch(typeof(CandyPink), nameof(CandyPink.SpawnChanceWeight), MethodType.Getter)]
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            LocalBuilder weight = generator.DeclareLocal(typeof(float).MakeByRefType());
+            instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
 
-            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
+            LocalBuilder weight = generator.DeclareLocal(typeof(float).MakeByRefType());
 
             newInstructions.Clear();
 
@@ -147,12 +148,7 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
             });
 #pragma warning restore SA1118 // Parameter should not span multiple lines
 
-            for (int z = 0; z < newInstructions.Count; z++)
-            {
-                yield return newInstructions[z];
-            }
-
-            ListPool<CodeInstruction>.Shared.Return(newInstructions);
+            return newInstructions.FinishTranspiler();
         }
     }
 

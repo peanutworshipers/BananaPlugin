@@ -85,9 +85,7 @@ public sealed class DisconnectReplace : BananaFeature
         // This patch removes default disconnectDrop implementation.
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            BPLogger.IdentifyMethodAs(nameof(RemoveDisonnectDropPatch), nameof(Transpiler));
-
-            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
+            instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
 
             FieldInfo disconnectDropField = Field(typeof(CustomNetworkManager), nameof(CustomNetworkManager._disconnectDrop));
 
@@ -96,14 +94,7 @@ public sealed class DisconnectReplace : BananaFeature
             int labelIndex = newInstructions.FindIndex(x => x.labels.Contains(notDisconnectDropLabel));
             newInstructions.RemoveRange(index - 1, labelIndex - index + 1);
 
-            BPLogger.Debug($"Removed {index - 1} - {labelIndex}");
-
-            for (int z = 0; z < newInstructions.Count; z++)
-            {
-                yield return newInstructions[z];
-            }
-
-            ListPool<CodeInstruction>.Shared.Return(newInstructions);
+            return newInstructions.FinishTranspiler();
         }
     }
 }

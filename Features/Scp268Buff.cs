@@ -2,6 +2,7 @@
 
 using BananaPlugin.API;
 using BananaPlugin.API.Main;
+using BananaPlugin.API.Utils;
 using BananaPlugin.Patches;
 using CustomPlayerEffects;
 using HarmonyLib;
@@ -77,7 +78,7 @@ public sealed class Scp268Buff : BananaFeature
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
+            instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
 
             Label skipLabel = generator.DefineLabel();
             Label effectNotNullLabel = generator.DefineLabel();
@@ -115,12 +116,7 @@ public sealed class Scp268Buff : BananaFeature
             });
 #pragma warning restore SA1118 // Parameter should not span multiple lines
 
-            for (int z = 0; z < newInstructions.Count; z++)
-            {
-                yield return newInstructions[z];
-            }
-
-            ListPool<CodeInstruction>.Shared.Return(newInstructions);
+            return newInstructions.FinishTranspiler();
         }
     }
 }

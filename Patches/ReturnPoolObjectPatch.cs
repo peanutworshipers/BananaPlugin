@@ -49,7 +49,7 @@ public static class ReturnPoolObjectPatch
 
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
-        List<CodeInstruction> newInstructions = ListPool<CodeInstruction>.Shared.Rent(instructions);
+        instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
 
         LocalBuilder destroy = generator.DeclareLocal(typeof(bool));
         Label allowReturnLabel = generator.DefineLabel();
@@ -90,12 +90,7 @@ public static class ReturnPoolObjectPatch
             new CodeInstruction(OpCodes.Nop).WithLabels(allowReturnLabel),
         });
 
-        for (int z = 0; z < newInstructions.Count; z++)
-        {
-            yield return newInstructions[z];
-        }
-
-        ListPool<CodeInstruction>.Shared.Return(newInstructions);
+        return newInstructions.FinishTranspiler();
     }
 
     private static void SceneLoaded(Scene scene, LoadSceneMode mode)
