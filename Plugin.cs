@@ -137,6 +137,11 @@ public sealed class Plugin : Plugin<Config>
                 continue;
             }
 
+            if (type.GetCustomAttribute<ObsoleteAttribute>() is not null)
+            {
+                continue;
+            }
+
             BananaFeature feature = (BananaFeature)Activator.CreateInstance(type, nonPublic: true);
 
             if (!Features.TryAddFeature(feature, out string? response))
@@ -179,6 +184,7 @@ public sealed class Plugin : Plugin<Config>
         Type[] types = AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly());
 
         int failCount = 0;
+        int successCount = 0;
 
         for (int i = 0; i < types.Length; i++)
         {
@@ -186,7 +192,12 @@ public sealed class Plugin : Plugin<Config>
 
             try
             {
-                Harmony.CreateClassProcessor(type).Patch();
+                if (Harmony.CreateClassProcessor(type).Patch()?.Count is > 0 and int num)
+                {
+                    BPLogger.Debug($"Applied {num} patches for type: [{type.FullName}]");
+
+                    successCount += num;
+                }
             }
             catch (HarmonyException e)
             {
@@ -199,6 +210,10 @@ public sealed class Plugin : Plugin<Config>
         if (failCount > 0)
         {
             BPLogger.Error($"Failed to apply {failCount} patches.");
+        }
+        else
+        {
+            BPLogger.Info($"Successfully applied {successCount} patches.");
         }
 
         yield break;
