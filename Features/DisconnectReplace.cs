@@ -4,7 +4,6 @@ using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using Exiled.Events.EventArgs.Player;
 using HarmonyLib;
-using NorthwoodLib.Pools;
 using PlayerRoles.Spectating;
 using PlayerStatsSystem;
 using System.Collections.Generic;
@@ -64,7 +63,7 @@ public sealed class DisconnectReplace : BananaFeature
 
         ReferenceHub left = ev.Player.ReferenceHub;
         ReferenceHub? available =
-            ReferenceHub.AllHubs
+            PlayerListUtils.VerifiedHubs
             .OrderByDescending(GetDeathTime)
             .FirstOrDefault(x => FilterHubs(left, x));
 

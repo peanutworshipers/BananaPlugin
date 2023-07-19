@@ -1,6 +1,5 @@
 ﻿namespace BananaPlugin;
 
-using BananaPlugin.Features;
 using BananaPlugin.Features.Configs;
 using Exiled.API.Interfaces;
 using System;

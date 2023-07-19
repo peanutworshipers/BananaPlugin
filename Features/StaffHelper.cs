@@ -9,7 +9,6 @@ using Exiled.Events.EventArgs.Scp330;
 using InventorySystem.Disarming;
 using MEC;
 using PlayerRoles;
-using PluginAPI.Core.Interfaces;
 using System.Collections.Generic;
 
 /// <summary>
@@ -86,7 +85,7 @@ public sealed class StaffHelper : BananaFeature
         }
 
         // Dont check SCP kills.
-        if (ev.Attacker.LeadingTeam == Exiled.API.Enums.LeadingTeam.Anomalies)
+        if (ev.Attacker.LeadingTeam == ExEnums.LeadingTeam.Anomalies)
         {
             return;
         }

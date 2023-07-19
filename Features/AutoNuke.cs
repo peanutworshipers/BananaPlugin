@@ -119,7 +119,7 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
 
     private IEnumerator<float> CheckRoundTime()
     {
-        while (Round.IsStarted && Round.InProgress)
+        while (Round.InProgress)
         {
             if (Round.ElapsedTime.TotalSeconds < this.LocalConfig.NukeSeconds)
             {

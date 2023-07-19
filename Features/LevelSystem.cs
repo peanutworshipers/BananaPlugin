@@ -2,10 +2,12 @@
 
 using BananaPlugin.API.Main;
 using BananaPlugin.Features.Configs;
+using System;
 
 /// <summary>
 /// The main feature responsible for levels.
 /// </summary>
+[Obsolete]
 public sealed class LevelSystem : BananaFeatureConfig<CfgLevelSystem>
 {
     /// <inheritdoc/>

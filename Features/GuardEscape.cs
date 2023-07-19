@@ -57,7 +57,7 @@ public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
 
         while (Round.IsStarted)
         {
-            foreach (ReferenceHub hub in ReferenceHub.AllHubs)
+            foreach (ReferenceHub hub in PlayerListUtils.VerifiedHubs)
             {
                 if (hub.roleManager.CurrentRole.RoleTypeId != RoleTypeId.FacilityGuard)
                 {

@@ -1,7 +1,6 @@
 ﻿namespace BananaPlugin.API.Utils.CustomWriters;
 
 using BananaPlugin.Extensions;
-using Exiled.API.Features;
 using Mirror;
 using PlayerRoles.FirstPersonControl;
 using PlayerRoles.FirstPersonControl.NetworkMessages;
@@ -81,7 +80,7 @@ public static class FpcPositionMessageWriter
     /// </summary>
     /// <param name="player">The player to set the rotation of.</param>
     /// <param name="forward">The forward direction of the rotation.</param>
-    public static void SetRotationForward(this Player player, Vector3 forward)
+    public static void SetRotationForward(this ExPlayer player, Vector3 forward)
         => player.ReferenceHub.SetHubRotationForward(forward);
 
     /// <summary>
@@ -90,7 +89,7 @@ public static class FpcPositionMessageWriter
     /// <param name="player">The player to set the rotation of.</param>
     /// <param name="horizontal">The horizontal value of the rotation.</param>
     /// <param name="vertical">The vertical value of the rotation.</param>
-    public static void SetRotation(this Player player, ushort horizontal, ushort vertical)
+    public static void SetRotation(this ExPlayer player, ushort horizontal, ushort vertical)
         => player.ReferenceHub.SetHubRotation(horizontal, vertical);
 
     /// <summary>
@@ -128,7 +127,7 @@ public static class FpcPositionMessageWriter
     /// </summary>
     /// <param name="player">The player to set the movement state of.</param>
     /// <param name="movementState">The movement state to apply to the player.</param>
-    public static void SetMovementState(this Player player, PlayerMovementState movementState)
+    public static void SetMovementState(this ExPlayer player, PlayerMovementState movementState)
         => player.ReferenceHub.SetHubMovementState(movementState);
 
     /// <summary>

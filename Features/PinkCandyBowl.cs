@@ -9,7 +9,6 @@ using BananaPlugin.Features.Configs;
 using CommandSystem;
 using HarmonyLib;
 using InventorySystem.Items.Usables.Scp330;
-using NorthwoodLib.Pools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

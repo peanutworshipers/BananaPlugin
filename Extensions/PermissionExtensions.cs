@@ -104,7 +104,7 @@ public static class PermissionExtensions
     /// </summary>
     /// <param name="rank">The rank to retrieve.</param>
     /// <returns>A string representing the rank's permission.</returns>
-    /// <exception cref="System.ArgumentOutOfRangeException">ArgumentOutOfRangeException.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">ArgumentOutOfRangeException.</exception>
     public static string GetPermission(this BRank rank)
     {
         return rank switch

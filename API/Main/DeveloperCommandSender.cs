@@ -1,7 +1,6 @@
 ﻿namespace BananaPlugin.API.Main;
 
 using BananaPlugin.Extensions;
-using Exiled.API.Features;
 using RemoteAdmin;
 using System.Linq;
 
@@ -121,7 +120,7 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
 
         this.RaReply(message, true, false, string.Empty);
 
-        foreach (Player ply in Player.List.Where(x => x.Sender.CheckPermission(BRank.SeniorModerator, out _)))
+        foreach (ExPlayer ply in ExPlayer.List.Where(x => x.Sender.CheckPermission(BRank.SeniorModerator, out _)))
         {
             if (ply.ReferenceHub == this.ReferenceHub)
             {

@@ -1,7 +1,6 @@
 ﻿namespace BananaPlugin.API.Interfaces;
 
 using BananaPlugin.API.Main;
-using CommandSystem;
 
 /// <summary>
 /// Implements a feature subcommand.

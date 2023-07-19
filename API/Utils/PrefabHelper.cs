@@ -2,7 +2,9 @@
 
 using BananaPlugin.Extensions;
 using MEC;
+#if LOCAL
 using Mirror;
+#endif
 using System;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;

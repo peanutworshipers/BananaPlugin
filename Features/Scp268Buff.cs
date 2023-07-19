@@ -6,7 +6,6 @@ using BananaPlugin.API.Utils;
 using BananaPlugin.Patches;
 using CustomPlayerEffects;
 using HarmonyLib;
-using NorthwoodLib.Pools;
 using PlayerRoles.FirstPersonControl.Thirdperson;
 using PlayerRoles.PlayableScps.Scp939.Ripples;
 using System.Collections.Generic;

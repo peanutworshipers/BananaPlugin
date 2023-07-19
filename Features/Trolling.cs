@@ -181,7 +181,7 @@ public sealed class Trolling : BananaFeature
             Quaternion rotation = Quaternion.LookRotation(hitInfo.normal);
             Vector3 position = hitInfo.point + (hitInfo.normal * 0.125f);
 
-            ItemPickupBase bottle = UnityEngine.Object.Instantiate(InventoryItemLoader.AvailableItems[ItemType.SCP207].PickupDropModel, position, rotation);
+            ItemPickupBase bottle = UObject.Instantiate(InventoryItemLoader.AvailableItems[ItemType.SCP207].PickupDropModel, position, rotation);
             bottle.Info.Locked = true;
             NetworkServer.Spawn(bottle.gameObject);
             SpawnedBottles.Enqueue(new SpawnedBottleInfo(bottle.netId, Time.fixedUnscaledTime));
@@ -446,7 +446,7 @@ public sealed class Trolling : BananaFeature
                 return true;
             }
 
-            if (!ExFeatures.Player.TryGet(sender, out ExFeatures.Player plySender))
+            if (!ExPlayer.TryGet(sender, out ExPlayer plySender))
             {
                 response = "Must be a player to use this command!";
                 return false;
@@ -515,7 +515,7 @@ public sealed class Trolling : BananaFeature
                 return false;
             }
 
-            ExFeatures.Player playerSender = ExFeatures.Player.Get(sender);
+            ExPlayer playerSender = ExPlayer.Get(sender);
 
             if (playerSender is null)
             {
@@ -537,7 +537,7 @@ public sealed class Trolling : BananaFeature
                 return false;
             }
 
-            TantrumEnvironmentalHazard tantrumEnvironmentalHazard = UnityEngine.Object.Instantiate(ability._tantrumPrefab);
+            TantrumEnvironmentalHazard tantrumEnvironmentalHazard = UObject.Instantiate(ability._tantrumPrefab);
             Vector3 targetPos = hitInfo.point + (Vector3.up * 1.25f);
             tantrumEnvironmentalHazard.SynchronizedPosition = new RelativePosition(targetPos);
             NetworkServer.Spawn(tantrumEnvironmentalHazard.gameObject);

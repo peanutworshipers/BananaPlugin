@@ -3,7 +3,6 @@
 using BananaPlugin.API;
 using BananaPlugin.API.Utils;
 using HarmonyLib;
-using NorthwoodLib.Pools;
 using PlayerRoles.FirstPersonControl.NetworkMessages;
 using System;
 using System.Collections.Generic;
@@ -95,6 +94,16 @@ public static class PositionDistributorPatch
     public struct VisibilityData
     {
         /// <summary>
+        /// The receiver of the visibility information.
+        /// </summary>
+        public readonly ReferenceHub Receiver;
+
+        /// <summary>
+        /// The player being viewed by the receiver.
+        /// </summary>
+        public readonly ReferenceHub Player;
+
+        /// <summary>
         /// Value indicating whether the player should be invisible to the receiver.
         /// </summary>
         public bool Invisible;
@@ -103,16 +112,6 @@ public static class PositionDistributorPatch
         /// The current event change priority.
         /// </summary>
         public EventChangePriority Priority;
-
-        /// <summary>
-        /// The receiver of the visibility information.
-        /// </summary>
-        public ReferenceHub Receiver;
-
-        /// <summary>
-        /// The player being viewed by the receiver.
-        /// </summary>
-        public ReferenceHub Player;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisibilityData"/> struct.

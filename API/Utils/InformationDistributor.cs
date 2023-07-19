@@ -1,7 +1,6 @@
 ﻿namespace BananaPlugin.API.Utils;
 
 using BananaPlugin.Extensions;
-using Exiled.API.Features;
 
 /// <summary>
 /// The main class responsible for distributing information to specified players.
@@ -18,7 +17,7 @@ public static class InformationDistributor
     {
         message = "@" + message;
 
-        foreach (Player ply in Player.List)
+        foreach (ExPlayer ply in ExPlayer.List)
         {
             if (!ply.Sender.CheckPermission(rank, out _))
             {

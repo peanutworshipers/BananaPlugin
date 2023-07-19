@@ -3,7 +3,6 @@
 using BananaPlugin.API.Utils;
 using GameObjectPools;
 using HarmonyLib;
-using NorthwoodLib.Pools;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using UnityEngine;

@@ -1,9 +1,8 @@
 ﻿namespace BananaPlugin.Features;
 
+#if DEBUG
 using BananaPlugin.API;
 using BananaPlugin.API.Interfaces;
-
-#if DEBUG
 using BananaPlugin.API.Main;
 using BananaPlugin.Extensions;
 using CommandSystem;
