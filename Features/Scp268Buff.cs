@@ -7,6 +7,7 @@ using BananaPlugin.Patches;
 using CustomPlayerEffects;
 using HarmonyLib;
 using PlayerRoles.FirstPersonControl.Thirdperson;
+using PlayerRoles.PlayableScps.Scp173;
 using PlayerRoles.PlayableScps.Scp939.Ripples;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -117,5 +118,52 @@ public sealed class Scp268Buff : BananaFeature
 
             return newInstructions.FinishTranspiler();
         }
+    }
+
+    [HarmonyPatch(typeof(Scp173ObserversTracker), nameof(Scp173ObserversTracker.IsObservedBy))]
+    private static class Scp173ObserverPatch
+    {
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        {
+            instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
+
+            Label skipLabel = generator.DefineLabel();
+            Label effectNotNullLabel = generator.DefineLabel();
+
+            newInstructions[0].WithLabels(skipLabel);
+
+            newInstructions.InsertRange(0, new CodeInstruction[]
+            {
+                // if (Scp268Buff.Instance is null || !Scp268Buff.Instance.Enabled)
+                // {
+                //     goto SKIP;
+                // }
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Scp268Buff), nameof(Instance))),
+                new(OpCodes.Brfalse_S, skipLabel),
+                new(OpCodes.Call, PropertyGetter(typeof(Scp268Buff), nameof(Instance))),
+                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Brfalse_S, skipLabel),
+
+                // if (target.playerEffectsController.GetEffect<Invisible>()?.IsEnabled)
+                // {
+                //     return false;
+                // }
+                new(OpCodes.Ldarg_1),
+                new(OpCodes.Ldfld, Field(typeof(ReferenceHub), nameof(ReferenceHub.playerEffectsController))),
+                new(OpCodes.Call, Method(typeof(PlayerEffectsController), nameof(PlayerEffectsController.GetEffect)).MakeGenericMethod(typeof(Invisible))),
+                new(OpCodes.Dup),
+                new(OpCodes.Brtrue_S, effectNotNullLabel),
+                new(OpCodes.Pop),
+                new(OpCodes.Br_S, skipLabel),
+                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(StatusEffectBase), nameof(StatusEffectBase.IsEnabled))).WithLabels(effectNotNullLabel),
+                new(OpCodes.Brfalse_S, skipLabel),
+                new(OpCodes.Ldc_I4_0),
+                new(OpCodes.Ret),
+            });
+
+            return newInstructions.FinishTranspiler();
+        }
+#pragma warning restore SA1118 // Parameter should not span multiple lines
     }
 }
