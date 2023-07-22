@@ -1,5 +1,6 @@
 ﻿namespace BananaPlugin.Features;
 
+using AFK;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using BananaPlugin.Extensions;
@@ -34,6 +35,8 @@ public sealed class AfkDetector : BananaFeature
     /// </summary>
     public const float AfkActiveKickTime = 180f;
 
+    private static readonly Vector3 TutorialTowerPos = new Vector3(40f, 1014.2f, -32f);
+    private static readonly float TutorialTowerSqrDist = 64f;
     private CoroutineHandle mainHandle;
 
     private AfkDetector()
@@ -80,6 +83,8 @@ public sealed class AfkDetector : BananaFeature
 
         PlayerRoleManager.OnRoleChanged += this.ChangingRole;
         ExHandlers.Server.WaitingForPlayers += this.WaitingForPlayers;
+
+        MECExtensions.RunAfterFrames(1, Segment.EndOfFrame, AFKManager.ConfigReloaded);
     }
 
     /// <inheritdoc/>
@@ -113,6 +118,8 @@ public sealed class AfkDetector : BananaFeature
         {
             info.Kill();
         }
+
+        MECExtensions.RunAfterFrames(1, Segment.EndOfFrame, AFKManager.ConfigReloaded);
     }
 
     private void NotAfkTrigger(ReferenceHub hub)
@@ -167,6 +174,20 @@ public sealed class AfkDetector : BananaFeature
                     continue;
                 }
 
+                // Don't kick global moderators ever.
+                if (info.Hub.serverRoles.RaEverywhere)
+                {
+                    info.NotAfkTrigger();
+                    continue;
+                }
+
+                // If player is in tutorial tower, we reset their timer.
+                if ((info.Hub.transform.position - TutorialTowerPos).sqrMagnitude < TutorialTowerSqrDist)
+                {
+                    info.NotAfkTrigger();
+                    continue;
+                }
+
                 if (info.TimeAfk == 0f)
                 {
                     info.EnsureStarted();
@@ -180,17 +201,11 @@ public sealed class AfkDetector : BananaFeature
                     continue;
                 }
 
-                // Don't kick global moderators.
-                if (info.Hub.serverRoles.RaEverywhere)
-                {
-                    continue;
-                }
-
                 float timeTillKick = (info.IsActive ? AfkActiveKickTime : AfkSpawnKickTime) - info.TimeAfk;
 
                 if (timeTillKick <= 0f)
                 {
-                    info.Hub.characterClassManager.DisconnectClient(info.Hub.connectionToClient, "Disconnected for being AFK.\nThis is an automated feature.\nIf you believe this is wrong, contact server administrators.");
+                    info.Hub.characterClassManager.DisconnectClient(info.Hub.connectionToClient, "<b>Disconnected for being AFK.\nThis is an automated feature.\nIf you believe this is wrong, contact server administrators or 'o5zereth' on discord.</b>");
                 }
                 else if (timeTillKick <= 30f && (Time.frameCount % 20) == 0)
                 {
@@ -511,6 +526,45 @@ public sealed class AfkDetector : BananaFeature
 
                 return newinstructions.FinishTranspiler();
             }
+        }
+    }
+
+    // This just makes sure default AFK kicking is disabled.
+    [HarmonyPatch(typeof(AFKManager), nameof(AFKManager.ConfigReloaded))]
+    private static class AFKManagerPatch
+    {
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        {
+            instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
+
+            Label assignLabel = generator.DefineLabel();
+            Label assignDefaultLabel = generator.DefineLabel();
+
+            int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Ldstr && x.operand is "afk_time") - 1;
+
+            float defaultValue = (float)newInstructions[index + 2].operand;
+
+            newInstructions.RemoveRange(index, 5);
+
+            newInstructions.InsertRange(index, new CodeInstruction[]
+            {
+                // AFKManager._kickTime = AfkDetector.Instance is not null && AfkDetector.Instance.Enabled
+                //     ? 0f
+                //     : defaultValue;
+                new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
+                new(OpCodes.Brfalse_S, assignDefaultLabel),
+                new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
+                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Brfalse_S, assignDefaultLabel),
+                new(OpCodes.Ldc_R4, 0f),
+                new(OpCodes.Br_S, assignLabel),
+                new CodeInstruction(OpCodes.Ldc_R4, defaultValue)
+                    .WithLabels(assignDefaultLabel),
+                new CodeInstruction(OpCodes.Stsfld, Field(typeof(AFKManager), nameof(AFKManager._kickTime)))
+                    .WithLabels(assignLabel),
+            });
+
+            return newInstructions.FinishTranspiler();
         }
     }
 #pragma warning restore SA1120 // Comments should contain text
