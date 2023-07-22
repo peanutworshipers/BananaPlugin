@@ -6,6 +6,7 @@ using Exiled.Events.EventArgs.Player;
 using HarmonyLib;
 using PlayerRoles.Spectating;
 using PlayerStatsSystem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,6 +16,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature for handling the replacement of disconnecting players.
 /// </summary>
+[Obsolete]
 public sealed class DisconnectReplace : BananaFeature
 {
     private DisconnectReplace()
