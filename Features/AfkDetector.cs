@@ -141,6 +141,8 @@ public sealed class AfkDetector : BananaFeature
     {
         this.AfkInformation.Clear();
         this.mainHandle.KillAssignNew(this.AfkCoroutine, Segment.Update);
+
+        AFKManager.ConfigReloaded();
     }
 
     private void ChangingRole(ReferenceHub userHub, PlayerRoleBase prevRole, PlayerRoleBase newRole)
