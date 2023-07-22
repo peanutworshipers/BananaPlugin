@@ -38,12 +38,24 @@ public static class PlayerListUtils
         ExHandlers.Player.Verified += Verified;
     }
 
+    /// <summary>
+    /// Gets the list of verified reference hubs.
+    /// </summary>
     public static List<ReferenceHub> VerifiedHubs { get; }
 
+    /// <summary>
+    /// Gets the list of all reference hubs.
+    /// </summary>
     public static List<ReferenceHub> AllHubs { get; }
 
+    /// <summary>
+    /// Gets the list of verified players.
+    /// </summary>
     public static List<ExPlayer> VerifiedPlayers { get; }
 
+    /// <summary>
+    /// Gets the list of all players.
+    /// </summary>
     public static List<ExPlayer> AllPlayers { get; }
 
     private static void Joined(JoinedEventArgs ev)
