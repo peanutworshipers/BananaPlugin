@@ -1,4 +1,32 @@
-﻿1.0.1
+﻿1.1.0
+- Updated Exiled reference to 7.2.0
+- Fixed an issue where tutorials could be handcuffed.
+- Fixed an extension issue where rotations would not be set properly.
+- Patches now apply after level load to wait for EXILED.
+- Optimized a patch involved in sending player positions.
+- Added a placeholder chaotic thursday feature. (awaiting usage)
+- Added a patch allowing for intercepting pool returns.
+- Added disconnect replace feature placeholder. (currently disabled)
+- Added new TranspilerHelper class to implement transpilers easier.
+
+- Added AFK Detector feature which automatically kicks players.
+  - Players who have just spawned have 90 seconds before they are kicked.
+  - Players who are active in the round have 3 minutes before they are kicked.
+  - Players who are in the tutorial tower are not kicked.
+  - Global Moderators and players with AFKImmunity permission are not kicked.
+  - Disables default AFK kicker while enabled.
+
+- Added SCP-939 Balance feature
+  - SCP-939 can only hit 3 players at once with their attacks.
+  - SCP-939 cannot see players while deafened.
+  - Flash grenades have an additional 3 seconds of deafening on SCP-939.
+
+- Readded the long awaited bottle invasion command.
+  - Has a global limit of 100 bottles spawned at a time.
+  - Includes a bottle clear command.
+  - Bottles created by this command cannot be picked up.
+
+1.0.1
 - Fix versioning not working.
 - Pink candy no longer causes KOS broadcasts.
 - Developer override now properly disables for users who don't have a group.
