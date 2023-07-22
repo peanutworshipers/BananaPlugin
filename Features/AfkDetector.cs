@@ -177,8 +177,7 @@ public sealed class AfkDetector : BananaFeature
                 // We still allow AFK time to add up however.
                 if ((info.Hub.serverRoles.Permissions & (ulong)PlayerPermissions.AFKImmunity) != 0)
                 {
-                    //continue;
-#warning undo
+                    continue;
                 }
 
                 // Don't kick global moderators.
