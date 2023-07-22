@@ -23,11 +23,19 @@ public static class TranspilerHelper
     /// Returns an enumerable of code instructions and returns the instructions list to the pool.
     /// </summary>
     /// <param name="newInstructions">The instructions list to return to the pool.</param>
+    /// <param name="logOpCodes">Specifies whether to log opcodes to the server console.</param>
     /// <returns>Enumerable representing the finished code of the transpiler.</returns>
-    public static IEnumerable<CodeInstruction> FinishTranspiler(this List<CodeInstruction> newInstructions)
+    public static IEnumerable<CodeInstruction> FinishTranspiler(this List<CodeInstruction> newInstructions, bool logOpCodes = false)
     {
+        BPLogger.IdentifyMethodAs(nameof(TranspilerHelper), nameof(FinishTranspiler));
+
         for (int i = 0; i < newInstructions.Count; i++)
         {
+            if (logOpCodes)
+            {
+                BPLogger.Debug($"[{i}] {newInstructions[i]}");
+            }
+
             yield return newInstructions[i];
         }
 
