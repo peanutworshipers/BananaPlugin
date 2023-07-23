@@ -26,6 +26,9 @@
   - Includes a bottle clear command.
   - Bottles created by this command cannot be picked up.
 
+- Updated Scp268 Buff feature.
+  - Players using SCP-268 no longer stop SCP-173.
+
 1.0.1
 - Fix versioning not working.
 - Pink candy no longer causes KOS broadcasts.
