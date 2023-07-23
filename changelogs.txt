@@ -1,4 +1,8 @@
-﻿1.1.0
+﻿1.1.1
+- Fix SCP-079 being kicked for AFK when not AFK.
+- Added extra checks for different interactions as other SCP roles.
+
+1.1.0
 - Updated Exiled reference to 7.2.0
 - Fixed an issue where tutorials could be handcuffed.
 - Fixed an extension issue where rotations would not be set properly.

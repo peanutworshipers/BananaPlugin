@@ -10,6 +10,9 @@ using MEC;
 using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
 using PlayerRoles.FirstPersonControl.NetworkMessages;
+using PlayerRoles.PlayableScps.Scp079;
+using PlayerRoles.PlayableScps.Scp079.Map;
+using PlayerRoles.PlayableScps.Subroutines;
 using RelativePositioning;
 using RemoteAdmin;
 using System;
@@ -62,6 +65,7 @@ public sealed class AfkDetector : BananaFeature
     /// <inheritdoc/>
     protected override void Enable()
     {
+        // Player events.
         ExHandlers.Player.ChangingItem += this.NotAfkPlayerEventHandler;
         ExHandlers.Player.DroppingItem += this.NotAfkPlayerEventHandler;
         ExHandlers.Player.DroppingAmmo += this.NotAfkPlayerEventHandler;
@@ -81,6 +85,41 @@ public sealed class AfkDetector : BananaFeature
         ExHandlers.Player.UnloadingWeapon += this.NotAfkPlayerEventHandler;
         ExHandlers.Player.ThrowingRequest += this.NotAfkPlayerEventHandler;
 
+        // SCP-079 events.
+        ExHandlers.Scp079.Pinging += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.LockingDown += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.TriggeringDoor += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.ChangingCamera += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.ChangingSpeakerStatus += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.ElevatorTeleporting += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.InteractingTesla += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.LockingDown += this.NotAfkPlayerEventHandler;
+
+        // SCP-096 events.
+        ExHandlers.Scp096.TryingNotToCry += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp096.Enraging += this.NotAfkPlayerEventHandler;
+
+        // SCP-106 events.
+        ExHandlers.Scp106.Stalking += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp106.Teleporting += this.NotAfkPlayerEventHandler;
+
+        // SCP-173 events.
+        ExHandlers.Scp173.PlacingTantrum += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp173.UsingBreakneckSpeeds += this.NotAfkPlayerEventHandler;
+
+        // SCP-049 events.
+        ExHandlers.Scp049.SendingCall += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp049.FinishingRecall += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp049.ActivatingSense += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp049.Attacking += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp049.ConsumingCorpse += this.NotAfkPlayerEventHandler;
+
+        // SCP-939 events.
+        ExHandlers.Scp939.ChangingFocus += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp939.PlacingAmnesticCloud += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp939.PlayingSound += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp939.PlayingVoice += this.NotAfkPlayerEventHandler;
+
         PlayerRoleManager.OnRoleChanged += this.ChangingRole;
         ExHandlers.Server.WaitingForPlayers += this.WaitingForPlayers;
 
@@ -90,6 +129,7 @@ public sealed class AfkDetector : BananaFeature
     /// <inheritdoc/>
     protected override void Disable()
     {
+        // Player events.
         ExHandlers.Player.ChangingItem -= this.NotAfkPlayerEventHandler;
         ExHandlers.Player.DroppingItem -= this.NotAfkPlayerEventHandler;
         ExHandlers.Player.DroppingAmmo -= this.NotAfkPlayerEventHandler;
@@ -108,6 +148,41 @@ public sealed class AfkDetector : BananaFeature
         ExHandlers.Player.ReloadingWeapon -= this.NotAfkPlayerEventHandler;
         ExHandlers.Player.UnloadingWeapon -= this.NotAfkPlayerEventHandler;
         ExHandlers.Player.ThrowingRequest -= this.NotAfkPlayerEventHandler;
+
+        // SCP-079 events.
+        ExHandlers.Scp079.Pinging -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.LockingDown -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.TriggeringDoor -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.ChangingCamera -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.ChangingSpeakerStatus -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.ElevatorTeleporting -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.InteractingTesla -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp079.LockingDown -= this.NotAfkPlayerEventHandler;
+
+        // SCP-096 events.
+        ExHandlers.Scp096.TryingNotToCry -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp096.Enraging -= this.NotAfkPlayerEventHandler;
+
+        // SCP-106 events.
+        ExHandlers.Scp106.Stalking -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp106.Teleporting -= this.NotAfkPlayerEventHandler;
+
+        // SCP-173 events.
+        ExHandlers.Scp173.PlacingTantrum -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp173.UsingBreakneckSpeeds -= this.NotAfkPlayerEventHandler;
+
+        // SCP-049 events.
+        ExHandlers.Scp049.SendingCall -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp049.FinishingRecall -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp049.ActivatingSense -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp049.Attacking -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp049.ConsumingCorpse -= this.NotAfkPlayerEventHandler;
+
+        // SCP-939 events.
+        ExHandlers.Scp939.ChangingFocus -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp939.PlacingAmnesticCloud -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp939.PlayingSound -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp939.PlayingVoice -= this.NotAfkPlayerEventHandler;
 
         PlayerRoleManager.OnRoleChanged -= this.ChangingRole;
         ExHandlers.Server.WaitingForPlayers -= this.WaitingForPlayers;
@@ -153,7 +228,7 @@ public sealed class AfkDetector : BananaFeature
             this.AfkInformation.Remove(info);
         }
 
-        this.AfkInformation.Add(new AfkInfo(userHub, UnityEngine.Time.timeSinceLevelLoadAsDouble + 1f));
+        this.AfkInformation.Add(new AfkInfo(userHub, Time.timeSinceLevelLoadAsDouble + 1f, newRole));
     }
 
     private IEnumerator<float> AfkCoroutine()
@@ -176,6 +251,19 @@ public sealed class AfkDetector : BananaFeature
                     continue;
                 }
 
+                if (info.TimeAfk == 0f)
+                {
+                    info.EnsureStarted();
+                    continue;
+                }
+
+                // Use northwood afk role implementation.
+                if (!info.AFKRole?.IsAFK ?? false)
+                {
+                    info.NotAfkTrigger();
+                    continue;
+                }
+
                 // Don't kick global moderators ever.
                 if (info.Hub.serverRoles.RaEverywhere)
                 {
@@ -190,16 +278,10 @@ public sealed class AfkDetector : BananaFeature
                     continue;
                 }
 
-                if (info.TimeAfk == 0f)
-                {
-                    info.EnsureStarted();
-                    continue;
-                }
-
                 // Dont kick players with afk immunity.
-                // We still allow AFK time to add up however.
                 if ((info.Hub.serverRoles.Permissions & (ulong)PlayerPermissions.AFKImmunity) != 0)
                 {
+                    info.NotAfkTrigger();
                     continue;
                 }
 
@@ -207,12 +289,12 @@ public sealed class AfkDetector : BananaFeature
 
                 if (timeTillKick <= 0f)
                 {
-                    info.Hub.characterClassManager.DisconnectClient(info.Hub.connectionToClient, "<b>Disconnected for being AFK.\nThis is an automated feature.\nIf you believe this is wrong, contact server administrators or 'o5zereth' on discord.</b>");
+                    info.Hub.characterClassManager.DisconnectClient(info.Hub.connectionToClient, "Disconnected for being AFK.\nThis is an automated feature.\nIf you believe this is wrong, contact server administrators or 'o5zereth' on discord.");
                 }
-                else if (timeTillKick <= 30f && (Time.frameCount % 20) == 0)
+                else if (timeTillKick <= 30f && (Time.frameCount % 30) == 0)
                 {
                     Broadcast.Singleton.TargetClearElements(info.Hub.connectionToClient);
-                    Broadcast.Singleton.TargetAddElement(info.Hub.connectionToClient, $"<b>You are being detected as AFK!\nYou will be kicked in {Mathf.FloorToInt(timeTillKick)} seconds!</b>", 3, Broadcast.BroadcastFlags.Normal);
+                    Broadcast.Singleton.TargetAddElement(info.Hub.connectionToClient, $"<b>You are being detected as AFK!\nYou will be kicked in {Mathf.CeilToInt(timeTillKick)} seconds!</b>", 3, Broadcast.BroadcastFlags.Normal);
                 }
             }
         }
@@ -231,11 +313,13 @@ public sealed class AfkDetector : BananaFeature
         /// </summary>
         /// <param name="hub">The reference hub associated with this instance.</param>
         /// <param name="allowedStartTime">The time this instance's stopwatch is allowed to start.</param>
-        public AfkInfo(ReferenceHub hub, double allowedStartTime)
+        /// <param name="newRole">The new role associated with this instance.</param>
+        public AfkInfo(ReferenceHub hub, double allowedStartTime, PlayerRoleBase newRole)
         {
             this.Hub = hub;
             this.watch = new();
             this.allowedStartTime = allowedStartTime;
+            this.AFKRole = newRole as IAFKRole;
 
             if (Instance)
             {
@@ -259,11 +343,16 @@ public sealed class AfkDetector : BananaFeature
         public ReferenceHub Hub { get; }
 
         /// <summary>
+        /// Gets the afk role associated with this instance, or null if not applicable.
+        /// </summary>
+        public IAFKRole? AFKRole { get; }
+
+        /// <summary>
         /// Triggers the time for being AFK to reset.
         /// </summary>
         internal void NotAfkTrigger()
         {
-            if (UnityEngine.Time.timeSinceLevelLoadAsDouble < this.allowedStartTime)
+            if (Time.timeSinceLevelLoadAsDouble < this.allowedStartTime)
             {
                 return;
             }
@@ -272,6 +361,11 @@ public sealed class AfkDetector : BananaFeature
             this.IsActive = true;
 
             this.watch.Restart();
+
+#if LOCAL
+            Broadcast.Singleton.TargetClearElements(this.Hub.connectionToClient);
+            Broadcast.Singleton.TargetAddElement(this.Hub.connectionToClient, $"Not AFK!", 1, Broadcast.BroadcastFlags.Normal);
+#endif
         }
 
         /// <summary>
@@ -279,7 +373,7 @@ public sealed class AfkDetector : BananaFeature
         /// </summary>
         internal void EnsureStarted()
         {
-            if (UnityEngine.Time.timeSinceLevelLoadAsDouble < this.allowedStartTime)
+            if (Time.timeSinceLevelLoadAsDouble < this.allowedStartTime)
             {
                 return;
             }
@@ -567,6 +661,105 @@ public sealed class AfkDetector : BananaFeature
             });
 
             return newInstructions.FinishTranspiler();
+        }
+    }
+
+    // This patch is responsible
+    // for detecting when SCP-079
+    // toggles or moves their map GUI.
+    [HarmonyPatch(typeof(Scp079MapToggler), nameof(Scp079MapToggler.ServerProcessCmd))]
+    private static class Scp079MapTogglerPatch
+    {
+        private static readonly Dictionary<int, Vector3> LastVectors;
+        private static readonly Dictionary<int, bool> LastStates;
+
+        static Scp079MapTogglerPatch()
+        {
+            LastVectors = new();
+            LastStates = new();
+            ExHandlers.Server.WaitingForPlayers += LastVectors.Clear;
+            ExHandlers.Server.WaitingForPlayers += LastStates.Clear;
+        }
+
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
+
+            MethodInfo syncVarsSetter = PropertySetter(typeof(Scp079MapGui), nameof(Scp079MapGui.SyncVars));
+
+            MethodInfo syncStateSetter = PropertySetter(typeof(Scp079ToggleMenuAbilityBase<Scp079MapToggler>), nameof(Scp079ToggleMenuAbilityBase<Scp079MapToggler>.SyncState));
+            MethodInfo syncStateGetter = PropertyGetter(typeof(Scp079ToggleMenuAbilityBase<Scp079MapToggler>), nameof(Scp079ToggleMenuAbilityBase<Scp079MapToggler>.SyncState));
+
+            int index = newInstructions.FindIndex(x => x.Calls(syncVarsSetter));
+
+            newInstructions.Insert(index++, new(OpCodes.Dup));
+            newInstructions.InsertRange(index + 1, new CodeInstruction[]
+            {
+                // Scp079MapTogglerPatch.OnVectorReceived([duplicated] reader.ReadVector3(), this.Owner);
+                new(OpCodes.Ldarg_0),
+                new(OpCodes.Call, PropertyGetter(typeof(ScpStandardSubroutine<Scp079Role>), nameof(ScpStandardSubroutine<Scp079Role>.Owner))),
+                new(OpCodes.Call, Method(typeof(Scp079MapTogglerPatch), nameof(OnVectorReceived))),
+            });
+
+            for (int i = newInstructions.Count - 1; i >= 0; i--)
+            {
+                if (!newInstructions[i].Calls(syncStateSetter))
+                {
+                    continue;
+                }
+
+                newInstructions.InsertRange(i + 1, new CodeInstruction[]
+                {
+                    // Scp079MapTogglerPatch.OnSyncStateReceived(this.SyncState, this.Owner);
+                    new CodeInstruction(OpCodes.Ldarg_0).MoveLabelsFrom(newInstructions[i + 1]),
+                    new(OpCodes.Call, syncStateGetter),
+                    new(OpCodes.Ldarg_0),
+                    new(OpCodes.Call, PropertyGetter(typeof(ScpStandardSubroutine<Scp079Role>), nameof(ScpStandardSubroutine<Scp079Role>.Owner))),
+                    new(OpCodes.Call, Method(typeof(Scp079MapTogglerPatch), nameof(OnSyncStateReceived))),
+                });
+            }
+
+            return newInstructions.FinishTranspiler();
+        }
+
+        private static void OnVectorReceived(Vector3 data, ReferenceHub hub)
+        {
+            if (!Instance)
+            {
+                return;
+            }
+
+            if (!LastVectors.TryGetValue(hub.PlayerId, out Vector3 oldData))
+            {
+                LastVectors[hub.PlayerId] = data;
+                return;
+            }
+
+            if (oldData != data)
+            {
+                LastVectors[hub.PlayerId] = data;
+                Instance.NotAfkTrigger(hub);
+            }
+        }
+
+        private static void OnSyncStateReceived(bool data, ReferenceHub hub)
+        {
+            if (!Instance)
+            {
+                return;
+            }
+
+            if (!LastStates.TryGetValue(hub.PlayerId, out bool oldData))
+            {
+                LastStates[hub.PlayerId] = data;
+                return;
+            }
+
+            if (oldData != data)
+            {
+                LastStates[hub.PlayerId] = data;
+                Instance.NotAfkTrigger(hub);
+            }
         }
     }
 #pragma warning restore SA1120 // Comments should contain text
