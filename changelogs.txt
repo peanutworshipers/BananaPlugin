@@ -1,4 +1,8 @@
-﻿1.1.1
+﻿1.1.2
+- Fix NRE when getting developer info. (cleanup as well)
+- Developer mode now has full EXILED permissions.
+
+1.1.1
 - Fix SCP-079 being kicked for AFK when not AFK.
 - Added extra checks for different interactions as other SCP roles.
 

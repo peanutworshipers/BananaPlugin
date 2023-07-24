@@ -1,6 +1,8 @@
 ﻿namespace BananaPlugin.API.Main;
 
 using BananaPlugin.Extensions;
+using Exiled.Permissions.Extensions;
+using Exiled.Permissions.Features;
 using RemoteAdmin;
 using System.Linq;
 
@@ -8,6 +10,14 @@ using System.Linq;
 internal sealed class DeveloperCommandSender : PlayerCommandSender
 {
     private bool developerModeActive = false;
+    private ExPlayer player;
+
+    static DeveloperCommandSender()
+    {
+        Group group = DeveloperModeExiledGroup = new Group();
+        group.Permissions.Add(".*");
+        group.CombinedPermissions.Add(".*");
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DeveloperCommandSender"/> class.
@@ -17,6 +27,7 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
         : base(original.ReferenceHub)
     {
         this.OriginalSender = original;
+        this.player = ExPlayer.Get(original.ReferenceHub);
     }
 
     /// <summary>
@@ -59,7 +70,7 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
     }
 
     /// <inheritdoc/>
-    public sealed override ulong Permissions => this.ActualPermissions | RevokedPermissions;
+    public sealed override ulong Permissions => this.developerModeActive ? RevokedPermissions : this.player.Group.Permissions;
 
     /// <summary>
     /// Gets the original player command sender.
@@ -78,42 +89,21 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
         RequiredKickPower = 1,
     };
 
-    private ulong ActualPermissions
-    {
-        get
-        {
-            UserGroup? group = ServerStatic.PermissionsHandler.GetUserGroup(this.ReferenceHub.characterClassManager.UserId)
-                ?? ServerStatic.PermissionsHandler.GetUserGroup(this.ReferenceHub.characterClassManager.UserId2);
-
-            return group?.Permissions ?? 0;
-        }
-    }
+    private static Group DeveloperModeExiledGroup { get; }
 
     private void ApplyDeveloperMode(bool value)
     {
+        ServerStatic.GetPermissionsHandler()._groups["DEV_OVERRIDE"] = DeveloperModeGroup;
+        Exiled.Permissions.Extensions.Permissions.Groups["DEV_OVERRIDE"] = DeveloperModeExiledGroup;
+
         if (value)
         {
-            this.ServerRoles.HiddenBadge = null;
-            this.ServerRoles.GlobalHidden = false;
-            this.ServerRoles.RpcResetFixed();
-            UserGroup userGroup = DeveloperModeGroup;
-            userGroup.Permissions = this.Permissions;
-            this.ServerRoles.SetGroup(userGroup, ovr: false, byAdmin: false, true);
-            this.ReferenceHub.queryProcessor.GameplayData = true;
+            this.player.Group = DeveloperModeGroup;
         }
         else
         {
-            this.ServerRoles.HiddenBadge = null;
-            this.ServerRoles.GlobalHidden = false;
-            this.ServerRoles.RpcResetFixed();
-
-            // Look at this function if this needs to be updated.
-            this.ServerRoles.RefreshPermissions(disp: false);
-
-            if (this.ServerRoles.Group == DeveloperModeGroup)
-            {
-                this.ServerRoles.SetGroup(null, false);
-            }
+            this.ServerRoles.SetGroup(null, ovr: false);
+            this.ServerRoles.RefreshPermissions();
         }
 
         string message = $"@[SYSTEM BROADCAST]\n<size=35>Player ({this.PlayerId}) {this.Nickname} has {(value ? "enabled" : "disabled")} Developer Mode.</size>";
