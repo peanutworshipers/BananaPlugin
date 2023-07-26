@@ -132,7 +132,10 @@ public class Scp939Balance : BananaFeature
             return;
         }
 
-        effect.ServerChangeDuration(3f, true);
+        MECExtensions.RunAfterFrames(0, Segment.EndOfFrame, () =>
+        {
+            effect.ServerChangeDuration(8f, false);
+        });
     }
 
     private void Hurting(HurtingEventArgs ev)
