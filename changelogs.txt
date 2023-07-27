@@ -1,4 +1,7 @@
-﻿1.2.0
+﻿1.2.1
+- SCP-939 can now only hit up to 2 players per swing when inside an elevator.
+
+1.2.0
 - Added 'Better Radios' feature.
   - Radios have 6 accessible channels, can be cycled and turned off by right clicking.
   - Radios now have 3x the amount of battery, for prolonged usage in gameplay.

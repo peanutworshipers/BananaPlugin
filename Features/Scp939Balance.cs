@@ -8,6 +8,7 @@ using Exiled.Events.EventArgs.Map;
 using Exiled.Events.EventArgs.Player;
 using MEC;
 using PlayerRoles;
+using RelativePositioning;
 using System.Collections.Generic;
 using static BananaPlugin.Patches.PositionDistributorPatch;
 
@@ -20,6 +21,11 @@ public class Scp939Balance : BananaFeature
     /// The maximum amount of players SCP-939 is allowed to hit within one frame.
     /// </summary>
     public const int Max939HitCount = 3;
+
+    /// <summary>
+    /// The maximum amount of players SCP-939 is allowed to hit within one frame inside an elevator.
+    /// </summary>
+    public const int Max939ElevatorHitCount = 2;
 
     private CoroutineHandle endOfFrameHandle;
 
@@ -147,9 +153,17 @@ public class Scp939Balance : BananaFeature
 
         this.EnsureEndOfFrameCoroutine();
 
+        if (!WaypointBase.TryGetWaypoint(ev.Attacker.RelativePosition.WaypointId, out WaypointBase wp))
+        {
+            ev.IsAllowed = false;
+            return;
+        }
+
+        bool isInElevator = wp is ElevatorWaypoint;
+
         this.IncrementAttackCounter(ev.Attacker.ReferenceHub);
 
-        if (this.CheckAttackCount(ev.Attacker.ReferenceHub) > Max939HitCount)
+        if (this.CheckAttackCount(ev.Attacker.ReferenceHub) > (isInElevator ? Max939ElevatorHitCount : Max939HitCount))
         {
             ev.IsAllowed = false;
         }
@@ -158,7 +172,7 @@ public class Scp939Balance : BananaFeature
     private int CheckAttackCount(ReferenceHub scp939)
 #pragma warning disable IDE0046 // Convert to conditional expression (for readability)
     {
-        if (scp939.roleManager.CurrentRole.RoleTypeId != PlayerRoles.RoleTypeId.Scp939)
+        if (scp939.roleManager.CurrentRole.RoleTypeId != RoleTypeId.Scp939)
         {
             return 0;
         }
@@ -174,7 +188,7 @@ public class Scp939Balance : BananaFeature
 
     private void IncrementAttackCounter(ReferenceHub scp939)
     {
-        if (scp939.roleManager.CurrentRole.RoleTypeId != PlayerRoles.RoleTypeId.Scp939)
+        if (scp939.roleManager.CurrentRole.RoleTypeId != RoleTypeId.Scp939)
         {
             return;
         }
