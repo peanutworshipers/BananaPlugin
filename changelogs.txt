@@ -1,4 +1,10 @@
-﻿1.1.3
+﻿1.2.0
+- Added 'Better Radios' feature.
+  - Radios have 6 accessible channels, can be cycled and turned off by right clicking.
+  - Radios now have 3x the amount of battery, for prolonged usage in gameplay.
+  - Radios will not lose battery unless transmitting.
+
+1.1.3
 - Fix an issue where the deafened effect would last up to 18 seconds on SCP-939 from flash grenades, preventing them from attacking anyone.
   - The deafened effect now lasts only 8 seconds.
 

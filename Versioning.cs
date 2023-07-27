@@ -17,7 +17,7 @@ public static class Versioning
     /// <summary>
     /// The string representation of the current assembly version.
     /// </summary>
-    public const string VersionString = "1.1.3";
+    public const string VersionString = "1.2.0";
 
     /// <summary>
     /// The extension of the current assembly version.
@@ -61,11 +61,11 @@ public static class Versioning
     {
         string[] split = VersionString.Split('.');
 
-        Major = int.Parse(split[0]);
-        Minor = int.Parse(split[1]);
-        Build = int.Parse(split[2]);
+        Version = new (VersionString);
 
-        Version = new (Major, Minor, Build);
+        Major = Version.Major;
+        Minor = Version.Minor;
+        Build = Version.Build;
 
         using StreamReader stream = new (typeof(Versioning).Assembly.GetManifestResourceStream(ChangelogsResource));
 
