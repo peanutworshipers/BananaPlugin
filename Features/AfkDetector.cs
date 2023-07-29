@@ -633,29 +633,26 @@ public sealed class AfkDetector : BananaFeature
         {
             instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
 
+            FieldInfo kickTimeField = Field(typeof(AFKManager), nameof(AFKManager._kickTime));
+
             Label assignLabel = generator.DefineLabel();
-            Label assignDefaultLabel = generator.DefineLabel();
 
-            int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Ldstr && x.operand is "afk_time") - 1;
+            int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Stsfld && x.operand is FieldInfo field && field == kickTimeField);
 
-            float defaultValue = (float)newInstructions[index + 2].operand;
-
-            newInstructions.RemoveRange(index, 5);
+            newInstructions.RemoveAt(index);
 
             newInstructions.InsertRange(index, new CodeInstruction[]
             {
                 // AFKManager._kickTime = AfkDetector.Instance is not null && AfkDetector.Instance.Enabled
                 //     ? 0f
-                //     : defaultValue;
+                //     : ConfigFile.ServerConfig.GetFloat("afk_time", 90f);
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
-                new(OpCodes.Brfalse_S, assignDefaultLabel),
+                new(OpCodes.Brfalse_S, assignLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
                 new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
-                new(OpCodes.Brfalse_S, assignDefaultLabel),
+                new(OpCodes.Brfalse_S, assignLabel),
+                new(OpCodes.Pop),
                 new(OpCodes.Ldc_R4, 0f),
-                new(OpCodes.Br_S, assignLabel),
-                new CodeInstruction(OpCodes.Ldc_R4, defaultValue)
-                    .WithLabels(assignDefaultLabel),
                 new CodeInstruction(OpCodes.Stsfld, Field(typeof(AFKManager), nameof(AFKManager._kickTime)))
                     .WithLabels(assignLabel),
             });
