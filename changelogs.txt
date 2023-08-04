@@ -1,4 +1,19 @@
-﻿1.2.1
+﻿1.3.0-prerelease.1
+- Added server port specific features.
+  - Features can now be restricted to certain ports.
+
+- Added Joining Test Server command.
+  - Allows players to join the test server.
+  - Can be toggled by developers with another command.
+
+- Added lucky coins feature (not fully implemented / test server only)
+  - Coins upgraded on fine become random lucky coins, 30% destroy chance.
+    - These coins land on both heads and tails.
+  - Coins upgraded on very fine become lucky coins, 80% destroy chance.
+    - These coins always land on heads.
+  - Heads gives a buff, tails gives a debuff.
+
+1.2.1
 - SCP-939 can now only hit up to 2 players per swing when inside an elevator.
 
 1.2.0

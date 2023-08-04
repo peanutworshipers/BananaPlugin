@@ -1,5 +1,4 @@
-﻿#nullable enable
-namespace BananaPlugin;
+﻿namespace BananaPlugin;
 
 using NorthwoodLib.Pools;
 using System;
@@ -15,14 +14,19 @@ using System.Text.RegularExpressions;
 public static class Versioning
 {
     /// <summary>
+    /// Gets the full string representation of the current assembly version.
+    /// </summary>
+    public const string FullVersionString = VersionString + Extension;
+
+    /// <summary>
     /// The string representation of the current assembly version.
     /// </summary>
-    public const string VersionString = "1.2.1";
+    public const string VersionString = "1.3.0";
 
     /// <summary>
     /// The extension of the current assembly version.
     /// </summary>
-    public const string Extension = "";
+    public const string Extension = "-prerelease.1";
 
     /// <summary>
     /// Represents the regular expression that is used to detect valid semantic versions.

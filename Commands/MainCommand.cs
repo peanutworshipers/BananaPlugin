@@ -77,6 +77,8 @@ public sealed class MainCommand : ParentCommand, IUsageProvider, IHelpProvider
         this.RegisterCommand(new EnableOrDisable(false));
         this.RegisterCommand(new ShowFeatures());
         this.RegisterCommand(new InformationCmd());
+        this.RegisterCommand(new JoinTestServer());
+        this.RegisterCommand(new ToggleTestServerJoining());
 
 #if DEBUG
         this.RegisterCommand(new TestCmd());

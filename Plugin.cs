@@ -1,5 +1,6 @@
 ﻿namespace BananaPlugin;
 
+using BananaPlugin.API.Attributes;
 using BananaPlugin.API.Collections;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
@@ -139,6 +140,14 @@ public sealed class Plugin : Plugin<Config>
 
             if (type.GetCustomAttribute<ObsoleteAttribute>() is not null)
             {
+                continue;
+            }
+
+            AllowedPortsAttribute? allowedPorts = type.GetCustomAttribute<AllowedPortsAttribute>();
+
+            if (allowedPorts is not null && !allowedPorts.ValidPorts.Contains(Server.Port))
+            {
+                BPLogger.Warn($"Feature '{type.FullName}' skipped due to not having valid port selection.");
                 continue;
             }
 

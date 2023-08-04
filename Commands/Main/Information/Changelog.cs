@@ -47,7 +47,7 @@ public sealed class Changelog : ICommand, IUsageProvider, IHelpProvider
 
         if (query.ToLower() == "current")
         {
-            query = Versioning.VersionString;
+            query = Versioning.FullVersionString;
         }
 
         if (!Versioning.GetChangelog(query, out string? changelog))

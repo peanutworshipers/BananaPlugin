@@ -34,13 +34,13 @@ public sealed class Build : ICommand, IUsageProvider, IHelpProvider
 
         StringBuilder strBuilder = StringBuilderPool.Shared.Rent();
 
-        strBuilder.AppendLine("CURRENT BUILD VERSION: " + Versioning.VersionString + "\n");
+        strBuilder.AppendLine("CURRENT BUILD VERSION: " + Versioning.FullVersionString + "\n");
 
         strBuilder.AppendLine("DEBUG BUILD: " + (Versioning.DebugBuild ? "TRUE" : "FALSE"));
         strBuilder.AppendLine("LOCAL BUILD: " + (Versioning.LocalBuild ? "TRUE" : "FALSE"));
         strBuilder.AppendLine("RELEASE BUILD: " + (Versioning.ReleaseBuild ? "TRUE\n" : "FALSE\n"));
 
-        if (!Versioning.GetChangelog(Versioning.VersionString, out string? changelog))
+        if (!Versioning.GetChangelog(Versioning.FullVersionString, out string? changelog))
         {
             strBuilder.AppendLine("Failed to obtain build changelogs.");
         }
