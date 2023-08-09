@@ -1,5 +1,6 @@
 ﻿namespace BananaPlugin.Features;
 
+using BananaPlugin.API.Attributes;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using BananaPlugin.Extensions;
@@ -14,7 +15,8 @@ using System.Collections.Generic;
 /// <summary>
 /// The main feature that allows guards to escape as chaos insurgency.
 /// </summary>
-public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
+[AllowedPorts(ServerPorts.ServerOne, ServerPorts.ServerTwo, ServerPorts.ServerThree)]
+public sealed class GuardEscape : BananaFeatureConfig<CfgBetterEscape>
 {
     private CoroutineHandle mainHandle;
 
@@ -44,7 +46,7 @@ public sealed class GuardEscape : BananaFeatureConfig<CfgGuardEscape>
     }
 
     /// <inheritdoc/>
-    protected override CfgGuardEscape RetrieveLocalConfig(Config config) => config.GuardEscape;
+    protected override CfgBetterEscape RetrieveLocalConfig(Config config) => config.BetterEscape;
 
     private void OnRoundStarted()
     {

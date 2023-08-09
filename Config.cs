@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 /// </summary>
 public sealed class Config : IConfig
 {
-    private CfgGuardEscape guardEscape;
+    private CfgBetterEscape betterEscape;
     private CfgAutoNuke autoNuke;
     private CfgPinkCandyBowl pinkCandyBowl;
     private CfgCleanup cleanup;
@@ -22,7 +22,7 @@ public sealed class Config : IConfig
     /// </summary>
     public Config()
     {
-        this.GuardEscape = new();
+        this.BetterEscape = new();
         this.AutoNuke = new();
         this.PinkCandyBowl = new();
         this.Cleanup = new();
@@ -49,13 +49,13 @@ public sealed class Config : IConfig
     /// <summary>
     /// Gets or sets the guard escape config.
     /// </summary>
-    public CfgGuardEscape GuardEscape
+    public CfgBetterEscape BetterEscape
     {
-        get => this.guardEscape;
-        [MemberNotNull(nameof(guardEscape))]
+        get => this.betterEscape;
+        [MemberNotNull(nameof(betterEscape))]
         set
         {
-            this.guardEscape = value;
+            this.betterEscape = value;
             FeatureConfigUpdated?.Invoke(this);
         }
     }
