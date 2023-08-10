@@ -1,6 +1,5 @@
 ﻿namespace BananaPlugin.Features;
 
-using BananaPlugin.API.Attributes;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using BananaPlugin.Extensions;
@@ -24,7 +23,6 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature responsible for preventing camping.
 /// </summary>
-[AllowedPorts(ServerPorts.TestServer)]
 public sealed class CampPrevention : BananaFeature
 {
     private CoroutineHandle nukeSiloHandle;

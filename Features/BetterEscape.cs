@@ -1,6 +1,5 @@
 ﻿namespace BananaPlugin.Features;
 
-using BananaPlugin.API.Attributes;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using BananaPlugin.Extensions;
@@ -21,7 +20,6 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature that improves escape functionality.
 /// </summary>
-[AllowedPorts(ServerPorts.TestServer)]
 public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
 {
     private CoroutineHandle guardHandle;

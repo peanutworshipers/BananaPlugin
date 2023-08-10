@@ -26,7 +26,7 @@ public static class Versioning
     /// <summary>
     /// The extension of the current assembly version.
     /// </summary>
-    public const string Extension = "-prerelease.1";
+    public const string Extension = "";
 
     /// <summary>
     /// Represents the regular expression that is used to detect valid semantic versions.

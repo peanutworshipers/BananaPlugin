@@ -1,6 +1,5 @@
 ﻿namespace BananaPlugin.Features;
 
-using BananaPlugin.API.Attributes;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using HarmonyLib;
@@ -14,7 +13,6 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature responsible for balancing disarming.
 /// </summary>
-[AllowedPorts(ServerPorts.TestServer)]
 public sealed class DisarmBalance : BananaFeature
 {
     /// <summary>

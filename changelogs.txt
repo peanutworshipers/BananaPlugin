@@ -1,8 +1,25 @@
-﻿1.3.0-prerelease.1
+﻿1.3.0
+- Added Disarm Balance feature
+  - Players will now be undetained at the following distances:
+    - 70m on surface.
+    - 50m in the facility.
+  - Original distance was 90m. (6 hallways)
+
+- Replaced 'Guard Escape' with 'Better Escape'
+  - Players now keep their effects upon escaping.
+
+- Added 'Camp Prevention' feature which currently implements nuke silo radiation.
+  - Players who stay in the nuke room for 2 minutes slowly die to the poison effect.
+  - Time is regained 2.5x slower than you have been in the nuke silo, while you aren't in it.
+    - Spent 2 mins -> 5 mins until your timer is back at zero.
+  - Wearing heavy armor allows you to stay for 3x longer.
+  - Damage bypasses AHP and Hume.
+  - SCPs take 6x the amount of damage.
+  
 - Added server port specific features.
   - Features can now be restricted to certain ports.
 
-- Added Joining Test Server command.
+- Added Joining Test Server command 'bp testsrv'
   - Allows players to join the test server.
   - Can be toggled by developers with another command.
 
