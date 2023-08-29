@@ -25,8 +25,6 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
 
     static BetterEscape()
     {
-        EffectArrayLength = NetworkManager.singleton.playerPrefab.GetComponentsInChildren<StatusEffectBase>().Length;
-        BPLogger.Debug($"Effect array length: {EffectArrayLength}");
     }
 
     private BetterEscape()
@@ -44,8 +42,6 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
 
     /// <inheritdoc/>
     public override string Prefix => "besc";
-
-    private static int EffectArrayLength { get; }
 
     /// <inheritdoc/>
     protected override void Enable()
