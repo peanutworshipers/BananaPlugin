@@ -12,7 +12,6 @@ using MEC;
 using Mirror;
 using PlayerRoles;
 using Respawning;
-using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using static HarmonyLib.AccessTools;
@@ -48,14 +47,11 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
 
     private static int EffectArrayLength { get; }
 
-    private Dictionary<PlayerRoleBase, EffectInfo[]>? EffectsToApply { get; set; }
-
     /// <inheritdoc/>
     protected override void Enable()
     {
-        this.EffectsToApply = new();
-
         ExHandlers.Server.RoundStarted += this.OnRoundStarted;
+        PlayerRoleManager.OnRoleChanged += this.OnRoleChanged;
 
         if (Round.IsStarted)
         {
@@ -66,9 +62,8 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
     /// <inheritdoc/>
     protected override void Disable()
     {
-        this.EffectsToApply = null;
-
         ExHandlers.Server.RoundStarted -= this.OnRoundStarted;
+        PlayerRoleManager.OnRoleChanged -= this.OnRoleChanged;
 
         Timing.KillCoroutines(this.guardHandle);
     }
@@ -76,28 +71,40 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
     /// <inheritdoc/>
     protected override CfgBetterEscape RetrieveLocalConfig(Config config) => config.BetterEscape;
 
-    private static EffectInfo[] GetEffectInfos(ReferenceHub player)
-    {
-        EffectInfo[] effectInfos = new EffectInfo[EffectArrayLength];
-
-        StatusEffectBase[] allEffects = player.playerEffectsController.AllEffects;
-
-        for (int i = 0; i < allEffects.Length; i++)
-        {
-            effectInfos[i] = new EffectInfo()
-            {
-                Type = allEffects[i].GetType(),
-                Intensity = allEffects[i].Intensity,
-                TimeLeft = allEffects[i].TimeLeft,
-            };
-        }
-
-        return effectInfos;
-    }
-
     private void OnRoundStarted()
     {
         this.guardHandle.KillAssignNew(this.GuardCoroutine, Segment.Update);
+    }
+
+    private void OnRoleChanged(ReferenceHub userHub, PlayerRoleBase prevRole, PlayerRoleBase newRole)
+    {
+        if (newRole.ServerSpawnReason != RoleChangeReason.Escaped)
+        {
+            return;
+        }
+
+        MECExtensions.Run(this.ValidateEffectsSync, Segment.Update, userHub.playerEffectsController);
+    }
+
+    private IEnumerator<float> ValidateEffectsSync(PlayerEffectsController controller)
+    {
+        if (!controller || !controller.gameObject)
+        {
+            yield break;
+        }
+
+        for (int i = 0; i < controller.EffectsLength; i++)
+        {
+            controller._syncEffectsIntensity[i] = 0;
+        }
+
+        // Race conditions require this wait.
+        yield return Timing.WaitForSeconds(0.1f);
+
+        for (int i = 0; i < controller.EffectsLength; i++)
+        {
+            controller._syncEffectsIntensity[i] = controller.AllEffects[i].Intensity;
+        }
     }
 
     private IEnumerator<float> GuardCoroutine()
@@ -133,100 +140,33 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
         }
     }
 
-    private void ApplyEffects(PlayerRoleBase role)
-    {
-        if (this.EffectsToApply is null)
-        {
-            return;
-        }
-
-        if (!role || role.ServerSpawnReason != RoleChangeReason.Escaped || role.Pooled)
-        {
-            this.EffectsToApply.Remove(role);
-            return;
-        }
-
-        if (!this.EffectsToApply.TryGetValue(role, out EffectInfo[] infos))
-        {
-            return;
-        }
-
-        Dictionary<Type, StatusEffectBase> effects = role._lastOwner.playerEffectsController._effectsByType;
-
-        for (int i = 0; i < infos.Length; i++)
-        {
-            EffectInfo info = infos[i];
-
-            if (effects.TryGetValue(info.Type, out StatusEffectBase effect))
-            {
-                effect.ServerSetState(info.Intensity, info.TimeLeft, false);
-            }
-        }
-
-        this.EffectsToApply.Remove(role);
-    }
-
-    /// <summary>
-    /// A struct containing info for an effect.
-    /// </summary>
-    public struct EffectInfo
-    {
-        /// <summary>
-        /// The type of the effect.
-        /// </summary>
-        public Type Type;
-
-        /// <summary>
-        /// The intensity of the effect.
-        /// </summary>
-        public byte Intensity;
-
-        /// <summary>
-        /// The time left for the effect.
-        /// </summary>
-        public float TimeLeft;
-    }
-
-    [HarmonyPatch(typeof(PlayerEffectsController), nameof(PlayerEffectsController.OnRoleChanged))]
-    private static class PlayerEffContPatch
+    [HarmonyPatch(typeof(StatusEffectBase), nameof(StatusEffectBase.OnRoleChanged))]
+    private static class StatusEffBasePatch
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-#pragma warning disable SA1118 // Parameter should not span multiple lines
             instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
 
-            int index = newInstructions.FindIndex(x => x.opcode == OpCodes.Ret) + 1;
+            Label allowLabel = generator.DefineLabel();
 
-            newInstructions.InsertRange(index, new CodeInstruction[]
+            newInstructions[0].labels.Add(allowLabel);
+
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+            newInstructions.InsertRange(0, new CodeInstruction[]
             {
-                // PlayerEffContPatch.OnRoleChanged(targetHub, oldRole, newRole);
-                new CodeInstruction(OpCodes.Ldarg_1)
-                    .MoveLabelsFrom(newInstructions[index]),
+                // if (newRole._spawnReason == RoleChangeReason.Escaped)
+                // {
+                //     return;
+                // }
                 new(OpCodes.Ldarg_2),
-                new(OpCodes.Ldarg_3),
-                new(OpCodes.Call, Method(typeof(PlayerEffContPatch), nameof(OnRoleChanged))),
+                new(OpCodes.Ldfld, Field(typeof(PlayerRoleBase), nameof(PlayerRoleBase._spawnReason))),
+                new(OpCodes.Ldc_I4, (int)RoleChangeReason.Escaped),
+                new(OpCodes.Bne_Un_S, allowLabel),
+                new(OpCodes.Ret),
             });
+#pragma warning restore SA1118 // Parameter should not span multiple lines
 
             return newInstructions.FinishTranspiler();
-#pragma warning restore SA1118 // Parameter should not span multiple lines
-        }
-
-        private static void OnRoleChanged(ReferenceHub userHub, PlayerRoleBase prevRole, PlayerRoleBase newRole)
-        {
-            if (!Instance || !Instance.Enabled)
-            {
-                return;
-            }
-
-            Instance.EffectsToApply!.Remove(prevRole);
-
-            if (newRole.ServerSpawnReason != RoleChangeReason.Escaped)
-            {
-                return;
-            }
-
-            Instance.EffectsToApply[newRole] = GetEffectInfos(userHub);
-            MECExtensions.RunAfterFrames(10, Segment.Update, Instance.ApplyEffects, newRole);
         }
     }
 }
