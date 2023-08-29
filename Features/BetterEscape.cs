@@ -84,11 +84,6 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
 
     private IEnumerator<float> ValidateEffectsSync(PlayerEffectsController controller)
     {
-        if (!controller || !controller.gameObject)
-        {
-            yield break;
-        }
-
         for (int i = 0; i < controller.EffectsLength; i++)
         {
             controller._syncEffectsIntensity[i] = 0;
@@ -96,6 +91,11 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
 
         // Race conditions require this wait.
         yield return Timing.WaitForSeconds(0.1f);
+
+        if (!controller || !controller.gameObject)
+        {
+            yield break;
+        }
 
         for (int i = 0; i < controller.EffectsLength; i++)
         {
