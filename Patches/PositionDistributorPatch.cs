@@ -117,7 +117,6 @@ public static class PositionDistributorPatch
         /// Initializes a new instance of the <see cref="VisibilityData"/> struct.
         /// </summary>
         /// <param name="invisible">Indicates whether the player should be invisible to the receiver.</param>
-        /// <param name="priority">The event change priority.</param>
         /// <param name="receiver">The receiver of the visibility information.</param>
         /// <param name="player">The player being viewed by the receiver.</param>
         public VisibilityData(bool invisible, ReferenceHub receiver, ReferenceHub player)
