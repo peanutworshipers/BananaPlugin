@@ -78,6 +78,8 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
         ExHandlers.Server.RoundStarted -= this.RoundStarted;
         ExHandlers.Warhead.Stopping -= this.Stopping;
 
+        Timing.KillCoroutines(this.mainHandle);
+
         this.StopAutoNuking();
     }
 
