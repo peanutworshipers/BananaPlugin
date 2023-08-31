@@ -32,13 +32,7 @@ public sealed class JoinTestServer : ICommand, IUsageProvider, IHelpProvider
     /// <inheritdoc/>
     public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
     {
-        if (Server.Port == ServerPorts.TestServer)
-        {
-            response = "You are already on the test server.";
-            return false;
-        }
-
-        if (!EnableJoining)
+        if (!EnableJoining && (ServerStatic.ServerPort != ServerPorts.TestServer))
         {
             response = "Joining the test server is currently disabled.";
             return false;
@@ -50,16 +44,41 @@ public sealed class JoinTestServer : ICommand, IUsageProvider, IHelpProvider
             return false;
         }
 
+        ushort portToRedirect = ServerPorts.TestServer;
+
+        if (arguments.Count != 0)
+        {
+            portToRedirect = arguments.At(0) switch
+            {
+                "1" => ServerPorts.ServerOne,
+                "one" => ServerPorts.ServerOne,
+
+                "2" => ServerPorts.ServerTwo,
+                "two" => ServerPorts.ServerTwo,
+
+                "3" => ServerPorts.ServerThree,
+                "three" => ServerPorts.ServerThree,
+
+                _ => ServerPorts.TestServer,
+            };
+        }
+
+        if (portToRedirect == ServerStatic.ServerPort)
+        {
+            response = "You are already on that server!";
+            return false;
+        }
+
         MECExtensions.RunAfterFrames(
             90,
             Segment.Update,
             player.Reconnect,
-            ServerPorts.TestServer,
+            portToRedirect,
             5,
             true,
             RoundRestarting.RoundRestartType.RedirectRestart);
 
-        response = "Sending you to the test server...";
+        response = $"Sending you to server: {ServerPorts.ServerNames[portToRedirect]}";
         return true;
     }
 

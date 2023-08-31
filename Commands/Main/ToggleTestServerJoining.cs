@@ -36,7 +36,7 @@ public sealed class ToggleTestServerJoining : ICommand, IUsageProvider, IHelpPro
             return false;
         }
 
-        if (Server.Port == ServerPorts.TestServer)
+        if (ServerStatic.ServerPort == ServerPorts.TestServer)
         {
             response = "You are already on the test server.";
             return false;

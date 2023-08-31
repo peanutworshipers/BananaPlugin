@@ -145,7 +145,7 @@ public sealed class Plugin : Plugin<Config>
 
             AllowedPortsAttribute? allowedPorts = type.GetCustomAttribute<AllowedPortsAttribute>();
 
-            if (allowedPorts is not null && !allowedPorts.ValidPorts.Contains(Server.Port))
+            if (allowedPorts is not null && !allowedPorts.ValidPorts.Contains(ServerStatic.ServerPort))
             {
                 BPLogger.Warn($"Feature '{type.FullName}' skipped due to not having valid port selection.");
                 continue;
