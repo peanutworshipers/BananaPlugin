@@ -12,13 +12,6 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
     private bool developerModeActive = false;
     private ExPlayer player;
 
-    static DeveloperCommandSender()
-    {
-        Group group = DeveloperModeExiledGroup = new Group();
-        group.Permissions.Add(".*");
-        group.CombinedPermissions.Add(".*");
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="DeveloperCommandSender"/> class.
     /// </summary>
@@ -89,12 +82,9 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
         RequiredKickPower = 1,
     };
 
-    private static Group DeveloperModeExiledGroup { get; }
-
     private void ApplyDeveloperMode(bool value)
     {
         ServerStatic.GetPermissionsHandler()._groups["DEV_OVERRIDE"] = DeveloperModeGroup;
-        Exiled.Permissions.Extensions.Permissions.Groups["DEV_OVERRIDE"] = DeveloperModeExiledGroup;
 
         if (value)
         {

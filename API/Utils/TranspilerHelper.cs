@@ -2,6 +2,7 @@
 
 using HarmonyLib;
 using NorthwoodLib.Pools;
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -40,5 +41,35 @@ public static class TranspilerHelper
         }
 
         ListPool<CodeInstruction>.Shared.Return(newInstructions);
+    }
+
+    /// <summary>
+    /// Finds the Nth instruction index that matches the specified predicate.
+    /// </summary>
+    /// <param name="instructions">The instructions to search.</param>
+    /// <param name="n">The Nth value to find.</param>
+    /// <param name="predicate">The predicate to match for.</param>
+    /// <returns>The index of the Nth instruction that matches the predicate, or -1 if not found.</returns>
+    public static int FindNthInstruction(this List<CodeInstruction> instructions, int n, Func<CodeInstruction, bool> predicate)
+    {
+        if (n <= 0)
+        {
+            return -1;
+        }
+
+        for (int i = 0; n < instructions.Count; i++)
+        {
+            if (!predicate(instructions[i]))
+            {
+                continue;
+            }
+
+            if (--n == 0)
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 }

@@ -1,6 +1,10 @@
 ﻿namespace BananaPlugin.API.Utils;
 
+using Exiled.Permissions.Extensions;
+using HarmonyLib;
 using System.Collections.Generic;
+using System.Reflection.Emit;
+using static HarmonyLib.AccessTools;
 
 /// <summary>
 /// A class that handles the plugin developers.
@@ -38,6 +42,26 @@ internal static class DeveloperUtils
     }
 
     /// <summary>
+    /// Determines if the player is a developer.
+    /// </summary>
+    /// <param name="player">The player to check.</param>
+    /// <returns>A value indicating whether the player is a developer.</returns>
+    public static bool IsDeveloper(this ExPlayer player)
+    {
+        return player is not null && IsDeveloper(player.UserId);
+    }
+
+    /// <summary>
+    /// Determines if the player is a developer.
+    /// </summary>
+    /// <param name="player">The player to check.</param>
+    /// <returns>A value indicating whether the player is a developer.</returns>
+    public static bool IsDeveloper(this ReferenceHub player)
+    {
+        return player && player.gameObject && IsDeveloper(player.characterClassManager.UserId);
+    }
+
+    /// <summary>
     /// A struct containing developer info.
     /// </summary>
     public struct DeveloperInfo
@@ -64,5 +88,46 @@ internal static class DeveloperUtils
         }
 
         public static implicit operator string(DeveloperInfo info) => info.UserId;
+    }
+
+    [HarmonyPatch(typeof(Permissions), nameof(Permissions.CheckPermission), typeof(ExPlayer), typeof(string))]
+    private static class ExiledPermissionPatch
+    {
+        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        {
+            instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
+
+            Label notDeveloperLabel = generator.DefineLabel();
+
+            int index = newInstructions.FindNthInstruction(2, x => x.opcode == OpCodes.Ldc_I4_0);
+
+            if (index == -1)
+            {
+                throw new System.Exception("Unable to locate instruction index.");
+            }
+
+            index += 2;
+
+            List<Label> extracted = newInstructions[index].ExtractLabels();
+
+            newInstructions[index].labels.Add(notDeveloperLabel);
+
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+            newInstructions.InsertRange(index, new CodeInstruction[]
+            {
+                // if (DeveloperUtils.IsDeveloper(player))
+                // {
+                //     return true;
+                // }
+                new CodeInstruction(OpCodes.Ldarg_0).WithLabels(extracted),
+                new(OpCodes.Call, Method(typeof(DeveloperUtils), nameof(IsDeveloper), new System.Type[] { typeof(ExPlayer) })),
+                new(OpCodes.Brfalse_S, notDeveloperLabel),
+                new(OpCodes.Ldc_I4_1),
+                new(OpCodes.Ret),
+            });
+#pragma warning restore SA1118 // Parameter should not span multiple lines
+
+            return newInstructions.FinishTranspiler();
+        }
     }
 }
