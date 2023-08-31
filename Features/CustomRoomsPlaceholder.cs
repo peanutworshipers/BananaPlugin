@@ -145,7 +145,7 @@ public sealed class CustomRoomsPlaceholder : BananaFeature
 
         public PrimitiveObjectToy SpawnPrimitive(PrimitiveType type, Vector3 pos, Vector3 rot, Vector3 scale, Color color)
         {
-            var prim = Object.Instantiate(primitiveToy);
+            var prim = UObject.Instantiate(primitiveToy);
 
             prim.transform.position = RelativePositioning.FromRelativePos(Transform, pos);
             prim.transform.rotation = Quaternion.Euler(RelativePositioning.FromRelativeRot(Transform, rot));
@@ -170,7 +170,7 @@ public sealed class CustomRoomsPlaceholder : BananaFeature
                 _ => throw new System.ArgumentOutOfRangeException(nameof(type))
             };
 
-            door = Object.Instantiate(door);
+            door = UObject.Instantiate(door);
 
             door.transform.position = RelativePositioning.FromRelativePos(Transform, pos);
             door.transform.rotation = Quaternion.Euler(RelativePositioning.FromRelativeRot(Transform, rot));
@@ -181,7 +181,7 @@ public sealed class CustomRoomsPlaceholder : BananaFeature
 
         public LightSourceToy SpawnLight(Vector3 pos, Color color, float range, float intensity = 1f)
         {
-            var light = Object.Instantiate(lightToy);
+            var light = UObject.Instantiate(lightToy);
 
             light.transform.position = RelativePositioning.FromRelativePos(Transform, pos);
 
