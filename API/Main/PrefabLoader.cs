@@ -86,7 +86,7 @@ public static class PrefabLoader
         // Null checking responsiblity
         // should be left to the caller
         // and not us.
-        PrimitiveObjectToy prim = Object.Instantiate(primitiveToy) !;
+        PrimitiveObjectToy prim = UObject.Instantiate(primitiveToy) !;
 
         prim.transform.position = pos;
         prim.transform.rotation = Quaternion.Euler(rot);

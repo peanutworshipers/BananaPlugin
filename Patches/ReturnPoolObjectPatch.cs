@@ -79,7 +79,7 @@ public static class ReturnPoolObjectPatch
             new(OpCodes.Ldarg_1), // [1] PoolObject
             new(OpCodes.Call, Method("GameObjectPools.Pool:ResetObject")),
             new(OpCodes.Ldarg_1), // [1] PoolObject
-            new(OpCodes.Call, Method(typeof(Object), nameof(Object.Destroy), new System.Type[] { typeof(Object) })),
+            new(OpCodes.Call, Method(typeof(UObject), nameof(UObject.Destroy), new System.Type[] { typeof(UObject) })),
 
             new CodeInstruction(OpCodes.Ldstr, "Prevented return of an object.").WithLabels(elseLabel),
             new(OpCodes.Call, Method(typeof(BPLogger), nameof(BPLogger.Debug))),

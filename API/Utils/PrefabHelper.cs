@@ -61,7 +61,7 @@ public static class PrefabHelper
 #if LOCAL
         foreach (KeyValuePair<uint, UnityEngine.GameObject> prefab in NetworkClient.prefabs)
         {
-            BPLogger.Info($"{prefab.Value.name}");
+            BPLogger.Info($"{prefab.Value.name} ({prefab.Key})");
 
             foreach (NetworkBehaviour comp in prefab.Value.GetComponents<NetworkBehaviour>())
             {
