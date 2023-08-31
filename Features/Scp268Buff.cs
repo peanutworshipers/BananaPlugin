@@ -73,53 +73,6 @@ public sealed class Scp268Buff : BananaFeature
         data.Invisible = true;
     }
 
-    [HarmonyPatch(typeof(FootstepRippleTrigger), nameof(FootstepRippleTrigger.OnFootstepPlayed))]
-    private static class FootstepRipplePatch
-    {
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
-        {
-            instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
-
-            Label skipLabel = generator.DefineLabel();
-            Label effectNotNullLabel = generator.DefineLabel();
-
-            newInstructions[0].labels.Add(skipLabel);
-
-#pragma warning disable SA1118 // Parameter should not span multiple lines
-            newInstructions.InsertRange(0, new CodeInstruction[]
-            {
-                // if (Scp268Buff.Instance is null || !Scp268Buff.Instance.Enabled)
-                // {
-                //     goto SKIP;
-                // }
-                new(OpCodes.Call, PropertyGetter(typeof(Scp268Buff), nameof(Instance))),
-                new(OpCodes.Brfalse_S, skipLabel),
-                new(OpCodes.Call, PropertyGetter(typeof(Scp268Buff), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
-                new(OpCodes.Brfalse_S, skipLabel),
-
-                // if (model.OwnerHub.playerEffectsController.GetEffect<Invisible>()?.IsEnabled)
-                // {
-                //     return;
-                // }
-                new(OpCodes.Ldarg_1),
-                new(OpCodes.Call, PropertyGetter(typeof(CharacterModel), nameof(CharacterModel.OwnerHub))),
-                new(OpCodes.Ldfld, Field(typeof(ReferenceHub), nameof(ReferenceHub.playerEffectsController))),
-                new(OpCodes.Call, Method(typeof(PlayerEffectsController), nameof(PlayerEffectsController.GetEffect)).MakeGenericMethod(typeof(Invisible))),
-                new(OpCodes.Dup),
-                new(OpCodes.Brtrue_S, effectNotNullLabel),
-                new(OpCodes.Pop),
-                new(OpCodes.Br_S, skipLabel),
-                new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(StatusEffectBase), nameof(StatusEffectBase.IsEnabled))).WithLabels(effectNotNullLabel),
-                new(OpCodes.Brfalse_S, skipLabel),
-                new(OpCodes.Ret),
-            });
-#pragma warning restore SA1118 // Parameter should not span multiple lines
-
-            return newInstructions.FinishTranspiler();
-        }
-    }
-
     [HarmonyPatch(typeof(Scp173ObserversTracker), nameof(Scp173ObserversTracker.IsObservedBy))]
     private static class Scp173ObserverPatch
     {

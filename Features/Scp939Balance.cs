@@ -5,10 +5,8 @@ using BananaPlugin.API.Main;
 using BananaPlugin.Extensions;
 using CustomPlayerEffects;
 using Exiled.Events.EventArgs.Map;
-using Exiled.Events.EventArgs.Player;
 using MEC;
 using PlayerRoles;
-using RelativePositioning;
 using System.Collections.Generic;
 using static BananaPlugin.Patches.PositionDistributorPatch;
 
@@ -17,18 +15,6 @@ using static BananaPlugin.Patches.PositionDistributorPatch;
 /// </summary>
 public class Scp939Balance : BananaFeature
 {
-    /// <summary>
-    /// The maximum amount of players SCP-939 is allowed to hit within one frame.
-    /// </summary>
-    public const int Max939HitCount = 3;
-
-    /// <summary>
-    /// The maximum amount of players SCP-939 is allowed to hit within one frame inside an elevator.
-    /// </summary>
-    public const int Max939ElevatorHitCount = 2;
-
-    private CoroutineHandle endOfFrameHandle;
-
     private Scp939Balance()
     {
         Instance = this;
@@ -45,14 +31,11 @@ public class Scp939Balance : BananaFeature
     /// <inheritdoc/>
     public override string Prefix => "939";
 
-    private Dictionary<int, int> Scp939ClawedCount { get; } = new();
-
     private HashSet<ReferenceHub> BeingFlashed { get; } = new();
 
     /// <inheritdoc/>
     protected override void Enable()
     {
-        ExHandlers.Player.Hurting += this.Hurting;
         ExHandlers.Map.ExplodingGrenade += this.ExplodingGrenade;
         StatusEffectBase.OnIntensityChanged += this.EffectIntensityChanged;
         CheckingVisibility += this.CheckingVisibilityDeafened;
@@ -61,7 +44,6 @@ public class Scp939Balance : BananaFeature
     /// <inheritdoc/>
     protected override void Disable()
     {
-        ExHandlers.Player.Hurting -= this.Hurting;
         ExHandlers.Map.ExplodingGrenade -= this.ExplodingGrenade;
         StatusEffectBase.OnIntensityChanged -= this.EffectIntensityChanged;
         CheckingVisibility -= this.CheckingVisibilityDeafened;
@@ -93,14 +75,6 @@ public class Scp939Balance : BananaFeature
         data.Invisible = true;
     }
 
-    private void EnsureEndOfFrameCoroutine()
-    {
-        if (!this.endOfFrameHandle.IsRunning)
-        {
-            this.endOfFrameHandle.AssignNew(this.OnEndOfFrame, Segment.EndOfFrame);
-        }
-    }
-
     private void ExplodingGrenade(ExplodingGrenadeEventArgs ev)
     {
         if (ev.Projectile.Type != ItemType.GrenadeFlash)
@@ -108,12 +82,12 @@ public class Scp939Balance : BananaFeature
             return;
         }
 
-        this.EnsureEndOfFrameCoroutine();
-
         foreach (ExPlayer player in ev.TargetsToAffect)
         {
             this.BeingFlashed.Add(player.ReferenceHub);
         }
+
+        MECExtensions.RunAfterFrames(0, Segment.EndOfFrame, this.BeingFlashed.Clear);
     }
 
     private void EffectIntensityChanged(StatusEffectBase effect, byte oldVal, byte newVal)
@@ -138,78 +112,6 @@ public class Scp939Balance : BananaFeature
             return;
         }
 
-        MECExtensions.RunAfterFrames(0, Segment.EndOfFrame, () =>
-        {
-            effect.ServerChangeDuration(8f, false);
-        });
-    }
-
-    private void Hurting(HurtingEventArgs ev)
-    {
-        if (ev.DamageHandler.Type != ExEnums.DamageType.Scp939 || ev.Attacker is null)
-        {
-            return;
-        }
-
-        this.EnsureEndOfFrameCoroutine();
-
-        if (!WaypointBase.TryGetWaypoint(ev.Attacker.RelativePosition.WaypointId, out WaypointBase wp))
-        {
-            ev.IsAllowed = false;
-            return;
-        }
-
-        bool isInElevator = wp is ElevatorWaypoint;
-
-        this.IncrementAttackCounter(ev.Attacker.ReferenceHub);
-
-        if (this.CheckAttackCount(ev.Attacker.ReferenceHub) > (isInElevator ? Max939ElevatorHitCount : Max939HitCount))
-        {
-            ev.IsAllowed = false;
-        }
-    }
-
-    private int CheckAttackCount(ReferenceHub scp939)
-#pragma warning disable IDE0046 // Convert to conditional expression (for readability)
-    {
-        if (scp939.roleManager.CurrentRole.RoleTypeId != RoleTypeId.Scp939)
-        {
-            return 0;
-        }
-
-        if (!this.Scp939ClawedCount.TryGetValue(scp939.PlayerId, out int count))
-        {
-            return 0;
-        }
-
-        return count;
-#pragma warning restore IDE0046 // Convert to conditional expression
-    }
-
-    private void IncrementAttackCounter(ReferenceHub scp939)
-    {
-        if (scp939.roleManager.CurrentRole.RoleTypeId != RoleTypeId.Scp939)
-        {
-            return;
-        }
-
-        if (!this.Scp939ClawedCount.TryGetValue(scp939.PlayerId, out int count))
-        {
-            this.Scp939ClawedCount[scp939.PlayerId] = 1;
-            return;
-        }
-
-        this.Scp939ClawedCount[scp939.PlayerId] = ++count;
-    }
-
-    private IEnumerator<float> OnEndOfFrame()
-    {
-        while (true)
-        {
-            yield return Timing.WaitForOneFrame;
-
-            this.Scp939ClawedCount.Clear();
-            this.BeingFlashed.Clear();
-        }
+        MECExtensions.RunAfterFrames(0, Segment.EndOfFrame, effect.ServerChangeDuration, 8f, false);
     }
 }
