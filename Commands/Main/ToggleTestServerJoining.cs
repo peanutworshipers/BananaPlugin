@@ -5,7 +5,6 @@ using BananaPlugin.API.Interfaces;
 using BananaPlugin.API.Utils;
 using BananaPlugin.Extensions;
 using CommandSystem;
-using Exiled.API.Features;
 using System;
 
 /// <summary>

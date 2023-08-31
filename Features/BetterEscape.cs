@@ -9,7 +9,6 @@ using Exiled.API.Features;
 using HarmonyLib;
 using InventorySystem.Disarming;
 using MEC;
-using Mirror;
 using PlayerRoles;
 using Respawning;
 using System.Collections.Generic;
