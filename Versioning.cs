@@ -21,7 +21,7 @@ public static class Versioning
     /// <summary>
     /// The string representation of the current assembly version.
     /// </summary>
-    public const string VersionString = "1.3.1";
+    public const string VersionString = "1.4.0";
 
     /// <summary>
     /// The extension of the current assembly version.
