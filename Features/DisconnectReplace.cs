@@ -56,6 +56,8 @@ public sealed class DisconnectReplace : BananaFeature
 
     private void Left(LeftEventArgs ev)
     {
+        ev.Player.ReferenceHub.playerStats.DealDamage(new UniversalDamageHandler(-1f, DeathTranslations.Unknown));
+
         // Add proper role checking here.
         // Ex: tutorials should not be replaced.
         //
