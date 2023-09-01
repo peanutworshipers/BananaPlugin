@@ -63,7 +63,7 @@ public sealed class Plugin : Plugin<Config>
     public override string Prefix => "banana_plugin";
 
     /// <inheritdoc/>
-    public override Version RequiredExiledVersion => new (7, 0, 0);
+    public override Version RequiredExiledVersion => new (8, 0, 0);
 
     /// <inheritdoc/>
     public override Version Version => Versioning.Version;

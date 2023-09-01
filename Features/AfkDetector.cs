@@ -112,7 +112,7 @@ public sealed class AfkDetector : BananaFeature
         ExHandlers.Scp049.FinishingRecall += this.NotAfkPlayerEventHandler;
         ExHandlers.Scp049.ActivatingSense += this.NotAfkPlayerEventHandler;
         ExHandlers.Scp049.Attacking += this.NotAfkPlayerEventHandler;
-        ExHandlers.Scp049.ConsumingCorpse += this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp0492.ConsumingCorpse += this.NotAfkPlayerEventHandler;
 
         // SCP-939 events.
         ExHandlers.Scp939.ChangingFocus += this.NotAfkPlayerEventHandler;
@@ -176,7 +176,7 @@ public sealed class AfkDetector : BananaFeature
         ExHandlers.Scp049.FinishingRecall -= this.NotAfkPlayerEventHandler;
         ExHandlers.Scp049.ActivatingSense -= this.NotAfkPlayerEventHandler;
         ExHandlers.Scp049.Attacking -= this.NotAfkPlayerEventHandler;
-        ExHandlers.Scp049.ConsumingCorpse -= this.NotAfkPlayerEventHandler;
+        ExHandlers.Scp0492.ConsumingCorpse -= this.NotAfkPlayerEventHandler;
 
         // SCP-939 events.
         ExHandlers.Scp939.ChangingFocus -= this.NotAfkPlayerEventHandler;
