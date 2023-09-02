@@ -1,4 +1,8 @@
-﻿1.4.0
+﻿1.4.1-prerelease.1
+- Fix players spawning where theyu arent supposed to.
+- Remove SchematicLoader and SLEditor reference.
+
+1.4.0
 - Update to EXILED 8.0
   - Fix some events.
 

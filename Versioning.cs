@@ -21,12 +21,12 @@ public static class Versioning
     /// <summary>
     /// The string representation of the current assembly version.
     /// </summary>
-    public const string VersionString = "1.4.0";
+    public const string VersionString = "1.4.1";
 
     /// <summary>
     /// The extension of the current assembly version.
     /// </summary>
-    public const string Extension = "";
+    public const string Extension = "-prerelease.1";
 
     /// <summary>
     /// Represents the regular expression that is used to detect valid semantic versions.

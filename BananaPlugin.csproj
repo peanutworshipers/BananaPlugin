@@ -36,9 +36,6 @@
         <Private>False</Private>
         <SpecificVersion>False</SpecificVersion>
       </Reference>
-      <Reference Include="SLEditor.Shared">
-        <HintPath>References\SLEditor.Shared.dll</HintPath>
-      </Reference>
       <Reference Include="System">
         <Private>False</Private>
       </Reference>

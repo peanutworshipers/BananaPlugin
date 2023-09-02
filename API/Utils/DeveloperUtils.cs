@@ -48,7 +48,7 @@ internal static class DeveloperUtils
     /// <returns>A value indicating whether the player is a developer.</returns>
     public static bool IsDeveloper(this ExPlayer player)
     {
-        return player is not null && IsDeveloper(player.UserId);
+        return player is not null && player.GameObject && IsDeveloper(player.UserId);
     }
 
     /// <summary>
