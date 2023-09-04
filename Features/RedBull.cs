@@ -535,7 +535,7 @@ public sealed class CustomCola : BananaFeature
         /// <inheritdoc/>
         public override void IntensityChanged(byte prevState, byte newState)
         {
-            if (newState == 0 || prevState == 0 || this.ahpProcess is null)
+            if (newState > this.MaxIntensity || newState == 0 || prevState == 0 || this.ahpProcess is null)
             {
                 return;
             }
