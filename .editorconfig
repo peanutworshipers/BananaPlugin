@@ -97,6 +97,9 @@ dotnet_diagnostic.IDE0058.severity = none
 # IDE0280: Use 'nameof'
 dotnet_diagnostic.IDE0280.severity = warning
 
+# CS0436: Type conflicts with imported type
+dotnet_diagnostic.CS0436.severity = suggestion
+
 [*.{cs,vb}]
 #### Naming styles ####
 

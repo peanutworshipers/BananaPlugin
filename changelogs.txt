@@ -1,6 +1,18 @@
-﻿1.4.1-prerelease.1
-- Fix players spawning where theyu arent supposed to.
-- Remove SchematicLoader and SLEditor reference.
+﻿1.5.0
+- Added new feature 'CustomCola' currently implementing Red Bull
+  - Red Bull can be obtained by DROPPING Anti207 or 207 on 1:1.
+    - Applies the Invigorated and Hemorrhage status effects.
+    - Gives passive AHP regen with the specified amount taken:
+      - 1 -> 0.5/s
+      - 2 -> 1/s
+      - 3 -> 1.5/s
+      - 4 -> 2.5/s
+    - AHP regen is stalled for 10 seconds if you take 10 or more damage in one hit. (time does not stack)
+
+- Fix players spawning where they arent supposed to. (Void bug)
+- Remove Pool Object patch as it is unused.
+- Remove SchematicLoader and SLEditor reference as they aren't used.
+- Add reference to SCP-294 plugin for compatability.
 
 1.4.0
 - Update to EXILED 8.0

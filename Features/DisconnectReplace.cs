@@ -39,12 +39,9 @@ public sealed class DisconnectReplace : BananaFeature
     {
     }
 
-    private static bool FilterHubs(ReferenceHub left, ReferenceHub toSelect)
+    private static bool FilterHubs(ReferenceHub toSelect)
     {
-        return toSelect.roleManager.CurrentRole is SpectatorRole spec
-
-            // Northwood skill issue. https://trello.com/c/Q7ziLNP3/4660-player-3rd-person-view
-            && spec.SyncedSpectatedNetId != left.netId;
+        return toSelect.roleManager.CurrentRole is SpectatorRole;
     }
 
     private static float GetDeathTime(ReferenceHub hub)
@@ -56,20 +53,27 @@ public sealed class DisconnectReplace : BananaFeature
 
     private void Left(LeftEventArgs ev)
     {
-        ev.Player.ReferenceHub.playerStats.DealDamage(new UniversalDamageHandler(-1f, DeathTranslations.Unknown));
-
         // Add proper role checking here.
         // Ex: tutorials should not be replaced.
         //
         // However, custom roles should specify
         // if they can be replaced.
+
+#warning CustomRoles look here.
+
+        if (ev.Player.ReferenceHub.roleManager.CurrentRole.RoleTypeId == PlayerRoles.RoleTypeId.Tutorial)
+        {
+            return;
+        }
+
+        ev.Player.ReferenceHub.playerStats.DealDamage(new UniversalDamageHandler(-1f, DeathTranslations.Unknown));
         return;
 
         ReferenceHub left = ev.Player.ReferenceHub;
         ReferenceHub? available =
             PlayerListUtils.VerifiedHubs
             .OrderByDescending(GetDeathTime)
-            .FirstOrDefault(x => FilterHubs(left, x));
+            .FirstOrDefault(FilterHubs);
 
         // Nobody available to replace
         // the disconnected player.
