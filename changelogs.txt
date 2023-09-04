@@ -1,5 +1,6 @@
 ﻿1.5.0
 - Added new feature 'CustomCola' currently implementing Red Bull
+  - Command 'bp cola gredbull' to give yourself a red bull. (Admin+ only)
   - Red Bull can be obtained by DROPPING Anti207 or 207 on 1:1.
     - Applies the Invigorated and Hemorrhage status effects.
     - Gives passive AHP regen with the specified amount taken:
