@@ -9,6 +9,7 @@
       - 3 -> 1.5/s
       - 4 -> 2.5/s
     - AHP regen is stalled for 10 seconds if you take 10 or more damage in one hit. (time does not stack)
+    - Explodes upon intake with Anti207 or 207.
 
 - Fix players spawning where they arent supposed to. (Void bug)
 - Remove Pool Object patch as it is unused.
