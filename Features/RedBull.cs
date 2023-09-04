@@ -14,6 +14,7 @@ using HarmonyLib;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using Mirror;
+using PlayerRoles;
 using PlayerStatsSystem;
 using Scp914;
 using System;
@@ -530,6 +531,21 @@ public sealed class CustomCola : BananaFeature
             {
                 hemorrhage.Intensity = 0;
             }
+        }
+
+        /// <inheritdoc/>
+        public override void OnRoleChanged(PlayerRoleBase previousRole, PlayerRoleBase newRole)
+        {
+            base.OnRoleChanged(previousRole, newRole);
+
+            if (this.ahpProcess is null)
+            {
+                return;
+            }
+
+            this.EnsureFields();
+
+            this.ahpStat.ServerKillProcess(this.ahpProcess.KillCode);
         }
 
         /// <inheritdoc/>
