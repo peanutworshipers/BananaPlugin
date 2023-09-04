@@ -404,7 +404,7 @@ public sealed class CustomCola : BananaFeature
         /// <summary>
         /// The efficacy of the redbull effect AHP.
         /// </summary>
-        public const float Efficacy = 1f;
+        public const float Efficacy = 0.7f;
 
         /// <summary>
         /// The AHP limit of the redbull effect.
