@@ -149,6 +149,16 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
 #pragma warning disable SA1118 // Parameter should not span multiple lines
             newInstructions.InsertRange(0, new CodeInstruction[]
             {
+                // if (BetterEscape.Instance is null || !BetterEscape.Instance.Enabled)
+                // {
+                //     goto allow;
+                // }
+                new(OpCodes.Call, PropertyGetter(typeof(BetterEscape), nameof(Instance))),
+                new(OpCodes.Brfalse_S, allowLabel),
+                new(OpCodes.Call, PropertyGetter(typeof(BetterEscape), nameof(Instance))),
+                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Brfalse_S, allowLabel),
+
                 // if (newRole._spawnReason == RoleChangeReason.Escaped)
                 // {
                 //     return;
