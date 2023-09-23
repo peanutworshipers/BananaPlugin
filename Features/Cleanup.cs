@@ -84,7 +84,7 @@ public sealed class Cleanup : BananaFeatureConfig<CfgCleanup>
 
         private static void EnsureCapacity(RagdollCleanup ragdoll)
         {
-            if (ragdoll is null || !Instance)
+            if (ragdoll == null || !Instance)
             {
                 return;
             }
@@ -101,6 +101,11 @@ public sealed class Cleanup : BananaFeatureConfig<CfgCleanup>
                 if (!RagdollQueue.TryDequeue(out RagdollCleanup queuedRagdoll))
                 {
                     break;
+                }
+
+                if (queuedRagdoll == null)
+                {
+                    continue;
                 }
 
                 NetworkServer.Destroy(queuedRagdoll.gameObject);
