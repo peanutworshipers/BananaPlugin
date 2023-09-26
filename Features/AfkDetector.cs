@@ -674,8 +674,16 @@ public sealed class AfkDetector : BananaFeature
         {
             LastVectors = new();
             LastStates = new();
-            ExHandlers.Server.WaitingForPlayers += LastVectors.Clear;
-            ExHandlers.Server.WaitingForPlayers += LastStates.Clear;
+
+            ExiledEventsHelper.RunWhenExiledEventsReady(() =>
+            {
+                BPLogger.IdentifyMethodAs("AfkDetector+Scp079MapTogglerPatch", ".cctor");
+
+                ExHandlers.Server.WaitingForPlayers += LastVectors.Clear;
+                ExHandlers.Server.WaitingForPlayers += LastStates.Clear;
+
+                BPLogger.Debug("Added events.");
+            });
         }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

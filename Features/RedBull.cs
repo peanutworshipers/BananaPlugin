@@ -405,7 +405,7 @@ public sealed class CustomCola : BananaFeature
         /// <summary>
         /// The efficacy of the redbull effect AHP.
         /// </summary>
-        public const float Efficacy = 0.7f;
+        public const float Efficacy = 0.85f;
 
         /// <summary>
         /// The AHP limit of the redbull effect.
@@ -415,7 +415,7 @@ public sealed class CustomCola : BananaFeature
         /// <summary>
         /// Gets the AHP gain based on the intensity of the red bull effect.
         /// </summary>
-        public static readonly float[] AHPGain = new float[] { 0f, 0.5f, 1f, 1.5f, 2.5f };
+        public static readonly float[] AHPGain = new float[] { 0f, 1.5f, 2f, 2.5f, 3.5f };
 
         private AhpStat? ahpStat;
         private AhpStat.AhpProcess? ahpProcess;

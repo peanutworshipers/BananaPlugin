@@ -38,6 +38,7 @@
       </Reference>
       <Reference Include="SCP294">
         <HintPath>References\SCP294.dll</HintPath>
+        <Private>False</Private>
       </Reference>
       <Reference Include="System">
         <Private>False</Private>
@@ -49,13 +50,12 @@
       <Reference Include="UnityEngine.PhysicsModule" SpecificVersion="false" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="False" />
     </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="EXILED" Version="8.0.0">
+    <PackageReference Include="EXILED" Version="8.2.1">
       <ExcludeAssets>RUNTIME</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="Lib.Harmony" Version="2.2.2">
       <ExcludeAssets>RUNTIME</ExcludeAssets>
     </PackageReference>
-    <PackageReference Include="LiteDB" Version="5.0.16" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <ExcludeAssets>RUNTIME</ExcludeAssets>

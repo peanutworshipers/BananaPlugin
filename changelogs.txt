@@ -1,4 +1,17 @@
-﻿1.5.0
+﻿1.5.1
+- Update to EXILED 8.2.1
+- Fixed null component / gameobject error in Cleanup feature.
+- Fixed a consistent error causing the server to freeze while players are online.
+- Patches are now applied instantly instead of waiting for EXILED.
+- Buffed red bull:
+  - AHP regen is now the following for amount taken:
+    - 1 -> 1.5/s
+    - 2 -> 2/s
+    - 3 -> 2.5/s
+    - 4 -> 3.5/s
+  - AHP efficacy for red bull increased from 70% -> 85%.
+
+1.5.0
 - Added new feature 'CustomCola' currently implementing Red Bull
   - Command 'bp cola gredbull' to give yourself a red bull. (Admin+ only)
   - Red Bull can be obtained by DROPPING Anti207 or 207 on 1:1.

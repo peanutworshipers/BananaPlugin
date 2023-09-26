@@ -4,12 +4,9 @@ using BananaPlugin.API.Attributes;
 using BananaPlugin.API.Collections;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
-using BananaPlugin.Extensions;
 using Exiled.API.Features;
 using HarmonyLib;
-using MEC;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -22,9 +19,48 @@ public sealed class Plugin : Plugin<Config>
 
     static Plugin()
     {
-        Harmony = new Harmony("com.zereth.bananaplugin");
+        Harmony harmony = Harmony = new Harmony("com.zereth.bananaplugin");
 
-        MECExtensions.Run(ApplyPatches, Segment.EndOfFrame);
+        Type[] types = AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly());
+
+        int failCount = 0;
+        int successCount = 0;
+
+        for (int i = 0; i < types.Length; i++)
+        {
+            Type type = types[i];
+
+            try
+            {
+                if (harmony.CreateClassProcessor(type).Patch()?.Count is > 0 and int num)
+                {
+                    BPLogger.Debug($"Applied {num} patches for type: [{type.FullName}]");
+
+                    successCount += num;
+                }
+            }
+            catch (HarmonyException e)
+            {
+                failCount++;
+
+                BPLogger.Error($"[HarmonyException] Failed to apply harmony patch: [{type.FullName}]\n{e}");
+            }
+            catch (Exception e)
+            {
+                failCount++;
+
+                BPLogger.Error($"[Exception] Failed to apply harmony patch: [{type.FullName}]\n{e}");
+            }
+        }
+
+        if (failCount > 0)
+        {
+            BPLogger.Error($"Failed to apply {failCount} patches.");
+        }
+        else
+        {
+            BPLogger.Info($"Successfully applied {successCount} patches.");
+        }
     }
 
     /// <summary>
@@ -63,7 +99,7 @@ public sealed class Plugin : Plugin<Config>
     public override string Prefix => "banana_plugin";
 
     /// <inheritdoc/>
-    public override Version RequiredExiledVersion => new (8, 0, 0);
+    public override Version RequiredExiledVersion => new (8, 2, 1);
 
     /// <inheritdoc/>
     public override Version Version => Versioning.Version;
@@ -184,48 +220,6 @@ public sealed class Plugin : Plugin<Config>
         this.enabled = false;
 
         base.OnDisabled();
-    }
-
-    private static IEnumerator<float> ApplyPatches()
-    {
-        BPLogger.IdentifyMethodAs(nameof(Plugin), nameof(ApplyPatches));
-
-        Type[] types = AccessTools.GetTypesFromAssembly(Assembly.GetExecutingAssembly());
-
-        int failCount = 0;
-        int successCount = 0;
-
-        for (int i = 0; i < types.Length; i++)
-        {
-            Type type = types[i];
-
-            try
-            {
-                if (Harmony.CreateClassProcessor(type).Patch()?.Count is > 0 and int num)
-                {
-                    BPLogger.Debug($"Applied {num} patches for type: [{type.FullName}]");
-
-                    successCount += num;
-                }
-            }
-            catch (HarmonyException e)
-            {
-                failCount++;
-
-                BPLogger.Error($"Failed to apply harmony patch: [{type.FullName}]\n{e}");
-            }
-        }
-
-        if (failCount > 0)
-        {
-            BPLogger.Error($"Failed to apply {failCount} patches.");
-        }
-        else
-        {
-            BPLogger.Info($"Successfully applied {successCount} patches.");
-        }
-
-        yield break;
     }
 
     [MemberNotNull(nameof(Instance), nameof(Features))]
