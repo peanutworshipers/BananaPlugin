@@ -14,8 +14,8 @@ public sealed class PDEscapeCoinEffect : LuckyCoinEffect
     /// <summary>
     /// Gets the responses for escaping SCP-106's pocket dimension.
     /// </summary>
-    public static string[] Responses { get; } = new string[]
-    {
+    public static string[] Responses { get; } =
+    [
         "Congratulations, you've managed to escape for now. But don't get too comfortable; old wrinkly's got all the time in the world to come after you again.",
         "Look at you, popping in and out of dimensions like a cosmic jack-in-the-box. Enjoy the breather, but remember, that old ghoul will be eagerly waiting for round two.",
         "Whoa, you're out! Guess SCP-106's pocket dimension didn't have a 'no escape' policy after all. Just don't expect a parade in your honor.",
@@ -26,7 +26,7 @@ public sealed class PDEscapeCoinEffect : LuckyCoinEffect
         "Heads up, you're out! But don't think you're off the hook just yet. The universe has a funny way of keeping tabs on people like you.",
         "You owe the coin a nice thank-you note, 'cause you just got a one-way ticket out of the abyss. Hope you cherish this stroke of fortune.",
         "You've hit the cosmic jackpot, escaping that dreadful pocket dimension. Just remember, luck can change as quickly as a flip of a coin.",
-    };
+    ];
 
     /// <inheritdoc/>
     public override bool IsBuff => true;

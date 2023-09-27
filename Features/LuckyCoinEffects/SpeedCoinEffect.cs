@@ -12,8 +12,8 @@ public sealed class SpeedCoinEffect : LuckyCoinEffect
     /// <summary>
     /// Gets the responses for the speed boost effect.
     /// </summary>
-    public static string[] Responses { get; } = new string[]
-    {
+    public static string[] Responses { get; } =
+    [
         "Luck is on your side, as a 50% speed boost empowers you. Move with lightning speed, catching your enemies off guard.",
         "Your speed surges by 50%! Harness this newfound momentum to outpace any nearby adversaries.",
         "A burst of speed engulfs you, providing a 50% boost. Use it wisely to gain the upper hand against nearby foes.",
@@ -23,7 +23,7 @@ public sealed class SpeedCoinEffect : LuckyCoinEffect
         "Oh, look who got a 50% speed boost! It's a shame you couldn't accomplish anything without it. But hey, better late than never, right?",
         "Wow, you got a 50% speed boost! If only you were as quick in your actions as you are in flipping coins, you might have succeeded by now.",
         "Finally, a 50% speed boost for you! Let's hope this newfound speed can make up for all those times you stumbled and failed before.",
-    };
+    ];
 
     /// <inheritdoc/>
     public override bool IsBuff => true;

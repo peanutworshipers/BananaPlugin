@@ -19,20 +19,20 @@ public sealed class InformationCmd : ParentCommand, IUsageProvider, IHelpProvide
     public override string Command => "information";
 
     /// <inheritdoc/>
-    public override string[] Aliases { get; } = new string[]
-    {
+    public override string[] Aliases { get; } =
+    [
         "info",
         "inf",
-    };
+    ];
 
     /// <inheritdoc/>
     public override string Description => "Displays information about the current banana plugin build.";
 
     /// <inheritdoc/>
-    public string[] Usage { get; } = new string[]
-    {
+    public string[] Usage { get; } =
+    [
         "build/changelog/versions",
-    };
+    ];
 
     /// <inheritdoc/>
     public string GetHelp(ArraySegment<string> arguments)

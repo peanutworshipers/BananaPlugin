@@ -24,12 +24,12 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
     {
         Instance = this;
 
-        this.Commands = new ICommand[]
-        {
+        this.Commands =
+        [
             new SetPinkCandyWeight(this),
             new GetPinkCandyWeight(this),
             new GetWeightFromChance(),
-        };
+        ];
     }
 
     /// <summary>
@@ -162,18 +162,18 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
 
         public string Command => "setweight";
 
-        public string[] Aliases { get; } = new string[]
-        {
+        public string[] Aliases { get; } =
+        [
             "sw",
             "sweight",
-        };
+        ];
 
         public string Description => "Sets the weight for pink candy.";
 
-        public string[] Usage { get; } = new string[]
-        {
+        public string[] Usage { get; } =
+        [
             "weight",
-        };
+        ];
 
         public BRank RankRequirement => BRank.JuniorAdministrator;
 
@@ -235,11 +235,11 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
 
         public string Command => "getweight";
 
-        public string[] Aliases { get; } = new string[]
-        {
+        public string[] Aliases { get; } =
+        [
             "gw",
             "gweight",
-        };
+        ];
 
         public string Description => "Gets the weight for pink candy.";
 
@@ -263,12 +263,12 @@ public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
     {
         public string Command => "convertpercent";
 
-        public string[] Aliases { get; } = new string[]
-        {
+        public string[] Aliases { get; } =
+        [
             "convertp",
             "convp",
             "cp",
-        };
+        ];
 
         public string Description => "Converts a percent value to a weight value.";
 

@@ -12,8 +12,8 @@ public sealed class Scp096TargetRemoveCoinEffect : LuckyCoinEffect
     /// <summary>
     /// Gets the responses from no longer being targeted by SCP-096.
     /// </summary>
-    public static string[] Responses { get; } = new string[]
-    {
+    public static string[] Responses { get; } =
+    [
         "Phew! It's like that face was never etched in your memory...",
         "Seems like your mind hit the 'delete' button on that haunting image.",
         "Whoosh! The memory of that face vanished into thin air.",
@@ -24,7 +24,7 @@ public sealed class Scp096TargetRemoveCoinEffect : LuckyCoinEffect
         "Well, well, well... Looks like SCP-096 took pity on you and decided to spare your fragile mind from its haunting image.",
         "Congratulations! You've won the 'I saw SCP-096 by accident and got a free memory wipe' prize.",
         "Ah, the perks of unintentionally gazing upon SCP-096's face. Consider yourself lucky, or maybe just forgetful.",
-    };
+    ];
 
     /// <summary>
     /// Gets the weight curve for the rage time of SCP-096.

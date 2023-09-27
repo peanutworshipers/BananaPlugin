@@ -142,10 +142,10 @@ public abstract class BananaFeature
         public override string Description { get; }
 
         /// <inheritdoc/>
-        public string[] Usage { get; } = new string[]
-        {
+        public string[] Usage { get; } =
+        [
             "subcommand",
-        };
+        ];
 
         /// <inheritdoc/>
         public override void LoadGeneratedCommands()

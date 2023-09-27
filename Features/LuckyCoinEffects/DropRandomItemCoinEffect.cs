@@ -14,8 +14,8 @@ public sealed class DropRandomItemCoinEffect : LuckyCoinEffect
     /// <summary>
     /// Gets the responses for a player's item being dropped.
     /// </summary>
-    public static string[] Responses { get; } = new string[]
-    {
+    public static string[] Responses { get; } =
+    [
         "Seems like your item had a sudden urge for freedom and made a daring escape from your inventory...",
         "Uh-oh! Your item decided it needed some alone time on the ground...",
         "Oopsie-daisy! Your item decided to take a spontaneous leap of faith...",
@@ -26,7 +26,7 @@ public sealed class DropRandomItemCoinEffect : LuckyCoinEffect
         "Well, well, well... Seems like you're having a hard time holding onto your precious items. Need some help with those slippery hands?",
         "Congratulations! You've just unlocked the 'Losing Items' achievement. Keep up the good work!",
         "Who needs an inventory anyway? Just toss your items around like confetti, it's much more fun!",
-    };
+    ];
 
     /// <inheritdoc/>
     public override bool IsBuff => false;

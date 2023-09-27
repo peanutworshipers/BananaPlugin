@@ -100,6 +100,9 @@ dotnet_diagnostic.IDE0280.severity = warning
 # CS0436: Type conflicts with imported type
 dotnet_diagnostic.CS0436.severity = suggestion
 
+# SA1010: Opening square brackets should be spaced correctly
+dotnet_diagnostic.SA1010.severity = silent
+
 [*.{cs,vb}]
 #### Naming styles ####
 

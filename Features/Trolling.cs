@@ -33,13 +33,13 @@ public sealed class Trolling : BananaFeature
 
     private Trolling()
     {
-        this.TrollCommands = new ICommand[]
-        {
+        this.TrollCommands =
+        [
             new SpinCommand(this),
             new SeverCommand(this),
             new ForceTantrum(this),
             new BottleInvasion(this),
-        };
+        ];
 
         MainCommand.OnAssigned += this.EnableCommands;
     }
@@ -236,11 +236,11 @@ public sealed class Trolling : BananaFeature
         public string Description => "Spins or unspins the specified player(s).";
 
         /// <inheritdoc/>
-        public string[] Usage { get; } = new string[]
-        {
+        public string[] Usage { get; } =
+        [
             "%player%",
             "0 / 1",
-        };
+        ];
 
         /// <inheritdoc/>
         public BRank RankRequirement => BRank.JuniorAdministrator;
@@ -340,10 +340,10 @@ public sealed class Trolling : BananaFeature
         public string Description => "Severs or unsevers players hands.";
 
         /// <inheritdoc/>
-        public string[] Usage { get; } = new string[]
-        {
+        public string[] Usage { get; } =
+        [
             "%player%",
-        };
+        ];
 
         /// <inheritdoc/>
         public BRank RankRequirement => BRank.JuniorAdministrator;

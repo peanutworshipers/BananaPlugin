@@ -29,10 +29,10 @@ public sealed class TestFeature : BananaFeature
 
     private TestFeature()
     {
-        this.Commands = new ICommand[]
-        {
+        this.Commands =
+        [
             new TestCommand(this),
-        };
+        ];
     }
 
     /// <inheritdoc/>

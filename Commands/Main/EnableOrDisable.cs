@@ -34,8 +34,8 @@ public sealed class EnableOrDisable : ICommand, IUsageProvider, IHelpProvider, I
         this.Command = enable ? "enable" : "disable";
 
         this.Aliases = enable
-            ? new string[] { "en" }
-            : new string[] { "dis" };
+            ? ["en"]
+            : ["dis"];
 
         this.Description = enable
             ? "Enables the specified banana plugin feature."
@@ -54,10 +54,10 @@ public sealed class EnableOrDisable : ICommand, IUsageProvider, IHelpProvider, I
     public string Description { get; }
 
     /// <inheritdoc/>
-    public string[] Usage { get; } = new string[]
-    {
+    public string[] Usage { get; } =
+    [
         "Feature Prefix",
-    };
+    ];
 
     /// <inheritdoc/>
     public BRank RankRequirement => BRank.SeniorModerator;
@@ -129,14 +129,14 @@ public sealed class EnableOrDisable : ICommand, IUsageProvider, IHelpProvider, I
     /// <inheritdoc/>
     public string GetHelp(ArraySegment<string> arguments)
     {
-        string[] lines = new string[]
-        {
+        string[] lines =
+        [
             $"\nProvide a feature prefix to {this.toggleText} that feature.",
             "For a list of prefixes, use the command 'bananaplugin showfeatures'",
             string.Empty,
             $"You can include multiple prefixes separated by commas to {this.toggleText} multiple features.",
             "EX: feature1,feature2,feature3",
-        };
+        ];
 
         return this.HelpProviderFormat(string.Join("\n", lines));
     }

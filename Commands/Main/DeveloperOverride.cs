@@ -19,10 +19,10 @@ public sealed class DeveloperOverride : ICommand, IUsageProvider, IHelpProvider,
     public string Command => "developeroverride";
 
     /// <inheritdoc/>
-    public string[] Aliases { get; } = new string[]
-    {
+    public string[] Aliases { get; } =
+    [
         "doverride",
-    };
+    ];
 
     /// <inheritdoc/>
     public string Description => "Enables developer override mode for you.";

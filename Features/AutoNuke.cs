@@ -26,10 +26,10 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
     {
         ExHandlers.Server.WaitingForPlayers += this.ForceEnableOnWaitingForPlayers;
 
-        this.Commands = new ICommand[]
-        {
+        this.Commands =
+        [
             new SetStartTimeCmd(this),
-        };
+        ];
     }
 
     /// <summary>
@@ -164,18 +164,18 @@ public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
 
         public string Command => "setstarttime";
 
-        public string[] Aliases { get; } = new string[]
-        {
+        public string[] Aliases { get; } =
+        [
             "starttime",
             "stime",
-        };
+        ];
 
         public string Description => "Sets the start time of auto nuke.";
 
-        public string[] Usage { get; } = new string[]
-        {
+        public string[] Usage { get; } =
+        [
             "time (seconds) / default",
-        };
+        ];
 
         public string GetHelp(ArraySegment<string> arguments)
         {

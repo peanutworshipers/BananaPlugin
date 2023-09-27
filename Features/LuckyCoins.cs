@@ -50,15 +50,15 @@ public sealed class LuckyCoins : BananaFeature
     /// <summary>
     /// Gets the array of all coin effects.
     /// </summary>
-    public static LuckyCoinEffect[] AllCoinEffects { get; } = new LuckyCoinEffect[]
-    {
+    public static LuckyCoinEffect[] AllCoinEffects { get; } =
+    [
         new HealCoinEffect(),
         new SpeedCoinEffect(),
         new PDEscapeCoinEffect(),
         new Scp096TargetRemoveCoinEffect(),
         new DropRandomItemCoinEffect(),
         new HurtCoinEffect(),
-    };
+    ];
 
     /// <inheritdoc/>
     public override string Name => "Lucky Coins";

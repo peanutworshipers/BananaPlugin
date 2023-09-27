@@ -15,7 +15,7 @@ public static class ServerPorts
     /// <summary>
     /// The port of server two.
     /// </summary>
-    public const ushort ServerTwo = 7780;
+    public const ushort ServerTwo = 7778;
 
     /// <summary>
     /// The port of server three.
@@ -25,7 +25,7 @@ public static class ServerPorts
     /// <summary>
     /// The port of the testing server.
     /// </summary>
-    public const ushort TestServer = 7778;
+    public const ushort TestServer = 7780;
 
     /// <summary>
     /// Gets the name of the server by its port.

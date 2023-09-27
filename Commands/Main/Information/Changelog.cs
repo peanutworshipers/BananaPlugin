@@ -14,11 +14,11 @@ public sealed class Changelog : ICommand, IUsageProvider, IHelpProvider
     public string Command => "changelog";
 
     /// <inheritdoc/>
-    public string[] Aliases { get; } = new string[]
-    {
+    public string[] Aliases { get; } =
+    [
         "changelogs",
         "clog",
-    };
+    ];
 
     /// <inheritdoc/>
     public string Description => "Displays the changelog for a given version of the banana plugin.";
