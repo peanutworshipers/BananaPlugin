@@ -137,7 +137,6 @@ public sealed class CustomCola : BananaFeature
     /// <returns>An enumeration specifying the cola type of the item.</returns>
     public ColaType GetColaType(ItemBase? item)
     {
-
 #pragma warning disable IDE0046 // Convert to conditional expression (for readability)
         if (item == null || !item.gameObject)
         {
@@ -202,6 +201,26 @@ public sealed class CustomCola : BananaFeature
             _ => ColaType.None,
         };
 #pragma warning restore IDE0046 // Convert to conditional expression
+    }
+
+    /// <summary>
+    /// Changes the cola type of the specified serial.
+    /// </summary>
+    /// <param name="serial">The serial to change.</param>
+    /// <param name="type">The new type of cola to change to.</param>
+    /// <remarks>This only works for custom colas.</remarks>
+    public void ChangeColaType(ushort serial, ColaType type)
+    {
+        switch (type)
+        {
+            case ColaType.RedBull:
+                this.redBullSerials!.Add(serial);
+                return;
+
+            default:
+                this.redBullSerials!.Remove(serial);
+                return;
+        }
     }
 
     /// <inheritdoc/>

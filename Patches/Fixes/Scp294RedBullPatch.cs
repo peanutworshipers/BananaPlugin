@@ -1,0 +1,66 @@
+﻿namespace BananaPlugin.Patches.Fixes;
+
+using BananaPlugin.API.Utils;
+using HarmonyLib;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Reflection.Emit;
+using static HarmonyLib.AccessTools;
+
+#pragma warning disable SA1118 // Parameter should not span multiple lines
+
+/// <summary>
+/// This patch allows obtaining custom cola feature drinks from SCP-294.
+/// </summary>
+[HarmonyPatch]
+public static class Scp294RedBullPatch
+{
+    private static Type? foundType;
+
+    [HarmonyPrepare]
+    private static bool Init()
+    {
+        foundType = TypeByName("SCP294.Commands.SCP294Command+<>c__DisplayClass10_4");
+
+        if (foundType is null)
+        {
+            BPLogger.Error("Could not find the necessary class to patch.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static MethodInfo TargetMethod()
+    {
+        return foundType!.GetMethod("<Execute>b__5", BindingFlags.Instance | BindingFlags.NonPublic);
+    }
+
+    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+    {
+        instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
+
+        newInstructions.InsertRange(newInstructions.Count - 1, new CodeInstruction[]
+        {
+            // Scp294RedBullPatch.OnReceivedCola(item, this.drinkName);
+            new(OpCodes.Ldloc_0),
+            new(OpCodes.Ldarg_0),
+            new(OpCodes.Ldfld, Field(foundType!, "drinkName")),
+            new(OpCodes.Call, Method(typeof(Scp294RedBullPatch), nameof(OnReceivedCola))),
+        });
+
+        return newInstructions.FinishTranspiler();
+    }
+
+    private static void OnReceivedCola(ExItem item, string drinkName)
+    {
+        if (!Features.CustomCola.Instance || drinkName.ToLower() != "red bull")
+        {
+            return;
+        }
+
+        Scp294Plugin.Instance.CustomDrinkItems.Remove(item.Serial);
+        Features.CustomCola.Instance.ChangeColaType(item.Serial, Features.CustomCola.ColaType.RedBull);
+    }
+}
