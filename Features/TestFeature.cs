@@ -5,7 +5,6 @@ using BananaPlugin.API;
 using BananaPlugin.API.Interfaces;
 using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
-using BananaPlugin.API.Utils.CustomWriters;
 using BananaPlugin.Extensions;
 using CommandSystem;
 using Exiled.API.Features;
@@ -142,10 +141,6 @@ public sealed class TestFeature : BananaFeature
                 response = "Not a player.";
                 return false;
             }
-
-            (ushort hor, ushort vert) = player.CameraTransform.rotation.ToClientUShorts();
-
-            player.ReferenceHub.SetHubRotation(hor, vert);
 
             response = "Testing...";
             return true;
