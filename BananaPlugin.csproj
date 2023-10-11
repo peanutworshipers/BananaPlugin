@@ -36,6 +36,9 @@
         <Private>False</Private>
         <SpecificVersion>False</SpecificVersion>
       </Reference>
+      <Reference Include="Push">
+        <HintPath>References\Push.dll</HintPath>
+      </Reference>
       <Reference Include="SCP294">
         <HintPath>References\SCP294.dll</HintPath>
         <Private>False</Private>
