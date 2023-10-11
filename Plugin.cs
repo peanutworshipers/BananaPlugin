@@ -32,7 +32,7 @@ public sealed class Plugin : Plugin<Config>
 
             try
             {
-                if (harmony.CreateClassProcessor(type).Patch()?.Count is > 0 and int num)
+                if (harmony.CreateClassProcessor(type).Patch()?.Count is int num)
                 {
                     BPLogger.Debug($"Applied {num} patches for type: [{type.FullName}]");
 
