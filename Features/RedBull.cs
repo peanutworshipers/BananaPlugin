@@ -15,6 +15,7 @@ using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using Mirror;
 using PlayerRoles;
+using PlayerRoles.FirstPersonControl;
 using PlayerStatsSystem;
 using Scp914;
 using System;
@@ -54,10 +55,10 @@ public sealed class CustomCola : BananaFeature
     private CustomCola()
     {
         Instance = this;
-        this.Commands = new ICommand[]
-        {
+        this.Commands =
+        [
             new GiveRedBull(this),
-        };
+        ];
     }
 
     /// <summary>
@@ -136,6 +137,7 @@ public sealed class CustomCola : BananaFeature
     /// <returns>An enumeration specifying the cola type of the item.</returns>
     public ColaType GetColaType(ItemBase? item)
     {
+
 #pragma warning disable IDE0046 // Convert to conditional expression (for readability)
         if (item == null || !item.gameObject)
         {
@@ -144,7 +146,7 @@ public sealed class CustomCola : BananaFeature
 
         ushort serial = item.ItemSerial;
 
-        if (Scp294Plugin.Instance?.CustomDrinkItems.ContainsKey(serial) ?? false)
+        if (Type.GetType("SCP294.SCP294") is not null && InternalCheckSCP294(item))
         {
             return ColaType.Scp294;
         }
@@ -160,6 +162,11 @@ public sealed class CustomCola : BananaFeature
             ItemType.AntiSCP207 => ColaType.AntiScp207,
             _ => ColaType.None,
         };
+
+        static bool InternalCheckSCP294(ItemBase? item)
+        {
+            return Scp294Plugin.Instance?.CustomDrinkItems.ContainsKey(item!.ItemSerial) ?? false;
+        }
 #pragma warning restore IDE0046 // Convert to conditional expression
     }
 
@@ -299,20 +306,15 @@ public sealed class CustomCola : BananaFeature
     {
         try
         {
-            if (cola <= ColaType.AntiScp207 || cola == ColaType.Scp294)
-            {
-                return;
-            }
-
             switch (cola)
             {
                 case ColaType.RedBull:
                     if (item.Owner.playerEffectsController.TryGetEffect(out RedBull playerEffect))
                     {
-                        playerEffect.Intensity = ++playerEffect.Intensity;
+                        playerEffect.Intensity++;
                     }
 
-                    break;
+                    return;
             }
         }
         catch (Exception ex)
@@ -395,7 +397,7 @@ public sealed class CustomCola : BananaFeature
     /// <summary>
     /// The custom player effect for the red bull cola.
     /// </summary>
-    public sealed class RedBull : CokeBase
+    public sealed class RedBull : CokeBase, IStaminaModifier
     {
         /// <summary>
         /// The AHP decay after the redbull effect has been removed.
@@ -408,18 +410,24 @@ public sealed class CustomCola : BananaFeature
         public const float Efficacy = 0.85f;
 
         /// <summary>
-        /// The AHP limit of the redbull effect.
-        /// </summary>
-        public const float Limit = 75f;
-
-        /// <summary>
         /// Gets the AHP gain based on the intensity of the red bull effect.
         /// </summary>
-        public static readonly float[] AHPGain = new float[] { 0f, 1.5f, 2f, 2.5f, 3.5f };
+        public static readonly float[] AHPGain = [0f, 1.5f, 2f, 2.5f, 3.5f];
 
+        /// <summary>
+        /// Gets the AHP limit based on the intensity of the red bull effect.
+        /// </summary>
+        public static readonly float[] Limit = [0f, 75f, 85f, 95f, 100f];
+
+        private static int? invigoratedIndex;
+        private static int? hemorrhageIndex;
+
+        private Invigorated? invigoratedEffect;
+        private Hemorrhage? hemorrhageEffect;
         private AhpStat? ahpStat;
         private AhpStat.AhpProcess? ahpProcess;
         private float stallTime;
+        private bool isSprinting;
 
         /// <inheritdoc/>
         public override EffectClassification Classification => EffectClassification.Mixed;
@@ -431,20 +439,75 @@ public sealed class CustomCola : BananaFeature
         public override float MovementSpeedMultiplier => 1f;
 
         /// <inheritdoc/>
+        public bool StaminaModifierActive => this.IsEnabled;
+
+        /// <inheritdoc/>
+        public float StaminaUsageMultiplier => 0f;
+
+        /// <inheritdoc/>
+        public float StaminaRegenMultiplier => 1f;
+
+        /// <inheritdoc/>
+        public bool SprintingDisabled => false;
+
+        /// <inheritdoc/>
         public override void OnAwake()
         {
-            this.StackMultipliers = new StackMultiplier[] { new() { DamageMultiplier = 1f, PostProcessIntensity = 0f, SpeedMultiplier = 1f } };
+            if (!NetworkServer.active)
+            {
+                return;
+            }
 
-            base.OnAwake();
+            try
+            {
+                this.StackMultipliers = [new() { DamageMultiplier = 1f, PostProcessIntensity = 0f, SpeedMultiplier = 1f }];
 
-            this.ahpProcess = null;
-            this.stallTime = 0f;
+                base.OnAwake();
+
+                this.ahpProcess = null;
+                this.stallTime = 0f;
+
+                StatusEffectBase[] effects = this.Hub.playerEffectsController.AllEffects;
+
+                if (invigoratedIndex == null || hemorrhageIndex == null)
+                {
+                    invigoratedIndex = -1;
+                    hemorrhageIndex = -1;
+
+                    for (int i = 0; i < effects.Length; i++)
+                    {
+                        if (effects[i] is Invigorated)
+                        {
+                            invigoratedIndex = i;
+                        }
+                        else if (effects[i] is Hemorrhage)
+                        {
+                            hemorrhageIndex = i;
+                        }
+                    }
+                }
+
+                this.invigoratedEffect = (Invigorated)effects[invigoratedIndex.Value];
+                this.hemorrhageEffect = (Hemorrhage)effects[hemorrhageIndex.Value];
+            }
+            catch (Exception ex)
+            {
+                BPLogger.Error(ex.ToString());
+            }
         }
 
         /// <inheritdoc/>
         public override void OnEffectUpdate()
         {
             base.OnEffectUpdate();
+
+            this.Hub.playerEffectsController._syncEffectsIntensity[invigoratedIndex!.Value] = 1;
+            this.Hub.playerEffectsController._syncEffectsIntensity[hemorrhageIndex!.Value] = 1;
+
+            if (this.Hub.roleManager.CurrentRole is IFpcRole fpcRole)
+            {
+                this.isSprinting = fpcRole.FpcModule.CurrentMovementState == PlayerMovementState.Sprinting;
+            }
 
             if (this.ahpProcess is null)
             {
@@ -459,11 +522,17 @@ public sealed class CustomCola : BananaFeature
             this.ahpProcess.DecayRate = this.stallTime > 0f
                 ? 0f
                 : -AHPGain[this._intensity];
+
+            this.ahpProcess.Limit = Limit[this._intensity];
         }
 
         /// <inheritdoc/>
         public override void OnTick()
         {
+            if (this.isSprinting)
+            {
+                this.Hub.playerStats.DealDamage(new RedBullDamage(this._intensity / 1.7f));
+            }
         }
 
         /// <inheritdoc/>
@@ -485,17 +554,10 @@ public sealed class CustomCola : BananaFeature
                     this.ahpStat!.ServerKillProcess(this.ahpProcess.KillCode);
                 }
 
-                this.ahpProcess = this.ahpStat.ServerAddProcess(initialAmount, Limit, -AHPGain[this._intensity], Efficacy, 0f, true);
+                this.ahpProcess = this.ahpStat.ServerAddProcess(initialAmount, Limit[this._intensity], -AHPGain[this._intensity], Efficacy, 0f, true);
 
-                if (this.Hub.playerEffectsController.TryGetEffect(out Invigorated invigorated))
-                {
-                    invigorated.ServerSetState(1, 0f, false);
-                }
-
-                if (this.Hub.playerEffectsController.TryGetEffect(out Hemorrhage hemorrhage))
-                {
-                    hemorrhage.ServerSetState(1, 0f, false);
-                }
+                this.Hub.playerEffectsController._syncEffectsIntensity[invigoratedIndex!.Value] = 1;
+                this.Hub.playerEffectsController._syncEffectsIntensity[hemorrhageIndex!.Value] = 1;
             }
             catch (Exception ex)
             {
@@ -520,16 +582,16 @@ public sealed class CustomCola : BananaFeature
             float amount = this.ahpProcess.CurrentAmount;
             this.ahpStat.ServerKillProcess(this.ahpProcess.KillCode);
 
-            this.ahpProcess = this.ahpStat.ServerAddProcess(amount, Limit, NotActiveDecay, Efficacy, 0, false);
+            this.ahpProcess = this.ahpStat.ServerAddProcess(amount, Limit[this.MaxIntensity], NotActiveDecay, Efficacy, 0, false);
 
-            if (this.Hub.playerEffectsController.TryGetEffect(out Invigorated invigorated) && invigorated.Duration == 0f)
+            if (!this.invigoratedEffect!.IsEnabled)
             {
-                invigorated.Intensity = 0;
+                this.Hub.playerEffectsController._syncEffectsIntensity[invigoratedIndex!.Value] = 0;
             }
 
-            if (this.Hub.playerEffectsController.TryGetEffect(out Hemorrhage hemorrhage) && hemorrhage.Duration == 0f)
+            if (!this.hemorrhageEffect!.IsEnabled)
             {
-                hemorrhage.Intensity = 0;
+                this.Hub.playerEffectsController._syncEffectsIntensity[hemorrhageIndex!.Value] = 0;
             }
         }
 
@@ -572,6 +634,33 @@ public sealed class CustomCola : BananaFeature
         private void EnsureFields()
         {
             this.ahpStat ??= this.Hub.playerStats.GetModule<AhpStat>();
+        }
+
+        /// <summary>
+        /// Damage handler that bypasses hume and AHP.
+        /// </summary>
+        private class RedBullDamage : CustomReasonDamageHandler
+        {
+            public RedBullDamage(float damage)
+                : base("Got too high on red bull...", damage, "TERMINATED BY G FUEL")
+            {
+            }
+
+            public override HandlerOutput ApplyDamage(ReferenceHub ply)
+            {
+                if (this.Damage <= 0f)
+                {
+                    return HandlerOutput.Nothing;
+                }
+
+                HealthStat module = ply.playerStats.GetModule<HealthStat>();
+
+                module.CurValue -= this.Damage;
+
+                return module.CurValue > 0f
+                    ? HandlerOutput.Damaged
+                    : HandlerOutput.Death;
+            }
         }
     }
 
