@@ -4,7 +4,8 @@
   - Effect is now independent.
   - Effect damage now scales with intake, bypassing AHP and Hume.
   - Max AHP increases as you intake more red bull.
-- RedBull can now be obtained from SCP-294!
+    - In order as follows: 70, 75, 85, 100
+- RedBull can now be obtained from SCP-294
   - Type 'red bull' to receive it.
 
 1.5.1

@@ -436,7 +436,7 @@ public sealed class CustomCola : BananaFeature
         /// <summary>
         /// Gets the AHP limit based on the intensity of the red bull effect.
         /// </summary>
-        public static readonly float[] Limit = [0f, 75f, 85f, 95f, 100f];
+        public static readonly float[] Limit = [0f, 70f, 75f, 85f, 100f];
 
         private static int? invigoratedIndex;
         private static int? hemorrhageIndex;
