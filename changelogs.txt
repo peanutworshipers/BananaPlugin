@@ -1,4 +1,13 @@
-﻿1.5.1
+﻿1.6.0
+- Made pushing 3x stronger on chaotic thursdays.
+- RedBull changes
+  - Effect is now independent.
+  - Effect damage now scales with intake, bypassing AHP and Hume.
+  - Max AHP increases as you intake more red bull.
+- RedBull can now be obtained from SCP-294!
+  - Type 'red bull' to receive it.
+
+1.5.1
 - Update to EXILED 8.2.1
 - Fixed null component / gameobject error in Cleanup feature.
 - Fixed a consistent error causing the server to freeze while players are online.
