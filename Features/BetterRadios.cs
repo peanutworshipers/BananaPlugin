@@ -4,9 +4,11 @@ using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using Exiled.Events.EventArgs.Player;
 using HarmonyLib;
+using Hints;
 using InventorySystem;
 using InventorySystem.Configs;
 using InventorySystem.Items.Radio;
+using PlayerRoles;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -70,6 +72,7 @@ public sealed class BetterRadios : BananaFeature
         TranceivingVoiceData += this.Chatting;
         ExHandlers.Player.UsingRadioBattery += this.UsingRadioBattery;
         ExHandlers.Player.ChangingRole += this.ChangingRole;
+        ExHandlers.Player.PickingUpItem += this.PickingUpItem;
 
         this.onChannels = [];
         ExHandlers.Server.WaitingForPlayers += this.onChannels.Clear;
@@ -81,9 +84,31 @@ public sealed class BetterRadios : BananaFeature
         TranceivingVoiceData -= this.Chatting;
         ExHandlers.Player.UsingRadioBattery -= this.UsingRadioBattery;
         ExHandlers.Player.ChangingRole -= this.ChangingRole;
+        ExHandlers.Player.PickingUpItem -= this.PickingUpItem;
 
         ExHandlers.Server.WaitingForPlayers -= this.onChannels!.Clear;
         this.onChannels = null;
+    }
+
+    private static TextHint GetRadioHint(RoleTypeId role)
+    {
+        const int duration = 8;
+
+        string roleColor = ExExtensions.RoleExtensions.GetColor(role).ToHex();
+
+        string text = $"<line-height=-1100>\n<line-height=1.5em>\n<size=60><color={roleColor}><b><u>You can switch radio channels by \nright-clicking your radio while equipped!</u></b></color></size>";
+
+        HintParameter[] parameters =
+        [
+            new StringHintParameter(text),
+        ];
+
+        HintEffect[] effects =
+        [
+             HintEffectPresets.TrailingPulseAlpha(1f, 0.4f, 0.5f, 4, 0f, 3),
+        ];
+
+        return new(text, parameters, effects, duration);
     }
 
     private void ChangingRole(ChangingRoleEventArgs ev)
@@ -110,7 +135,22 @@ public sealed class BetterRadios : BananaFeature
             return;
         }
 
-        ev.Player.ShowHint("\n\n<size=40><b>You can switch radio channels by \nright-clicking your radio while equipped!</b></size>", 7);
+        ev.Player.HintDisplay.Show(GetRadioHint(ev.NewRole));
+    }
+
+    private void PickingUpItem(PickingUpItemEventArgs ev)
+    {
+        if (!ev.IsAllowed)
+        {
+            return;
+        }
+
+        if (ev.Pickup.Type != ItemType.Radio)
+        {
+            return;
+        }
+
+        ev.Player.HintDisplay.Show(GetRadioHint(ev.Player.Role));
     }
 
     private void UsingRadioBattery(UsingRadioBatteryEventArgs ev)
