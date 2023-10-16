@@ -417,7 +417,7 @@ public sealed class Trolling : BananaFeature
         };
 
         /// <inheritdoc/>
-        public string Description => "Forces a tantrum on yourself.";
+        public string Description => "Invade the facility with bottles!";
 
         /// <inheritdoc/>
         public string[] Usage => Array.Empty<string>();
