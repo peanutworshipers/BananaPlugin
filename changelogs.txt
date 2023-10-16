@@ -1,4 +1,8 @@
-﻿1.6.0
+﻿1.6.1
+- Add hint explaining channels when spawning with radio.
+- Fix 'bottleinvasion' command description.
+
+1.6.0
 - Made pushing 3x stronger on chaotic thursdays.
 - RedBull changes
   - Effect is now independent.
