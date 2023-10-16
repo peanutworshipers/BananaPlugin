@@ -31,6 +31,7 @@
 
       <Reference Include="Push" HintPath="References\Push.dll" Private="False" />
       <Reference Include="SCP294" HintPath="References\SCP294.dll" Private="False" />
+      <Reference Include="MapEditorReborn" HintPath="References\MapEditorReborn.dll" Private="False" />
     </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EXILED" Version="8.2.1" ExcludeAssets="RUNTIME" />

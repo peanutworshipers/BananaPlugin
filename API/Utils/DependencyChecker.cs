@@ -22,6 +22,11 @@ public static class DependencyChecker
         /// Represents the SCP294 dependency.
         /// </summary>
         SCP294 = 1 << 1,
+
+        /// <summary>
+        /// Represents the MapEditorReborn dependency.
+        /// </summary>
+        MapEditorReborn = 1 << 2,
     }
 
     /// <summary>
@@ -55,10 +60,17 @@ public static class DependencyChecker
             result &= CheckSCP294();
         }
 
+        if ((dependency & Dependency.MapEditorReborn) != 0)
+        {
+            result &= CheckMapEditorReborn();
+        }
+
         return result;
     }
 
     private static bool CheckSCP294() => typeof(Scp294Plugin) is not null;
 
     private static bool CheckPush() => typeof(Push.Push) is not null;
+
+    private static bool CheckMapEditorReborn() => typeof(MapEditorReborn.MapEditorReborn) is not null;
 }

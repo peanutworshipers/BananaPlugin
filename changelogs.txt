@@ -1,4 +1,8 @@
-﻿1.6.2
+﻿1.6.3
+- Added new feature: 'SCP-294 Balance'
+  - SCP-294 starts with one use, and gains one use every 3 minutes as the round progresses.
+
+1.6.2
 - Radio hint is now in a better spot and has some cool effects!
 - Radio hint will now also show upon picking up a radio.
 - Fixed a bug where the red bull effect isnt synced properly.
