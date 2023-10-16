@@ -4,8 +4,11 @@ using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using Exiled.Events.EventArgs.Player;
 using HarmonyLib;
+using InventorySystem;
+using InventorySystem.Configs;
 using InventorySystem.Items.Radio;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using VoiceChat.Playbacks;
@@ -66,8 +69,9 @@ public sealed class BetterRadios : BananaFeature
     {
         TranceivingVoiceData += this.Chatting;
         ExHandlers.Player.UsingRadioBattery += this.UsingRadioBattery;
+        ExHandlers.Player.ChangingRole += this.ChangingRole;
 
-        this.onChannels = new();
+        this.onChannels = [];
         ExHandlers.Server.WaitingForPlayers += this.onChannels.Clear;
     }
 
@@ -76,9 +80,37 @@ public sealed class BetterRadios : BananaFeature
     {
         TranceivingVoiceData -= this.Chatting;
         ExHandlers.Player.UsingRadioBattery -= this.UsingRadioBattery;
+        ExHandlers.Player.ChangingRole -= this.ChangingRole;
 
         ExHandlers.Server.WaitingForPlayers -= this.onChannels!.Clear;
         this.onChannels = null;
+    }
+
+    private void ChangingRole(ChangingRoleEventArgs ev)
+    {
+        // Only show a hint upon round start or respawning.
+        if (ev.Reason != ExEnums.SpawnReason.RoundStart && ev.Reason != ExEnums.SpawnReason.Respawn)
+        {
+            return;
+        }
+
+        // Make sure their inventory is being assigned.
+        if ((ev.SpawnFlags & PlayerRoles.RoleSpawnFlags.AssignInventory) == 0)
+        {
+            return;
+        }
+
+        if (!StartingInventories.DefinedInventories.TryGetValue(ev.NewRole, out InventoryRoleInfo info))
+        {
+            return;
+        }
+
+        if (!info.Items.Contains(ItemType.Radio))
+        {
+            return;
+        }
+
+        ev.Player.ShowHint("\n\n<size=40><b>You can switch radio channels by \nright-clicking your radio while equipped!</b></size>", 7);
     }
 
     private void UsingRadioBattery(UsingRadioBatteryEventArgs ev)
