@@ -2,6 +2,7 @@
 
 using BananaPlugin.API.Utils;
 using HarmonyLib;
+using SCP294.Commands;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -16,25 +17,22 @@ using static HarmonyLib.AccessTools;
 [HarmonyPatch]
 public static class Scp294RedBullPatch
 {
-    private static Type? foundType;
+    private const string NestedTypeName = "<>c__DisplayClass10_4";
+    private const string MethodName = "<Execute>b__5";
+
+    private static Type? nestedType;
 
     [HarmonyPrepare]
     private static bool Init()
     {
-        foundType = TypeByName("SCP294.Commands.SCP294Command+<>c__DisplayClass10_4");
-
-        if (foundType is null)
-        {
-            BPLogger.Error("Could not find the necessary class to patch.");
-            return false;
-        }
-
-        return true;
+        return DependencyChecker.CheckDependencies(DependencyChecker.Dependency.SCP294);
     }
 
     private static MethodInfo TargetMethod()
     {
-        return foundType!.GetMethod("<Execute>b__5", BindingFlags.Instance | BindingFlags.NonPublic);
+        nestedType = typeof(SCP294Command).GetNestedType(NestedTypeName, all);
+
+        return nestedType.GetMethod(MethodName, all);
     }
 
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
@@ -46,7 +44,7 @@ public static class Scp294RedBullPatch
             // Scp294RedBullPatch.OnReceivedCola(item, this.drinkName);
             new(OpCodes.Ldloc_0),
             new(OpCodes.Ldarg_0),
-            new(OpCodes.Ldfld, Field(foundType!, "drinkName")),
+            new(OpCodes.Ldfld, Field(nestedType!, "drinkName")),
             new(OpCodes.Call, Method(typeof(Scp294RedBullPatch), nameof(OnReceivedCola))),
         });
 

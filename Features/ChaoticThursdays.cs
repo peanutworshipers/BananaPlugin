@@ -4,6 +4,7 @@ using BananaPlugin.API.Main;
 using BananaPlugin.API.Utils;
 using HarmonyLib;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Reflection.Emit;
 using static HarmonyLib.AccessTools;
 
@@ -60,13 +61,19 @@ public sealed class ChaoticThursday : BananaFeature
     [HarmonyPatch]
     private static class PushForcePatch
     {
+        private const string MethodName = "get_PushForce";
+
         [HarmonyPrepare]
         private static bool Init()
         {
-            return TypeByName("Push.Config") is not null;
+            return DependencyChecker.CheckDependencies(DependencyChecker.Dependency.Push);
         }
 
-        [HarmonyPatch("Push.Config", nameof(Push.Config.PushForce), MethodType.Getter)]
+        private static MethodInfo TargetMethod()
+        {
+            return typeof(Push.Config).GetMethod(MethodName, all);
+        }
+
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
