@@ -14,7 +14,6 @@ using HarmonyLib;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using Mirror;
-using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
 using PlayerStatsSystem;
 using Scp914;
@@ -593,16 +592,6 @@ public sealed class CustomCola : BananaFeature
 
             this.stallTime = 0f;
 
-            if (this.ahpProcess is null)
-            {
-                return;
-            }
-
-            float amount = this.ahpProcess.CurrentAmount;
-            this.ahpStat.ServerKillProcess(this.ahpProcess.KillCode);
-
-            this.ahpProcess = this.ahpStat.ServerAddProcess(amount, Limit[this.MaxIntensity], NotActiveDecay, Efficacy, 0, false);
-
             if (!this.invigoratedEffect!.IsEnabled)
             {
                 this.Hub.playerEffectsController._syncEffectsIntensity[invigoratedIndex!.Value] = 0;
@@ -612,21 +601,15 @@ public sealed class CustomCola : BananaFeature
             {
                 this.Hub.playerEffectsController._syncEffectsIntensity[hemorrhageIndex!.Value] = 0;
             }
-        }
-
-        /// <inheritdoc/>
-        public override void OnRoleChanged(PlayerRoleBase previousRole, PlayerRoleBase newRole)
-        {
-            base.OnRoleChanged(previousRole, newRole);
 
             if (this.ahpProcess is null)
             {
                 return;
             }
 
-            this.EnsureFields();
-
+            float amount = this.ahpProcess.CurrentAmount;
             this.ahpStat.ServerKillProcess(this.ahpProcess.KillCode);
+            this.ahpProcess = this.ahpStat.ServerAddProcess(amount, Limit[this.MaxIntensity], NotActiveDecay, Efficacy, 0, false);
         }
 
         /// <inheritdoc/>
