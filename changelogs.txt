@@ -1,4 +1,7 @@
-﻿1.6.3
+﻿1.6.4
+- Fix a goof with the time counter coroutine in 'SCP-294 Balance' causing it to accumulate through multiple rounds.
+
+1.6.3
 - Added new feature: 'SCP-294 Balance'
   - SCP-294 starts with one use, and gains one use every 3 minutes as the round progresses.
 

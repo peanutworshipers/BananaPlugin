@@ -13,6 +13,8 @@ using static BananaPlugin.API.Utils.DependencyChecker;
 /// </summary>
 public sealed class Scp294Balance : BananaFeature
 {
+    private CoroutineHandle mainHandle;
+
     private Scp294Balance()
     {
     }
@@ -52,15 +54,16 @@ public sealed class Scp294Balance : BananaFeature
             SCP294Object.SetSCP294Uses(scp294, 1);
         }
 
-        MECExtensions.Run(this.IncrementScp294Uses, Segment.Update);
+        this.mainHandle.KillAssignNew(this.IncrementScp294Uses, Segment.Update);
     }
 
     private IEnumerator<float> IncrementScp294Uses()
     {
-        const float TimeBetweenIncrements = 3f * 60f;
+        const float TimeBetweenIncrements = 180f;
 
         float time = 0f;
-        while (ExFeatures.Round.IsStarted)
+
+        while (true)
         {
             while (time < TimeBetweenIncrements)
             {
