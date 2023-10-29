@@ -19,6 +19,9 @@ internal static class DeveloperUtils
         new ("Zereth", "76561198288227848@steam"),
         new ("Zereth", "300607485738221569@discord"),
 
+        new ("Alex", "76561199489585086@steam"),
+        new ("Alex", "1125158821598339125@discord"),
+        
         new ("Skillz", "76561198397906373@steam"),
         new ("Skillz", "330362707029131265@discord"),
     };
