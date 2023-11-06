@@ -18,7 +18,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature that improves escape functionality.
 /// </summary>
-public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
+public sealed class BetterEscape : PluginFeatureConfig<CfgBetterEscape>
 {
     private CoroutineHandle guardHandle;
 
@@ -156,7 +156,7 @@ public sealed class BetterEscape : BananaFeatureConfig<CfgBetterEscape>
                 new(OpCodes.Call, PropertyGetter(typeof(BetterEscape), nameof(Instance))),
                 new(OpCodes.Brfalse_S, allowLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(BetterEscape), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, allowLabel),
 
                 // if (newRole._spawnReason == RoleChangeReason.Escaped)

@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// The main feature responsible for cleaning the facility / server.
 /// </summary>
-public sealed class Cleanup : BananaFeatureConfig<CfgCleanup>
+public sealed class Cleanup : PluginFeatureConfig<CfgCleanup>
 {
     static Cleanup()
     {

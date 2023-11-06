@@ -13,7 +13,7 @@ using static BananaPlugin.Patches.PositionDistributorPatch;
 /// <summary>
 /// The main feature responsible for balancing SCP-939.
 /// </summary>
-public class Scp939Balance : BananaFeature
+public class Scp939Balance : PluginFeature
 {
     private Scp939Balance()
     {

@@ -13,7 +13,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature responsible for balancing disarming.
 /// </summary>
-public sealed class DisarmBalance : BananaFeature
+public sealed class DisarmBalance : PluginFeature
 {
     /// <summary>
     /// The distance at which players are uncuffed inside the facility.
@@ -84,7 +84,7 @@ public sealed class DisarmBalance : BananaFeature
                 new(OpCodes.Call, PropertyGetter(typeof(DisarmBalance), nameof(Instance))),
                 new(OpCodes.Brfalse_S, originalLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(DisarmBalance), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, originalLabel),
 
                 // float [onstack] sqrDist;

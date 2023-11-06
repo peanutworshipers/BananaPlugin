@@ -21,7 +21,7 @@ using static InventorySystem.Items.Radio.RadioMessages;
 /// <summary>
 /// The main feature responsible for radio channels.
 /// </summary>
-public sealed class BetterRadios : BananaFeature
+public sealed class BetterRadios : PluginFeature
 {
     private Dictionary<int, int>? onChannels;
 

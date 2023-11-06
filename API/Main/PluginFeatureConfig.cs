@@ -6,13 +6,13 @@ using System.Diagnostics.CodeAnalysis;
 /// The main feature implementation allowing for config usage.
 /// </summary>
 /// <typeparam name="T">The config type to use.</typeparam>
-public abstract class BananaFeatureConfig<T> : BananaFeature
+public abstract class PluginFeatureConfig<T> : PluginFeature
     where T : class, new()
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BananaFeatureConfig{T}"/> class.
+    /// Initializes a new instance of the <see cref="PluginFeatureConfig{T}"/> class.
     /// </summary>
-    protected BananaFeatureConfig()
+    protected PluginFeatureConfig()
     {
         if (!Plugin.AssertEnabled())
         {

@@ -13,7 +13,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature responsible for chaotic thursdays.
 /// </summary>
-public sealed class ChaoticThursday : BananaFeature
+public sealed class ChaoticThursday : PluginFeature
 {
     private ChaoticThursday()
     {

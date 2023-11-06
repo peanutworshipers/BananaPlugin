@@ -9,7 +9,7 @@ using GameCore;
 /// <summary>
 /// The feature responsible for enabling friendly fire when the round ends.
 /// </summary>
-public sealed class RoundEndFF : BananaFeature
+public sealed class RoundEndFF : PluginFeature
 {
     private RoundEndFF()
     {

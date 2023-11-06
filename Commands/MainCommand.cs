@@ -57,10 +57,10 @@ public sealed class MainCommand : ParentCommand, IUsageProvider, IHelpProvider
     public override string Description => "The main command for banana plugin.";
 
     /// <inheritdoc/>
-    public string[] Usage { get; } =
-    [
+    public string[] Usage => new[]
+    {
         "subcommand",
-    ];
+    };
 
     /// <inheritdoc/>
     public string GetHelp(ArraySegment<string> arguments)

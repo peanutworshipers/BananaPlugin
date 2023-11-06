@@ -18,7 +18,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature responsible for allowing pink candy to be obtained from SCP-330.
 /// </summary>
-public sealed class PinkCandyBowl : BananaFeatureConfig<CfgPinkCandyBowl>
+public sealed class PinkCandyBowl : PluginFeatureConfig<CfgPinkCandyBowl>
 {
     private PinkCandyBowl()
     {

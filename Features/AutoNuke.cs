@@ -18,7 +18,7 @@ using static Broadcast;
 /// <summary>
 /// The main feature responsible for automatically enabling the alpha warhead after a specified amount of time from round start.
 /// </summary>
-public sealed class AutoNuke : BananaFeatureConfig<CfgAutoNuke>
+public sealed class AutoNuke : PluginFeatureConfig<CfgAutoNuke>
 {
     private CoroutineHandle mainHandle;
 

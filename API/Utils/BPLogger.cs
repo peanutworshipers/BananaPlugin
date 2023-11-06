@@ -27,7 +27,7 @@ public sealed class BPLogger
     /// Initializes a new instance of the <see cref="BPLogger"/> class.
     /// </summary>
     /// <param name="feature">The feature to use as a parent.</param>
-    internal BPLogger(BananaFeature feature)
+    internal BPLogger(PluginFeature feature)
     {
         this.Feature = feature;
         Loggers.Add(this);
@@ -36,7 +36,7 @@ public sealed class BPLogger
     /// <summary>
     /// Gets the feature associated with this logger.
     /// </summary>
-    public BananaFeature Feature { get; }
+    public PluginFeature Feature { get; }
 
     /// <summary>
     /// Gets the log name associated with this logger.

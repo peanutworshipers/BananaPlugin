@@ -23,7 +23,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature responsible for preventing camping.
 /// </summary>
-public sealed class CampPrevention : BananaFeature
+public sealed class CampPrevention : PluginFeature
 {
     private CoroutineHandle nukeSiloHandle;
     private NukeSiloHelper? nukeSiloHelper;
@@ -147,7 +147,7 @@ public sealed class CampPrevention : BananaFeature
                 new(OpCodes.Call, PropertyGetter(typeof(CampPrevention), nameof(Instance))),
                 new(OpCodes.Brfalse_S, originalLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(CampPrevention), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, originalLabel),
 
                 // if (!PlayerRolesUtils.IsSCP(this.Hub, includeZombies: false))

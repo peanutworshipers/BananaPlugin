@@ -28,7 +28,7 @@ using static HarmonyLib.AccessTools;
 /// The main feature for handling the replacement of disconnecting players.
 /// </summary>
 [Obsolete]
-public sealed class DisconnectReplace : BananaFeature
+public sealed class DisconnectReplace : PluginFeature
 {
     private DisconnectReplace()
     {
@@ -269,7 +269,7 @@ public sealed class DisconnectReplace : BananaFeature
                 new(OpCodes.Call, PropertyGetter(typeof(DisconnectReplace), nameof(Instance))),
                 new(OpCodes.Brfalse_S, dontSkipLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(DisconnectReplace), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brtrue_S, skipDisconnectDropLabel),
             });
 

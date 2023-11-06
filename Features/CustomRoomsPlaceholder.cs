@@ -17,7 +17,7 @@ using UnityEngine;
 /// <summary>
 /// The main feature responsible for custom rooms within the facility.
 /// </summary>
-public sealed class CustomRoomsPlaceholder : BananaFeature
+public sealed class CustomRoomsPlaceholder : PluginFeature
 {
     private CustomRoomsPlaceholder()
     {

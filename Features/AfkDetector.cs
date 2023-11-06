@@ -26,7 +26,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature responsible for kicking afk players.
 /// </summary>
-public sealed class AfkDetector : BananaFeature
+public sealed class AfkDetector : PluginFeature
 {
     /// <summary>
     /// The maximum time a player can be AFK before they are kicked after spawning.
@@ -436,7 +436,7 @@ public sealed class AfkDetector : BananaFeature
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
                 new(OpCodes.Brfalse_S, skipLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, skipLabel),
 
                 // if (!this._position.Equals(module.Motor.ReceivedPosition))
@@ -523,7 +523,7 @@ public sealed class AfkDetector : BananaFeature
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
                 new(OpCodes.Brfalse_S, skipLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, skipLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
                 new(OpCodes.Ldarg_0),
@@ -573,7 +573,7 @@ public sealed class AfkDetector : BananaFeature
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))).WithLabels(notServerCommunication),
                 new(OpCodes.Brfalse_S, skipLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, skipLabel),
                 new(OpCodes.Ldsfld, Field(typeof(QuerySentPatch), nameof(activeProcessor))),
                 new(OpCodes.Brfalse_S, skipLabel),
@@ -614,7 +614,7 @@ public sealed class AfkDetector : BananaFeature
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
                 new(OpCodes.Brfalse_S, skipLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, skipLabel),
                 new(OpCodes.Ldarg_0),
                 new(OpCodes.Stsfld, Field(typeof(QuerySentPatch), nameof(activeProcessor))),
@@ -649,7 +649,7 @@ public sealed class AfkDetector : BananaFeature
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
                 new(OpCodes.Brfalse_S, assignLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(AfkDetector), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, assignLabel),
                 new(OpCodes.Pop),
                 new(OpCodes.Ldc_R4, 0f),

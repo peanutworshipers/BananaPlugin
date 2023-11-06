@@ -18,7 +18,7 @@ using UnityEngine;
 /// The main feature responsible for lucky coins.
 /// </summary>
 [AllowedPorts(ServerPorts.TestServer)]
-public sealed class LuckyCoins : BananaFeature
+public sealed class LuckyCoins : PluginFeature
 {
     private Dictionary<ushort, LuckyCoinType>? coinSerials;
 

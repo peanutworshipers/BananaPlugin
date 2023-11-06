@@ -4,7 +4,7 @@ using BananaPlugin.API.Main;
 using System;
 
 /// <summary>
-/// An attribute that specifies a <see cref="BananaFeature"/> must only enable on certain server ports.
+/// An attribute that specifies a <see cref="PluginFeature"/> must only enable on certain server ports.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
 public sealed class AllowedPortsAttribute : Attribute

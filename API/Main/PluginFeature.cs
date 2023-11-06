@@ -6,18 +6,19 @@ using BananaPlugin.Extensions;
 using CommandSystem;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Interfaces;
 
 /// <summary>
 /// The main feature implementation.
 /// </summary>
-public abstract class BananaFeature
+public abstract class PluginFeature : IPrefixableItem
 {
     private bool enabled = false;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BananaFeature"/> class.
+    /// Initializes a new instance of the <see cref="PluginFeature"/> class.
     /// </summary>
-    protected BananaFeature()
+    protected PluginFeature()
     {
         MainCommand.OnAssigned += this.RegisterCommands;
 
@@ -83,7 +84,7 @@ public abstract class BananaFeature
     /// </summary>
     public FeatureCommand Command { get; }
 
-    public static implicit operator bool([NotNullWhen(true)] BananaFeature? feature)
+    public static implicit operator bool([NotNullWhen(true)] PluginFeature? feature)
     {
         return feature is not null;
     }
@@ -126,7 +127,7 @@ public abstract class BananaFeature
         /// Initializes a new instance of the <see cref="FeatureCommand"/> class.
         /// </summary>
         /// <param name="feature">The feature attached to this command.</param>
-        public FeatureCommand(BananaFeature feature)
+        public FeatureCommand(PluginFeature feature)
         {
             this.Command = feature.Prefix;
             this.Description = $"Main command for feature: [{feature.Name}]";
@@ -142,12 +143,12 @@ public abstract class BananaFeature
         public override string Description { get; }
 
         /// <inheritdoc/>
-        public string[] Usage { get; } =
-        [
+        public string[] Usage { get; } = new[]
+        {
             "subcommand",
-        ];
+        };
 
-        /// <inheritdoc/>
+    /// <inheritdoc/>
         public override void LoadGeneratedCommands()
         {
         }

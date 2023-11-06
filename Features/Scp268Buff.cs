@@ -15,7 +15,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main feature responsible for buffing the SCP-268 item.
 /// </summary>
-public sealed class Scp268Buff : BananaFeature
+public sealed class Scp268Buff : PluginFeature
 {
     private Scp268Buff()
     {
@@ -93,7 +93,7 @@ public sealed class Scp268Buff : BananaFeature
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(Scp268Buff), nameof(Instance))),
                 new(OpCodes.Brfalse_S, skipLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(Scp268Buff), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, skipLabel),
 
                 // if (target.playerEffectsController.GetEffect<Invisible>()?.IsEnabled)

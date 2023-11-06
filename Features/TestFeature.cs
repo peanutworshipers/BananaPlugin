@@ -16,7 +16,7 @@ using System.Threading;
 /// <summary>
 /// The test feature used for debugging.
 /// </summary>
-public sealed class TestFeature : BananaFeature
+public sealed class TestFeature : PluginFeature
 {
     static TestFeature()
     {

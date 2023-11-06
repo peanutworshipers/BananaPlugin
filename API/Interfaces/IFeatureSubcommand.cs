@@ -7,7 +7,7 @@ using BananaPlugin.API.Main;
 /// </summary>
 /// <typeparam name="T">The feature associated with this subcommand.</typeparam>
 public interface IFeatureSubcommand<T> : IFullCommand
-    where T : BananaFeature
+    where T : PluginFeature
 {
     /// <summary>
     /// Gets the parent feature of this subcommand.

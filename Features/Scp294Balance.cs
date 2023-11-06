@@ -11,7 +11,7 @@ using static BananaPlugin.API.Utils.DependencyChecker;
 /// <summary>
 /// The main feature responsible for handling SCP-294 balancing.
 /// </summary>
-public sealed class Scp294Balance : BananaFeature
+public sealed class Scp294Balance : PluginFeature
 {
     private CoroutineHandle mainHandle;
 

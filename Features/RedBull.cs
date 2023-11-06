@@ -30,7 +30,7 @@ using UsableScp207 = InventorySystem.Items.Usables.Scp207;
 /// <summary>
 /// The main feature responsible for custom cola items.
 /// </summary>
-public sealed class CustomCola : BananaFeature
+public sealed class CustomCola : PluginFeature
 {
     /// <summary>
     /// An array of all cola types.
@@ -695,7 +695,7 @@ public sealed class CustomCola : BananaFeature
                 new(OpCodes.Call, PropertyGetter(typeof(CustomCola), nameof(Instance))),
                 new(OpCodes.Brfalse_S, allowLabel),
                 new(OpCodes.Call, PropertyGetter(typeof(CustomCola), nameof(Instance))),
-                new(OpCodes.Call, PropertyGetter(typeof(BananaFeature), nameof(Enabled))),
+                new(OpCodes.Call, PropertyGetter(typeof(PluginFeature), nameof(Enabled))),
                 new(OpCodes.Brfalse_S, allowLabel),
 
                 // ColaType colaType = CustomCola.Instance.GetColaType(this);

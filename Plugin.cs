@@ -165,41 +165,7 @@ public sealed class Plugin : Plugin<Config>
 
         this.EnsureInstances();
 
-        Type[] types = this.Assembly.GetTypes();
-
-        foreach (Type type in types)
-        {
-            if (!type.IsSubclassOf(typeof(BananaFeature)) || type.IsAbstract)
-            {
-                continue;
-            }
-
-            if (type.GetCustomAttribute<ObsoleteAttribute>() is not null)
-            {
-                continue;
-            }
-
-            AllowedPortsAttribute? allowedPorts = type.GetCustomAttribute<AllowedPortsAttribute>();
-
-            if (allowedPorts is not null && !allowedPorts.ValidPorts.Contains(ServerStatic.ServerPort))
-            {
-                BPLogger.Warn($"Feature '{type.FullName}' skipped due to not having valid port selection.");
-                continue;
-            }
-
-            BananaFeature feature = (BananaFeature)Activator.CreateInstance(type, nonPublic: true);
-
-            if (!Features.TryAddFeature(feature, out string? response))
-            {
-                BPLogger.Error(response);
-            }
-            else
-            {
-                feature.Enabled = true;
-            }
-        }
-
-        Features.MarkAsLoaded();
+        
 
         base.OnEnabled();
     }
@@ -212,7 +178,7 @@ public sealed class Plugin : Plugin<Config>
             return;
         }
 
-        foreach (BananaFeature feature in Features)
+        foreach (PluginFeature feature in Features)
         {
             feature.Enabled = false;
         }

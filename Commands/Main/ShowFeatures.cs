@@ -47,7 +47,7 @@ public sealed class ShowFeatures : ICommand, IUsageProvider, IHelpProvider
 
         strBuilder.AppendLine("\n<size=30><b><u>Features list:</u></b></size>\n");
 
-        BananaFeature[] arr = Plugin.Features.OrderByDescending(x => x.Enabled).ToArray();
+        PluginFeature[] arr = Plugin.Features.OrderByDescending(x => x.Enabled).ToArray();
 
         if (arr.Length == 0)
         {
@@ -132,7 +132,7 @@ public sealed class ShowFeatures : ICommand, IUsageProvider, IHelpProvider
         return this.HelpProviderFormat("Run the command to list all features, their prefix, and their enabled status.");
     }
 
-    private string GetFeatureString(BananaFeature feature)
+    private string GetFeatureString(PluginFeature feature)
     {
         return $"{feature.Name} [{feature.Prefix}]";
     }

@@ -27,7 +27,7 @@ using Utils;
 /// <summary>
 /// The main feature responsible for trolling in-game players.
 /// </summary>
-public sealed class Trolling : BananaFeature
+public sealed class Trolling : PluginFeature
 {
     private CoroutineHandle spinHandle;
 
@@ -58,7 +58,7 @@ public sealed class Trolling : BananaFeature
     /// <summary>
     /// Gets the troll commands for this feature.
     /// </summary>
-    /// <remarks>We use a different array to apply subcommands to the main banana command, instead of overriding <see cref="BananaFeature.Commands"/>.</remarks>
+    /// <remarks>We use a different array to apply subcommands to the main banana command, instead of overriding <see cref="PluginFeature.Commands"/>.</remarks>
     public ICommand[] TrollCommands { get; }
 
     /// <inheritdoc/>

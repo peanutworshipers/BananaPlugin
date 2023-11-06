@@ -98,7 +98,7 @@ public sealed class EnableOrDisable : ICommand, IUsageProvider, IHelpProvider, I
         {
             string prefix = prefixes[i];
 
-            if (!Plugin.Features.TryGetFeature(prefix, out BananaFeature? feature))
+            if (!Plugin.Features.TryGetFeature(prefix, out PluginFeature? feature))
             {
                 strBuilder.AppendLine($"<color=orange>Feature with prefix '{prefix}' could not be found.</color>");
                 continue;

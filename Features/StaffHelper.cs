@@ -14,7 +14,7 @@ using System.Collections.Generic;
 /// <summary>
 /// The main feature responsible for assisting staff in their duties.
 /// </summary>
-public sealed class StaffHelper : BananaFeature
+public sealed class StaffHelper : PluginFeature
 {
     private HashSet<int>? cuffedPlayersDying;
     private HashSet<int>? usingPinkCandy;
