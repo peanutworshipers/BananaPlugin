@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Interfaces;
 
 /// <summary>
@@ -26,6 +27,11 @@ public class Collection<T> : IEnumerable<T>
         this.itemsByPrefix = new ();
         this.items = new ();
     }
+
+    /// <summary>
+    /// Gets the count of the amount of items in the collection.
+    /// </summary>
+    public int Count { get => this.items.Count; }
 
     /// <summary>
     /// Gets a value indicating whether the collection is loaded.

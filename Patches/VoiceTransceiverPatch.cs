@@ -13,7 +13,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main patch responsible for overriding voice transceiving.
 /// </summary>
-[HarmonyPatch(typeof(VoiceTransceiver), nameof(VoiceTransceiver.ServerReceiveMessage))]
+// [HarmonyPatch(typeof(VoiceTransceiver), nameof(VoiceTransceiver.ServerReceiveMessage))]
 public static class VoiceTransceiverPatch
 {
     private static readonly List<TranceivingVoice> Handlers = new(16);

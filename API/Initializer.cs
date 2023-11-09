@@ -11,10 +11,12 @@
 
 namespace BananaPlugin.API;
 
+using System.Runtime.Remoting;
 using Exiled.API.Features;
 using Exiled.API.Interfaces;
 using Interfaces;
 using Main;
+using MEC;
 
 /// <summary>
 /// Contains the Initializer that is used to enable the features of this framework.
@@ -22,12 +24,19 @@ using Main;
 // ReSharper disable once UnusedType.Global
 public static class Initializer
 {
+    private static bool initialized = false;
+
     /// <summary>
     /// Initializes the features of this framework.
     /// </summary>
-    /// <param name="pluginInstance">The instance of the plugin.</param>
-    /// <typeparam name="T">The type of the plugin.</typeparam>
-    public static void Initialize<T>(object pluginInstance)
+    public static void Initialize()
     {
+        if (initialized)
+        {
+            return;
+        }
+
+        initialized = true;
+        CosturaUtility.Initialize();
     }
 }

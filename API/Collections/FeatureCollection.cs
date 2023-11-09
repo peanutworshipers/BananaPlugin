@@ -8,9 +8,9 @@ using System.Diagnostics.CodeAnalysis;
 using Interfaces;
 
 /// <summary>
-/// Used to contain all <see cref="PluginFeature"/> for a <see cref="BpPlugin"/>.
+/// Used to contain all <see cref="BananaFeature"/> for a <see cref="BananaPlugin{TConfig}"/>.
 /// </summary>
-public sealed class FeatureCollection : Collection<PluginFeature>
+public sealed class FeatureCollection : Collection<BananaFeature>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FeatureCollection"/> class.
@@ -20,11 +20,11 @@ public sealed class FeatureCollection : Collection<PluginFeature>
     }
 
     /// <inheritdoc cref="TryGetFeature"/>
-    public new PluginFeature this[string prefix]
+    public new BananaFeature this[string prefix]
     {
         get
         {
-            if (!this.TryGetFeature(prefix, out PluginFeature? result))
+            if (!this.TryGetFeature(prefix, out BananaFeature? result))
             {
                 throw new ArgumentOutOfRangeException($"Feature {prefix} does not exist, and cannot be retrieved.");
             }
@@ -39,7 +39,7 @@ public sealed class FeatureCollection : Collection<PluginFeature>
     /// <param name="prefix">The prefix to find.</param>
     /// <param name="feature">The feature, if found.</param>
     /// <returns>A value indicating whether the operation was a success.</returns>
-    public bool TryGetFeature(string prefix, [NotNullWhen(true)] out PluginFeature? feature) =>
+    public bool TryGetFeature(string prefix, [NotNullWhen(true)] out BananaFeature? feature) =>
         this.TryGetItem(prefix, out feature);
 
 }

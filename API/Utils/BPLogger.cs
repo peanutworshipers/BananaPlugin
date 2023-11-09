@@ -27,7 +27,7 @@ public sealed class BPLogger
     /// Initializes a new instance of the <see cref="BPLogger"/> class.
     /// </summary>
     /// <param name="feature">The feature to use as a parent.</param>
-    internal BPLogger(PluginFeature feature)
+    internal BPLogger(BananaFeature feature)
     {
         this.Feature = feature;
         Loggers.Add(this);
@@ -36,7 +36,7 @@ public sealed class BPLogger
     /// <summary>
     /// Gets the feature associated with this logger.
     /// </summary>
-    public PluginFeature Feature { get; }
+    public BananaFeature Feature { get; }
 
     /// <summary>
     /// Gets the log name associated with this logger.
@@ -133,12 +133,12 @@ public sealed class BPLogger
 
     private static void LogMessage(string message, LogLevel logType, BPLogger? feature = null)
     {
-        ConsoleColor color = logType switch
+        string color = logType switch
         {
-            LogLevel.Error => ConsoleColor.DarkRed,
-            LogLevel.Warn => ConsoleColor.Magenta,
-            LogLevel.Info => ConsoleColor.Cyan,
-            LogLevel.Debug => ConsoleColor.Green,
+            LogLevel.Error => "&1", // Red
+            LogLevel.Warn => "&5", // Purple
+            LogLevel.Info => "&6", // Cyan
+            LogLevel.Debug => "&2", // Green
             _ => throw new ArgumentOutOfRangeException(nameof(logType)),
         };
 
@@ -148,7 +148,7 @@ public sealed class BPLogger
             Log.SendRaw(message, color);
         }
 #else
-        Log.SendRaw(message, color);
+        PluginAPI.Core.Log.Raw(PluginAPI.Core.Log.FormatText(message, color));
 #endif
     }
 

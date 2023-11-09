@@ -32,17 +32,10 @@ public abstract class ServerInfo : IPrefixableItem
     /// <param name="info">Returns a list of <see cref="ServerInfo"/> if allowed.</param>
     /// <exception cref="NullReferenceException">Thrown when the plugin doesn't have a valid Server.</exception>
     /// <returns>Returns the primary server info instance, if the server system is enabled. Otherwise returns null.</returns>
-    internal static ServerInfo? InitializeServerInformation<T>(BpPlugin<T> pluginInstance, out List<ServerInfo>? info) 
-        where T : IConfig, new()
+    internal static ServerInfo InitializeServerInformation(IServerInfo<BananaConfig> pluginInstance, out List<ServerInfo> info)
     {
-        if (!ServerInfoConfigOptions.EnableServerInstanceProfileSystem)
-        {
-            info = null;
-            return null;
-        }
-
         info = GetServerInfoInstances(pluginInstance);
-        ServerInfo? server = FindCurrentServer<T>(pluginInstance, info);
+        ServerInfo? server = FindCurrentServer(pluginInstance, info);
         if (server is null)
         {
             throw new NullReferenceException("Could not find a valid server profile, for this server. Try setting the Server Id.");
@@ -51,12 +44,11 @@ public abstract class ServerInfo : IPrefixableItem
         return server;
     }
 
-    private static ServerInfo FindCurrentServer<T>(BpPlugin<T> instance, List<ServerInfo> values)
-        where T : IConfig, new()
+    private static ServerInfo FindCurrentServer(IServerInfo<BananaConfig> instance, List<ServerInfo> values)
     {
         foreach (ServerInfo info in values)
         {
-            switch (ServerInfoConfigOptions.SearchMethod)
+            switch (instance.SearchMethod)
             {
                 case SearchIndex.ServerPort:
                     if (info.ServerPort != Server.Port)
@@ -73,12 +65,7 @@ public abstract class ServerInfo : IPrefixableItem
 
                     return info;
                 case SearchIndex.ServerId:
-                    if (instance.Config is not BpConfig config)
-                    {
-                        throw new ArgumentException("The config must be a BpConfig or IBpConfig to use this option.");
-                    }
-
-                    if (info.ServerId != config.ServerId)
+                    if (info.ServerId != instance.Config.ServerId)
                     {
                         continue;
                     }
@@ -90,8 +77,7 @@ public abstract class ServerInfo : IPrefixableItem
         throw new Exception("Server info not found from arguments supplied by the plugin. Ensure that the server info is defined.");
     }
 
-    private static List<ServerInfo> GetServerInfoInstances<T>(BpPlugin<T> plugin)
-        where T : IConfig, new()
+    private static List<ServerInfo> GetServerInfoInstances(IServerInfo<BananaConfig> plugin)
     {
         List<ServerInfo> serverInfos = new List<ServerInfo>();
         Type[] types = plugin.GetType().Assembly.GetTypes();
@@ -133,4 +119,9 @@ public abstract class ServerInfo : IPrefixableItem
 
     /// <inheritdoc />
     public abstract string Prefix { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether features with the <see cref="global::BananaPlugin.API.Attributes.DebugFeatureAttribute"/> be loaded.
+    /// </summary>
+    public virtual bool EnableDebugFeatures => false;
 }

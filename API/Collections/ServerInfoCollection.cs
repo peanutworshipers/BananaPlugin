@@ -10,19 +10,19 @@ using Interfaces;
 using JetBrains.Annotations;
 
 /// <summary>
-/// Used to contain all <see cref="ServerInfo"/> instances for a <see cref="BpPlugin"/>.
+/// Used to contain all <see cref="ServerInfo"/> instances for a <see cref="BananaPlugin{TConfig}"/>.
 /// </summary>
 public sealed class ServerInfoCollection : Collection<ServerInfo>, ICollectionPrimaryKey<ServerInfo>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ServerInfoCollection"/> class.
     /// </summary>
-    public ServerInfoCollection(ServerInfo? primaryKey, List<ServerInfo>? values)
+    public ServerInfoCollection(ServerInfo primaryKey, List<ServerInfo> values)
     {
         this.PrimaryKey = primaryKey;
     }
 
     /// <inheritdoc />
-    public ServerInfo? PrimaryKey { get; }
+    public ServerInfo PrimaryKey { get; }
 
 }

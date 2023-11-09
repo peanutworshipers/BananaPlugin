@@ -14,7 +14,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main patch for overriding visibility of players.
 /// </summary>
-[HarmonyPatch(typeof(FpcServerPositionDistributor), nameof(FpcServerPositionDistributor.WriteAll))]
+// [HarmonyPatch(typeof(FpcServerPositionDistributor), nameof(FpcServerPositionDistributor.WriteAll))]
 public static class PositionDistributorPatch
 {
     private static readonly List<VisibilityCheck> Handlers = new(16);
