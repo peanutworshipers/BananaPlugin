@@ -1,7 +1,7 @@
 ﻿namespace BananaPlugin.API.Main;
 
-using BananaPlugin.API.Utils;
-using BananaPlugin.Extensions;
+using Utils;
+using Extensions;
 using CommandSystem;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -12,15 +12,14 @@ using Interfaces;
 /// </summary>
 public abstract class BananaFeature : IPrefixableItem
 {
-    private bool enabled = false;
+    private bool enabled;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BananaFeature"/> class.
     /// </summary>
     protected BananaFeature()
     {
-        MainCommand.OnAssigned += this.RegisterCommands;
-
+        // MainCommand.OnAssigned += this.RegisterCommands;
         this.Command = new(this);
     }
 
@@ -98,16 +97,16 @@ public abstract class BananaFeature : IPrefixableItem
     /// </summary>
     protected abstract void Disable();
 
-    private void RegisterCommands(MainCommand command)
+    // ReSharper disable once UnusedMember.Local
+    private void RegisterCommands()
     {
         if (this.Commands.Length == 0)
         {
             return;
         }
 
-        command.UnregisterCommand(this.Command);
-        command.RegisterCommand(this.Command);
-
+        // command.UnregisterCommand(this.Command);
+        // command.RegisterCommand(this.Command);
         ICommand[] cmds = this.Commands;
 
         for (int i = 0; i < cmds.Length; i++)
@@ -161,8 +160,11 @@ public abstract class BananaFeature : IPrefixableItem
         /// <inheritdoc/>
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, [NotNullWhen(true)] out string? response)
         {
-            return Plugin.AssertEnabled(out response)
-                && this.InvalidSubcommandFormat(out response);
+            response = string.Empty;
+            return false;
+
+            // return Plugin.AssertEnabled(out response)
+            //   && this.InvalidSubcommandFormat(out response);
         }
     }
 }

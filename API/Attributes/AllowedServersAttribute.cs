@@ -1,13 +1,13 @@
 ﻿namespace BananaPlugin.API.Attributes;
 
-using BananaPlugin.API.Main;
+using Main;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 /// <summary>
 /// An attribute that specifies a <see cref="BananaFeature"/> must only enable on certain server instances.
 /// </summary>
+// ReSharper disable ClassNeverInstantiated.Global
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
 public sealed class AllowedServersAttribute : Attribute
 {

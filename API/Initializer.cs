@@ -11,20 +11,13 @@
 
 namespace BananaPlugin.API;
 
-using System.Runtime.Remoting;
-using Exiled.API.Features;
-using Exiled.API.Interfaces;
-using Interfaces;
-using Main;
-using MEC;
-
 /// <summary>
 /// Contains the Initializer that is used to enable the features of this framework.
 /// </summary>
 // ReSharper disable once UnusedType.Global
 public static class Initializer
 {
-    private static bool initialized = false;
+    private static bool initialized;
 
     /// <summary>
     /// Initializes the features of this framework.

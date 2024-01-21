@@ -19,20 +19,20 @@ using Main;
 /// </summary>
 /// <typeparam name="TConfig">The plugin config.</typeparam>
 public interface IServerInfo<TConfig>
-    where TConfig : BananaConfig
+    where TConfig : BananaConfig, new()
 {
     /// <summary>
-    /// Gets the <see cref="Main.ServerInfo"/> instances defined for this plugin.
+    /// Gets or sets the <see cref="Main.ServerInfo"/> instances defined for this plugin.
     /// </summary>
-    public ServerInfoCollection ServerInfo { get; internal set; }
+    public ServerInfoCollection ServerInfo { get; set; }
 
     /// <summary>
-    /// Gets or sets the method of indexing that plugin authors can use to find the <see cref="ServerInfo"/> profile that this server instance is.
+    /// Gets the method of indexing that plugin authors can use to find the <see cref="ServerInfo"/> profile that this server instance is.
     /// </summary>
     public SearchIndex SearchMethod { get; }
 
     /// <summary>
-    /// The config instance.
+    /// Gets the config instance.
     /// </summary>
     public TConfig Config { get; }
 }

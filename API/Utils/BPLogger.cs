@@ -1,8 +1,7 @@
 ﻿namespace BananaPlugin.API.Utils;
 
-using BananaPlugin.API.Main;
+using Main;
 using Discord;
-using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,7 +12,10 @@ using System.Reflection;
 /// </summary>
 public sealed class BPLogger
 {
-    private static readonly List<BPLogger> Loggers = new ();
+    /// <summary>
+    /// Gets a list of loggers.
+    /// </summary>
+    public static readonly List<BPLogger> Loggers = new ();
 
     private static readonly HashSet<MethodBase> AlreadyIdentified = new();
 
@@ -131,6 +133,7 @@ public sealed class BPLogger
         LogMessage($"[BP+{this.LogName}-{GetCallerString(false)}] {message}", LogLevel.Debug, this);
     }
 
+    // ReSharper disable once UnusedParameter.Local
     private static void LogMessage(string message, LogLevel logType, BPLogger? feature = null)
     {
         string color = logType switch
@@ -158,7 +161,7 @@ public sealed class BPLogger
 
         string result = !Identifiers.TryGetValue(GetFullMethodName(method), out (string, string) identifier)
             ? includeType
-                ? $"{method.DeclaringType.Name}::{method.Name}"
+                ? $"{method.DeclaringType?.Name}::{method.Name}"
                 : $"{method.Name}]"
             : includeType
                 ? $"{identifier.Item1}::{identifier.Item2}"
@@ -176,7 +179,7 @@ public sealed class BPLogger
 
     private static string GetFullMethodName(MethodBase methodBase)
     {
-        return methodBase.DeclaringType.FullName + "::" + methodBase.Name;
+        return methodBase.DeclaringType?.FullName + "::" + methodBase.Name;
     }
 
     /// <summary>

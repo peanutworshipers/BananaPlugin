@@ -68,6 +68,7 @@ public static class DependencyChecker
         return result;
     }
 
+    // ReSharper disable ConditionIsAlwaysTrueOrFalse
     private static bool CheckSCP294() => typeof(Scp294Plugin) is not null;
 
     private static bool CheckPush() => typeof(Push.Push) is not null;

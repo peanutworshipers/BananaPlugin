@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.API.Utils;
 
-using BananaPlugin.Extensions;
+using Extensions;
 using MEC;
 #if LOCAL
 using Mirror;

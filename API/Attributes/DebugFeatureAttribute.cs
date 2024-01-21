@@ -17,7 +17,12 @@ using System;
 /// Allows defining a feature that is meant for debugging. Features with this attribute will only be enabled if debugging is enabled for the server.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-public class DebugFeatureAttribute : System.Attribute
+public class DebugFeatureAttribute : Attribute
 {
-    public DebugFeatureAttribute() { }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DebugFeatureAttribute"/> class.
+    /// </summary>
+    public DebugFeatureAttribute()
+    {
+    }
 }

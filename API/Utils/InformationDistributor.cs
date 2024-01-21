@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.API.Utils;
 
-using BananaPlugin.Extensions;
+using Extensions;
 
 /// <summary>
 /// The main class responsible for distributing information to specified players.

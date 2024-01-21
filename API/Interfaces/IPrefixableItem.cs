@@ -11,10 +11,13 @@
 
 namespace BananaPlugin.API.Interfaces;
 
+/// <summary>
+/// Adds a prefix to an item. Used for collections.
+/// </summary>
 public interface IPrefixableItem
 {
     /// <summary>
-    /// The prefix of the item.
+    /// Gets the prefix of the item.
     /// </summary>
     string Prefix { get; }
 }

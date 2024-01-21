@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.Patches;
 
-using BananaPlugin.API;
+using API;
 using BananaPlugin.API.Utils;
 using HarmonyLib;
 using System;
@@ -33,6 +33,8 @@ public static class VoiceTransceiverPatch
         remove => Handlers.Remove(value);
     }
 
+    // ReSharper disable UnusedMember.Local
+    // ReSharper disable UnusedParameter.Local
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
 #pragma warning disable SA1118 // Parameter should not span multiple lines

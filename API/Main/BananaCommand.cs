@@ -41,7 +41,6 @@ public class BananaParentCommand : ParentCommand
     /// <inheritdoc/>
     public override string Command => this.command;
 
-
     private string[] aliases = Array.Empty<string>();
 
     /// <inheritdoc/>

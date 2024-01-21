@@ -1,23 +1,35 @@
 ﻿namespace BananaPlugin.API.Collections;
 
-using BananaPlugin.API.Main;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Interfaces;
+
+#pragma warning disable SA1401
 
 /// <summary>
 /// Used to contain all bananaplugin Features.
 /// </summary>
+/// <typeparam name="T">The type item the collection holds.</typeparam>
+// ReSharper disable MemberCanBePrivate.Global
 public class Collection<T> : IEnumerable<T>
     where T : IPrefixableItem
 {
+    /// <summary>
+    /// The items but sorted by a prefix.
+    /// </summary>
     protected readonly Dictionary<string, T> itemsByPrefix;
-    protected  readonly List<T> items;
 
-    bool isLoaded;
+    /// <summary>
+    /// The items buy not sort.
+    /// </summary>
+    protected readonly List<T> Items;
+
+    /// <summary>
+    /// Used to notate whether the collection has been loaded or not.
+    /// </summary>
+    protected bool isLoaded;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Collection{T}"/> class.
@@ -25,18 +37,38 @@ public class Collection<T> : IEnumerable<T>
     public Collection()
     {
         this.itemsByPrefix = new ();
-        this.items = new ();
+        this.Items = new ();
     }
-
-    /// <summary>
-    /// Gets the count of the amount of items in the collection.
-    /// </summary>
-    public int Count { get => this.items.Count; }
 
     /// <summary>
     /// Gets a value indicating whether the collection is loaded.
     /// </summary>
     public bool IsLoaded => this.isLoaded;
+
+    /// <inheritdoc cref="TryGetItem"/>
+    public T this[string prefix]
+    {
+        get
+        {
+            if (!this.TryGetItem(prefix, out T? result))
+            {
+                throw new ArgumentOutOfRangeException($"Feature {prefix} does not exist, and cannot be retrieved.");
+            }
+
+            if (result is null)
+            {
+                throw new ArgumentOutOfRangeException($"Feature {prefix} does not exist, and cannot be retrieved.");
+            }
+
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// Gets the count of the amount of items in the collection.
+    /// </summary>
+    /// <returns>The count of items in the collection.</returns>
+    public int GetCount() => this.Items.Count;
 
     /// <summary>
     /// Attempts to get an item by its prefix.
@@ -55,7 +87,7 @@ public class Collection<T> : IEnumerable<T>
     /// <returns>An enumerator over the list of items.</returns>
     public IEnumerator<T> GetEnumerator()
     {
-        return this.items.GetEnumerator();
+        return this.Items.GetEnumerator();
     }
 
     /// <inheritdoc/>
@@ -86,8 +118,8 @@ public class Collection<T> : IEnumerable<T>
                 return false;
             }
 
-            this.itemsByPrefix[item.Prefix] = item;
-            this.items.Add(item);
+            this.itemsByPrefix.Add(item.Prefix, item);
+            this.Items.Add(item);
             response = null;
             return true;
         }
@@ -104,24 +136,5 @@ public class Collection<T> : IEnumerable<T>
     internal void MarkAsLoaded()
     {
         this.isLoaded = true;
-    }
-
-    /// <inheritdoc cref="TryGetItem"/>
-    public T this[string prefix]
-    {
-        get
-        {
-            if (!this.TryGetItem(prefix, out T? result))
-            {
-                throw new ArgumentOutOfRangeException($"Feature {prefix} does not exist, and cannot be retrieved.");
-            }
-
-            if (result is null)
-            {
-                throw new ArgumentOutOfRangeException($"Feature {prefix} does not exist, and cannot be retrieved.");
-            }
-
-            return result;
-        }
     }
 }

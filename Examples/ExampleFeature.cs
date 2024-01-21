@@ -11,12 +11,12 @@
 
 namespace BananaPlugin.Examples;
 
-using API.Attributes;
 using API.Commands;
 using API.Commands.Arguments;
 using API.Main;
 using Exiled.API.Features;
 
+/// <inheritdoc />
 internal sealed class ExampleFeature : BananaFeature
 {
     /// <inheritdoc/>
@@ -30,10 +30,12 @@ internal sealed class ExampleFeature : BananaFeature
     {
     }
 
+    /// <inheritdoc/>
     protected override void Disable()
     {
     }
 
+    // ReSharper disable UnusedMember.Local
     [BananaCommand("Nickname2", "Gives a player a nickname.")]
     [CommandArgument<string>("Player", "The player to apply the new nickname to.", usagePath: 1)]
     [CommandArgument<string>("Nickname", "The new nickname.", usagePath: 1)]
@@ -41,7 +43,7 @@ internal sealed class ExampleFeature : BananaFeature
     private void BananaCommand(ArgumentResultCollection result)
     {
         string nickname = result["Nickname"].Result<string>();
-        Player ply = result.Count > 1 ? result["Player"].Result<ExPlayer>() : Player.Get(result.Sender);
+        Player ply = result.GetCount() > 1 ? result["Player"].Result<ExPlayer>() : Player.Get(result.Sender);
         ply.DisplayNickname = nickname;
     }
 }

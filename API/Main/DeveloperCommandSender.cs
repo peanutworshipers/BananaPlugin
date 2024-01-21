@@ -1,15 +1,13 @@
 ﻿namespace BananaPlugin.API.Main;
 
-using BananaPlugin.Extensions;
-using Exiled.Permissions.Extensions;
-using Exiled.Permissions.Features;
+using Extensions;
 using RemoteAdmin;
 using System.Linq;
 
 /// <inheritdoc/>
 internal sealed class DeveloperCommandSender : PlayerCommandSender
 {
-    private bool developerModeActive = false;
+    private bool developerModeActive;
     private ExPlayer player;
 
     /// <summary>
@@ -63,7 +61,7 @@ internal sealed class DeveloperCommandSender : PlayerCommandSender
     }
 
     /// <inheritdoc/>
-    public sealed override ulong Permissions => this.developerModeActive ? RevokedPermissions : this.player.Group.Permissions;
+    public override ulong Permissions => this.developerModeActive ? RevokedPermissions : this.player.Group.Permissions;
 
     /// <summary>
     /// Gets the original player command sender.

@@ -11,8 +11,9 @@
 
 namespace BananaPlugin.API.Commands.Arguments;
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Reflection;
 using CommandSystem;
 using Main;
 
@@ -20,35 +21,13 @@ using Main;
 /// <inheritdoc cref="CommandImplementation" />
 public class UsageProviderCommandImplementation : CommandImplementation, IUsageProvider
 {
-
     /// <inheritdoc />
-    public UsageProviderCommandImplementation(BananaCommandAttribute cmd, List<BananaPermission>? requiredPermissions = null) : base(cmd, requiredPermissions)
+    public UsageProviderCommandImplementation(BananaCommandAttribute cmd, MethodInfo method, List<BananaPermission>? requiredPermissions = null, object? instance = null)
+        : base(cmd, method, requiredPermissions, instance)
     {
-        List<string> args = new List<string>();
-        foreach(List<CommandArgument> path in cmd.CommandArguments.Values)
-        {
-            if (path.Count < 1)
-            {
-                continue;
-            }
-
-            string concat = path[0];
-            for (int i = 1; i < list.Count; i++)
-            {
-                concat += $" / {list[i]}";
-            }
-
-            values.Add(concat);
-            
-            args.Add();
-        }
-
-        List<string> values = new();
-        foreach(List<string> list in args)
-        {
-            
-        }
+        this.Usage = Array.Empty<string>();
     }
 
+    /// <inheritdoc />
     public string[] Usage { get; }
 }

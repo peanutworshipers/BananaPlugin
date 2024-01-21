@@ -63,7 +63,7 @@ public class BananaCommandAttribute : Attribute
     public string[] Aliases { get; init; }
 
     /// <summary>
-    /// Gets or sets the required <see cref="CommandArguments"/> in correspondence to the proper usage path. />
+    /// Gets or sets the required <see cref="CommandArguments"/> in correspondence to the proper usage path. />.
     /// </summary>
     public Dictionary<int, List<CommandArgument>> CommandArguments { get; set; } = new ();
 }

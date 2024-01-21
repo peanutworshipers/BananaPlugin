@@ -1,9 +1,8 @@
 ﻿namespace BananaPlugin.Patches;
 
-using BananaPlugin.API;
+using API;
 using BananaPlugin.API.Utils;
 using HarmonyLib;
-using PlayerRoles.FirstPersonControl.NetworkMessages;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -34,6 +33,8 @@ public static class PositionDistributorPatch
         remove => Handlers.Remove(value);
     }
 
+    // ReSharper disable UnusedMember.Local
+    // ReSharper disable once UnusedParameter.Local
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
         instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);

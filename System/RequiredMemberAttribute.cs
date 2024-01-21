@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #pragma warning disable
+// ReSharper disable CheckNamespace
 namespace System.Runtime.CompilerServices;
 
 /// <summary>Specifies that a type has required members or that a member is required.</summary>

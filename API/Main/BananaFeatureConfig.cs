@@ -14,13 +14,14 @@ public abstract class BananaFeatureConfig<T> : BananaFeature
     /// </summary>
     protected BananaFeatureConfig()
     {
-        if (!base.Plugin.AssertEnabled())
+        this.LocalConfig = null!;
+        /* if (!base.Plugin.AssertEnabled())
         {
             throw new System.InvalidOperationException();
         }
 
         this.OnConfigUpdated(Plugin.Instance.Config);
-        Config.FeatureConfigUpdated += this.OnConfigUpdated;
+        Config.FeatureConfigUpdated += this.OnConfigUpdated;*/
     }
 
     /// <summary>

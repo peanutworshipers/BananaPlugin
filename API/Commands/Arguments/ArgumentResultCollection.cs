@@ -11,6 +11,7 @@
 
 namespace BananaPlugin.API.Commands.Arguments;
 
+using System.Collections.Generic;
 using CommandSystem;
 
 /// <summary>
@@ -26,10 +27,12 @@ public class ArgumentResultCollection : Collections.Collection<ArgumentResult>
     /// </summary>
     /// <param name="sender">The <see cref="ICommandSender"/> executing the command.</param>
     /// <param name="usagePath"><inheritdoc cref="CommandArgument.UsagePath"/></param>
-    public ArgumentResultCollection(ICommandSender sender, int usagePath)
+    /// <param name="arguments">A list of the provided command arguments.</param>
+    public ArgumentResultCollection(ICommandSender sender, int usagePath, List<string> arguments)
     {
         this.Sender = sender;
         this.UsagePath = usagePath;
+        this.Arguments = arguments.AsReadOnly();
     }
 
     /// <summary>
@@ -39,4 +42,9 @@ public class ArgumentResultCollection : Collections.Collection<ArgumentResult>
 
     /// <inheritdoc cref="ICommandArgument.UsagePath" />
     public int UsagePath { get; init; }
+
+    /// <summary>
+    /// Gets a readonly list of the provided arguments.
+    /// </summary>
+    public IReadOnlyList<string> Arguments { get; }
 }

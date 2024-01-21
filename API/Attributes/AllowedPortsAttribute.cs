@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.API.Attributes;
 
-using BananaPlugin.API.Main;
+using Main;
 using System;
 
 /// <summary>

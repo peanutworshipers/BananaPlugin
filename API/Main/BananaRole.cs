@@ -11,7 +11,38 @@
 
 namespace BananaPlugin.API.Main;
 
-public class BananaRole
+using System.Collections.Generic;
+using Collections;
+using Interfaces;
+
+/// <summary>
+/// The implementation for banana roles.
+/// </summary>
+public abstract class BananaRole : IPrefixableItem
 {
-    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BananaRole"/> class.
+    /// </summary>
+    public BananaRole()
+    {
+        this.PermissionCollection = new PermissionCollection();
+    }
+
+    /// <summary>
+    /// Gets the Id of the role.
+    /// </summary>
+    public abstract string RoleId { get; }
+
+    /// <summary>
+    /// Gets the permissions the role has.
+    /// </summary>
+    public PermissionCollection PermissionCollection { get; internal set; }
+
+    /// <summary>
+    /// Gets the types of permissions this role should have.
+    /// </summary>
+    public abstract List<Type> DefinedPermissions { get; }
+
+    /// <inheritdoc/>
+    public string Prefix => this.RoleId;
 }

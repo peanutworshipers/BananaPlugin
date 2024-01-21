@@ -1,22 +1,20 @@
 ﻿namespace BananaPlugin.API.Collections;
 
-using BananaPlugin.API.Main;
-using System;
-using System.Collections;
+using Main;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using Exiled.Events.Handlers;
 using Interfaces;
-using JetBrains.Annotations;
 
 /// <summary>
 /// Used to contain all <see cref="ServerInfo"/> instances for a <see cref="BananaPlugin{TConfig}"/>.
 /// </summary>
+// ReSharper disable UnusedParameter.Local
 public sealed class ServerInfoCollection : Collection<ServerInfo>, ICollectionPrimaryKey<ServerInfo>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ServerInfoCollection"/> class.
     /// </summary>
+    /// <param name="primaryKey">The primary server.</param>
+    /// <param name="values">The servers to add.</param>
     public ServerInfoCollection(ServerInfo primaryKey, List<ServerInfo> values)
     {
         this.PrimaryKey = primaryKey;
@@ -24,5 +22,4 @@ public sealed class ServerInfoCollection : Collection<ServerInfo>, ICollectionPr
 
     /// <inheritdoc />
     public ServerInfo PrimaryKey { get; }
-
 }

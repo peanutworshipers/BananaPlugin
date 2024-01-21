@@ -1,11 +1,8 @@
 ﻿namespace BananaPlugin.API.Collections;
 
-using BananaPlugin.API.Main;
+using Main;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Interfaces;
 
 /// <summary>
 /// Used to contain all <see cref="BananaFeature"/> for a <see cref="BananaPlugin{TConfig}"/>.
@@ -41,5 +38,4 @@ public sealed class FeatureCollection : Collection<BananaFeature>
     /// <returns>A value indicating whether the operation was a success.</returns>
     public bool TryGetFeature(string prefix, [NotNullWhen(true)] out BananaFeature? feature) =>
         this.TryGetItem(prefix, out feature);
-
 }

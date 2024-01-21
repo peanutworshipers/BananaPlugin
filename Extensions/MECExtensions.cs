@@ -72,6 +72,7 @@ public static class MECExtensions
             }
             catch (Exception e)
             {
+                // ReSharper disable PossibleNullReferenceException
                 string message = string.Concat(
                     "Error in coroutine [",
                     coroutine.Method.DeclaringType.FullName,

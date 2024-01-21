@@ -17,6 +17,20 @@ namespace BananaPlugin.API.Commands.Arguments;
 public sealed class CommandResponse
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="CommandResponse"/> class.
+    /// </summary>
+    /// <param name="args">The argument collection result.</param>
+    public CommandResponse(ArgumentResultCollection args)
+    {
+        this.Arguments = args;
+    }
+
+    /// <summary>
+    /// Gets a <see cref="ArgumentResultCollection"/> with the provided command information.
+    /// </summary>
+    public ArgumentResultCollection Arguments { get; }
+
+    /// <summary>
     /// Gets or sets the value of the resulting command.
     /// </summary>
     public string Result { get; set; } = string.Empty;

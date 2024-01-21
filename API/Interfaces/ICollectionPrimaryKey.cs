@@ -18,7 +18,7 @@ namespace BananaPlugin.API.Interfaces;
 public interface ICollectionPrimaryKey<T>
 {
     /// <summary>
-    /// The primary item of the collection.
+    /// Gets the primary item of the collection.
     /// </summary>
     public T PrimaryKey { get; }
 }

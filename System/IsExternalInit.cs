@@ -4,6 +4,7 @@
 #pragma warning disable
 using System.ComponentModel;
 
+// ReSharper disable CheckNamespace
 namespace System.Runtime.CompilerServices;
 
 /// <summary>
