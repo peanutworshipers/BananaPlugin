@@ -23,7 +23,7 @@ public static class TypeExtensions
                                 .Select(GetGenericName)
                                 .Aggregate((x1, x2) => $"{x1}, {x2}");
 
-            return $"{type.Name.Substring(0, type.Name.IndexOf("`"))}"
+            return $"{type.Name.Substring(0, type.Name.IndexOf("`", StringComparison.Ordinal))}"
                  + $"<{genericArguments}>";
         }
 

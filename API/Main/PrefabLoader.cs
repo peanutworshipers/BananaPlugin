@@ -1,7 +1,7 @@
 ﻿namespace BananaPlugin.API.Main;
 
 using AdminToys;
-using BananaPlugin.API.Utils;
+using Utils;
 using Interactables.Interobjects.DoorUtils;
 using Mirror;
 using System.Collections.Generic;
@@ -88,6 +88,7 @@ public static class PrefabLoader
         // and not us.
         PrimitiveObjectToy prim = UObject.Instantiate(primitiveToy) !;
 
+        // ReSharper disable Unity.InefficientPropertyAccess
         prim.transform.position = pos;
         prim.transform.rotation = Quaternion.Euler(rot);
         prim.transform.localScale = scale;

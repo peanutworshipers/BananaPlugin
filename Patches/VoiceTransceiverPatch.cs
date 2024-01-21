@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.Patches;
 
-using BananaPlugin.API;
+using API;
 using BananaPlugin.API.Utils;
 using HarmonyLib;
 using System;
@@ -13,7 +13,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main patch responsible for overriding voice transceiving.
 /// </summary>
-[HarmonyPatch(typeof(VoiceTransceiver), nameof(VoiceTransceiver.ServerReceiveMessage))]
+// [HarmonyPatch(typeof(VoiceTransceiver), nameof(VoiceTransceiver.ServerReceiveMessage))]
 public static class VoiceTransceiverPatch
 {
     private static readonly List<TranceivingVoice> Handlers = new(16);
@@ -33,6 +33,8 @@ public static class VoiceTransceiverPatch
         remove => Handlers.Remove(value);
     }
 
+    // ReSharper disable UnusedMember.Local
+    // ReSharper disable UnusedParameter.Local
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
 #pragma warning disable SA1118 // Parameter should not span multiple lines

@@ -18,6 +18,7 @@ using static HarmonyLib.AccessTools;
 [HarmonyPatch(typeof(NetPeer), nameof(NetPeer.SendUserData))]
 internal static class SendUserDataPatch
 {
+    // ReSharper disable UnusedMember.Local
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
         instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
@@ -37,7 +38,7 @@ internal static class SendUserDataPatch
         newInstructions.RemoveAt(index);
         newInstructions[index].labels.Add(exitTryLabel);
 
-        newInstructions.InsertRange(index, new CodeInstruction[]
+        newInstructions.InsertRange(index, new[]
         {
             // Store sent arguments.
             new(OpCodes.Stloc_S, count),
@@ -50,7 +51,7 @@ internal static class SendUserDataPatch
             new(OpCodes.Ldloc_S, src),
             new(OpCodes.Call, PropertyGetter(typeof(Array), nameof(Array.Length))),
             new(OpCodes.Ldloc_S, count),
-            new(OpCodes.Call, Method(typeof(Math), nameof(Math.Min), new Type[] { typeof(int), typeof(int) })),
+            new(OpCodes.Call, Method(typeof(Math), nameof(Math.Min), new[] { typeof(int), typeof(int) })),
             new(OpCodes.Stloc_S, count),
 
             // Load them again.

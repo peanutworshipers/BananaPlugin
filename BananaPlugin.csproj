@@ -7,7 +7,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
-    <DebugType>full</DebugType>
+    <DebugType>embedded</DebugType>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
     <Platforms>x64;AnyCPU</Platforms>
@@ -22,19 +22,30 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Local|AnyCPU'">
     <DefineConstants>$(DefineConstants);DEBUG</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  </PropertyGroup>
     <ItemGroup>
       <Reference Include="Pooling" HintPath="$(SL_REFERENCES)\Pooling-Publicized.dll" Private="False" />
       <Reference Include="Assembly-CSharp-firstpass" HintPath="$(SL_REFERENCES)\Assembly-CSharp-firstpass.dll" Private="False" />
       <Reference Include="Mirror" HintPath="$(SL_REFERENCES)\Mirror.dll" Private="False" />
       <Reference Include="UnityEngine.CoreModule" HintPath="$(SL_REFERENCES)\UnityEngine.CoreModule.dll" Private="False" />
       <Reference Include="UnityEngine.PhysicsModule" HintPath="$(SL_REFERENCES)\UnityEngine.PhysicsModule.dll" Private="False" />
-
       <Reference Include="Push" HintPath="References\Push.dll" Private="False" />
       <Reference Include="SCP294" HintPath="References\SCP294.dll" Private="False" />
       <Reference Include="MapEditorReborn" HintPath="References\MapEditorReborn.dll" Private="False" />
     </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="5.8.0-alpha0098" ExcludeAssets="RUNTIME">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; compile; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="EXILED" Version="8.2.1" ExcludeAssets="RUNTIME" />
+    <PackageReference Include="Fody" Version="6.8.0" ExcludeAssets="RUNTIME">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; compile; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Lib.Harmony" Version="2.2.2" ExcludeAssets="RUNTIME" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" ExcludeAssets="RUNTIME" />
     <PackageReference Include="System.Buffers" Version="4.5.1" ExcludeAssets="RUNTIME" />

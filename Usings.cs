@@ -6,4 +6,5 @@ global using ExHandlers = Exiled.Events.Handlers;
 global using ExItem = Exiled.API.Features.Items.Item;
 global using ExPlayer = Exiled.API.Features.Player;
 global using Scp294Plugin = SCP294.SCP294;
+global using Type = System.Type;
 global using UObject = UnityEngine.Object;

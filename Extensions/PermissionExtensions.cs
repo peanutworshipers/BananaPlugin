@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.Extensions;
 
-using BananaPlugin.API;
+using API;
 using BananaPlugin.API.Utils;
 using CommandSystem;
 using Exiled.Permissions.Extensions;

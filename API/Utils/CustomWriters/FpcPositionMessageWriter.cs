@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.API.Utils.CustomWriters;
 
-using BananaPlugin.Extensions;
+using Extensions;
 using Mirror;
 using PlayerRoles.FirstPersonControl;
 using PlayerRoles.FirstPersonControl.NetworkMessages;
@@ -16,7 +16,9 @@ public static class FpcPositionMessageWriter
     private static AppliedValues valuesToApply;
 
     private static (ushort horizontal, ushort vertical) appliedMouseLook;
+#pragma warning disable CS0649
     private static RelativePosition appliedPosition;
+#pragma warning restore CS0649
     private static PlayerMovementState appliedMovementState;
 
     static FpcPositionMessageWriter()
@@ -176,6 +178,7 @@ public static class FpcPositionMessageWriter
             ? appliedMouseLook
             : default;
 
+        // ReSharper disable once BitwiseOperatorOnEnumWithoutFlags
         PlayerMovementState movementState = applyMovementState
             ? (appliedMovementState & (PlayerMovementState)3)
             : fpcModule.CurrentMovementState;

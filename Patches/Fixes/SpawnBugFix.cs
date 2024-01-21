@@ -20,6 +20,8 @@ using static HarmonyLib.AccessTools;
 [HarmonyPatch]
 public static class SpawnBugFix
 {
+    // ReSharper disable UnusedMember.Local
+    // ReSharper disable PossibleNullReferenceException
     private static MethodInfo TargetMethod()
     {
         Type[] types = typeof(RoleSpawnpointManager).GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Instance);
@@ -42,6 +44,7 @@ public static class SpawnBugFix
 
                 IEnumerable<Type> methodParams = method.GetParameters().Select(x => x.ParameterType);
 
+                // ReSharper disable PossibleMultipleEnumeration
                 if (!methodParams.SequenceEqual(eventParams))
                 {
                     continue;
@@ -54,6 +57,7 @@ public static class SpawnBugFix
         throw new Exception("Could not find method.");
     }
 
+    // ReSharper disable UnusedParameter.Local
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
         instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
@@ -67,7 +71,7 @@ public static class SpawnBugFix
             new(OpCodes.Ldloc_1),
             new(OpCodes.Call, PropertyGetter(typeof(Vector3), nameof(Vector3.up))),
             new(OpCodes.Ldloc_2),
-            new(OpCodes.Call, Method(typeof(Vector3), "op_Multiply", new Type[] { typeof(Vector3), typeof(float) })),
+            new(OpCodes.Call, Method(typeof(Vector3), "op_Multiply", new[] { typeof(Vector3), typeof(float) })),
             new(OpCodes.Call, Method(typeof(FirstPersonMovementModule), nameof(FirstPersonMovementModule.ServerOverridePosition))),
         });
 #pragma warning restore SA1118 // Parameter should not span multiple lines

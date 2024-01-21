@@ -14,6 +14,8 @@ using static HarmonyLib.AccessTools;
 [HarmonyPatch(typeof(DamageHandlerReaderWriter), nameof(DamageHandlerReaderWriter.WriteDamageHandler))]
 public static class DamageHandlerWriterPatch
 {
+    // ReSharper disable UnusedMember.Local
+    // ReSharper disable UnusedParameter.Local
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         yield return new(OpCodes.Ldarg_0);
@@ -33,6 +35,8 @@ public static class DamageHandlerWriterPatch
             return;
         }
 
+        // ReSharper disable PossibleNullReferenceException
+        // ReSharper disable AssignNullToNotNullAttribute
         while ((type = type.BaseType) != typeof(DamageHandlerBase))
         {
             if (DamageHandlers.IdsByTypeHash.TryGetValue(type.FullName.GetStableHashCode(), out hash))

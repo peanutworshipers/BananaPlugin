@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.API.Utils;
 
-using BananaPlugin.Extensions;
+using Extensions;
 using MEC;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 /// </summary>
 public static class ExiledEventsHelper
 {
-    private static bool exiledEventsReady = false;
+    private static bool exiledEventsReady;
     private static CoroutineHandle eventsReadyCoroutine;
     private static Queue<(Delegate, object[])> actions = new();
 

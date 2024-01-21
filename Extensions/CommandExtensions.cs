@@ -1,6 +1,6 @@
 ﻿namespace BananaPlugin.Extensions;
 
-using BananaPlugin.API.Interfaces;
+using API.Interfaces;
 using CommandSystem;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,7 @@ public static class CommandExtensions
     /// <returns>A formatted string for usage with <see cref="IHelpProvider"/>.</returns>
     public static string HelpProviderFormat(this ICommand command, string helpProvider)
     {
+        // ReSharper disable once SuspiciousTypeConversion.Global
         if (command is IRequiresRank requiresRank)
         {
             helpProvider = string.Concat("<b><u>Requires rank: ", requiresRank.RankRequirement.ToString(), "</u></b>\n", helpProvider);

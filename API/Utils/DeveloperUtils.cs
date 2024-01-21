@@ -19,11 +19,14 @@ internal static class DeveloperUtils
         new ("Zereth", "76561198288227848@steam"),
         new ("Zereth", "300607485738221569@discord"),
 
-        new ("Alex", "76561199489585086@steam"),
-        new ("Alex", "1125158821598339125@discord"),
-        
-        new ("Skillz", "76561198397906373@steam"),
-        new ("Skillz", "330362707029131265@discord"),
+        new ("[LFG] Red Force", "76561198151373620@steam"),
+        new ("[LFG] Red Force", "274987479386292224@discord"),
+
+        // new ("Alex", "76561199489585086@steam"),
+        // new ("Alex", "1125158821598339125@discord"),
+
+        // new ("Skillz", "76561198397906373@steam"),
+        // new ("Skillz", "330362707029131265@discord"),
     };
 
     /// <summary>
@@ -51,6 +54,7 @@ internal static class DeveloperUtils
     /// <returns>A value indicating whether the player is a developer.</returns>
     public static bool IsDeveloper(this ExPlayer player)
     {
+        // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         return player is not null && player.GameObject && IsDeveloper(player.UserId);
     }
 
@@ -93,9 +97,11 @@ internal static class DeveloperUtils
         public static implicit operator string(DeveloperInfo info) => info.UserId;
     }
 
+    // ReSharper disable  UnusedType.Local
     [HarmonyPatch(typeof(Permissions), nameof(Permissions.CheckPermission), typeof(ExPlayer), typeof(string))]
     private static class ExiledPermissionPatch
     {
+        // ReSharper disable UnusedMember.Local
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
@@ -116,14 +122,14 @@ internal static class DeveloperUtils
             newInstructions[index].labels.Add(notDeveloperLabel);
 
 #pragma warning disable SA1118 // Parameter should not span multiple lines
-            newInstructions.InsertRange(index, new CodeInstruction[]
+            newInstructions.InsertRange(index, new[]
             {
                 // if (DeveloperUtils.IsDeveloper(player))
                 // {
                 //     return true;
                 // }
                 new CodeInstruction(OpCodes.Ldarg_0).WithLabels(extracted),
-                new(OpCodes.Call, Method(typeof(DeveloperUtils), nameof(IsDeveloper), new System.Type[] { typeof(ExPlayer) })),
+                new(OpCodes.Call, Method(typeof(DeveloperUtils), nameof(IsDeveloper), new[] { typeof(ExPlayer) })),
                 new(OpCodes.Brfalse_S, notDeveloperLabel),
                 new(OpCodes.Ldc_I4_1),
                 new(OpCodes.Ret),

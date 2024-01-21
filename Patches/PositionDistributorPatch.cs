@@ -1,9 +1,8 @@
 ﻿namespace BananaPlugin.Patches;
 
-using BananaPlugin.API;
+using API;
 using BananaPlugin.API.Utils;
 using HarmonyLib;
-using PlayerRoles.FirstPersonControl.NetworkMessages;
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
@@ -14,7 +13,7 @@ using static HarmonyLib.AccessTools;
 /// <summary>
 /// The main patch for overriding visibility of players.
 /// </summary>
-[HarmonyPatch(typeof(FpcServerPositionDistributor), nameof(FpcServerPositionDistributor.WriteAll))]
+// [HarmonyPatch(typeof(FpcServerPositionDistributor), nameof(FpcServerPositionDistributor.WriteAll))]
 public static class PositionDistributorPatch
 {
     private static readonly List<VisibilityCheck> Handlers = new(16);
@@ -34,6 +33,8 @@ public static class PositionDistributorPatch
         remove => Handlers.Remove(value);
     }
 
+    // ReSharper disable UnusedMember.Local
+    // ReSharper disable once UnusedParameter.Local
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
         instructions.BeginTranspiler(out List<CodeInstruction> newInstructions);
